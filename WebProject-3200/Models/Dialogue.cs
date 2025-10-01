@@ -17,6 +17,7 @@ public class Dialogue
 
     /// <summary>
     /// The story node this dialogue belongs to.
+    /// test string
     /// </summary>
     public StoryNode StoryNode { get; set; } = null!;
     
