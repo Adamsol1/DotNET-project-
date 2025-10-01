@@ -1,5 +1,5 @@
 
-namespace WebProject_3200.Models;
+namespace WebProject_3200.Infrastructure.Models;
 /// <summary>
 /// Represents a piece of dialogue in a story node, optionally associated with a character.
 /// </summary>
