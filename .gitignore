@@ -1,0 +1,33 @@
+# .NET related files to ignore
+bin/
+obj/
+*.user
+*.suo
+*.cache
+.vs/
+.idea/
+*.rsuser
+*.userosscache
+*.sln.docstates
+
+# Node related files to ignore
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+package-lock.json
+yarn-error.log*
+
+# Code Editor enviroment files to ignore
+.vscode/
+.idea/
+.DS_Store
+
+
+# OS related files to ignore
+.DS_Store
+
+# Build files to ignore
+dist/
+build/
+.next/
+.nuxt/
