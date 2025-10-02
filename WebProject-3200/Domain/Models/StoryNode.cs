@@ -1,4 +1,4 @@
-namespace WebProject_3200.Infrastructure.Models;
+namespace WebProject_3200.Domain.Models;
 /// <summary>
 /// Represents a node in the story, containing dialogues and choices.
 /// </summary>

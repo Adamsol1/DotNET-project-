@@ -1,5 +1,5 @@
 
-namespace WebProject_3200.Infrastructure.Models;
+namespace WebProject_3200.Domain.Models;
 
 /// <summary>
 /// Represents a character in the story.

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using WebProject_3200.Infrastructure.Models;
+using WebProject_3200.Domain.Models;
 
 public class AppDbContext : DbContext
 {

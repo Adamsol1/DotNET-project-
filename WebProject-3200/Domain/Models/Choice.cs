@@ -1,6 +1,6 @@
 
 
-namespace WebProject_3200.Models;
+namespace WebProject_3200.Domain.Models;
 
 /// <summary>
 /// Represents a choice in a story node that leads to another story node.

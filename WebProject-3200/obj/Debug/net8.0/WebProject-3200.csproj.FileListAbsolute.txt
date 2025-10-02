@@ -1,0 +1,8 @@
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\WebProject-3200\obj\Debug\net8.0\WebProject-3200.csproj.AssemblyReference.cache
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\WebProject-3200\obj\Debug\net8.0\WebProject-3200.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\WebProject-3200\obj\Debug\net8.0\WebProject-3200.AssemblyInfoInputs.cache
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\WebProject-3200\obj\Debug\net8.0\WebProject-3200.AssemblyInfo.cs
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\WebProject-3200\obj\Debug\net8.0\WebProject-3200.csproj.CoreCompileInputs.cache
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\WebProject-3200\obj\Debug\net8.0\WebProject-3200.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\WebProject-3200\obj\Debug\net8.0\WebProject-3200.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\WebProject-3200\obj\Debug\net8.0\WebProject-3200.sourcelink.json

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "I:\\Programing\\ITPE3200 - Web Applikasjoner\\Examen\\DotNET-project-\\WebProject-3200\\WebProject-3200.csproj": {}
+    "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\WebProject-3200\\WebProject-3200.csproj": {}
   },
   "projects": {
-    "I:\\Programing\\ITPE3200 - Web Applikasjoner\\Examen\\DotNET-project-\\WebProject-3200\\WebProject-3200.csproj": {
+    "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\WebProject-3200\\WebProject-3200.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "I:\\Programing\\ITPE3200 - Web Applikasjoner\\Examen\\DotNET-project-\\WebProject-3200\\WebProject-3200.csproj",
+        "projectUniqueName": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\WebProject-3200\\WebProject-3200.csproj",
         "projectName": "WebProject-3200",
-        "projectPath": "I:\\Programing\\ITPE3200 - Web Applikasjoner\\Examen\\DotNET-project-\\WebProject-3200\\WebProject-3200.csproj",
+        "projectPath": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\WebProject-3200\\WebProject-3200.csproj",
         "packagesPath": "C:\\Users\\realm\\.nuget\\packages\\",
-        "outputPath": "I:\\Programing\\ITPE3200 - Web Applikasjoner\\Examen\\DotNET-project-\\WebProject-3200\\obj\\",
+        "outputPath": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\WebProject-3200\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\realm\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -67,7 +67,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.414/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.413/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
