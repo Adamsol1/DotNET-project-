@@ -56,14 +56,3 @@ build/
 *.tmp
 *.bak
 *.swp
-
-
-Tools/
-
-# Sikkerhetsnett (allerede delvis i filen din)
-bin/
-obj/
-*.cache
-project.assets.json
-project.nuget.cache
-TestResults/

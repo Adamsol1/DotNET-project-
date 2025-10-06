@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/ahmedyusuf/Documents/GitHub/DotNET-project/DOTNET_PROJECT.Tests/DOTNET_PROJECT.Tests.csproj": {}
+    "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT.Tests\\DOTNET_PROJECT.tests.csproj": {}
   },
   "projects": {
-    "/Users/ahmedyusuf/Documents/GitHub/DotNET-project/DOTNET_PROJECT.Tests/DOTNET_PROJECT.Tests.csproj": {
+    "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT.Tests\\DOTNET_PROJECT.tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/ahmedyusuf/Documents/GitHub/DotNET-project/DOTNET_PROJECT.Tests/DOTNET_PROJECT.Tests.csproj",
-        "projectName": "DOTNET_PROJECT.Tests",
-        "projectPath": "/Users/ahmedyusuf/Documents/GitHub/DotNET-project/DOTNET_PROJECT.Tests/DOTNET_PROJECT.Tests.csproj",
-        "packagesPath": "/Users/ahmedyusuf/.nuget/packages/",
-        "outputPath": "/Users/ahmedyusuf/Documents/GitHub/DotNET-project/DOTNET_PROJECT.Tests/obj/",
+        "projectUniqueName": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT.Tests\\DOTNET_PROJECT.tests.csproj",
+        "projectName": "DOTNET_PROJECT.tests",
+        "projectPath": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT.Tests\\DOTNET_PROJECT.tests.csproj",
+        "packagesPath": "C:\\Users\\realm\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/ahmedyusuf/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\realm\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -26,8 +26,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/ahmedyusuf/Documents/GitHub/DotNET-project/DOTNET_PROJECT/DOTNET-PROJECT.csproj": {
-                "projectPath": "/Users/ahmedyusuf/Documents/GitHub/DotNET-project/DOTNET_PROJECT/DOTNET-PROJECT.csproj"
+              "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj": {
+                "projectPath": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj"
               }
             }
           }
@@ -80,21 +80,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/Users/ahmedyusuf/.dotnet/sdk/8.0.411/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.413/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/Users/ahmedyusuf/Documents/GitHub/DotNET-project/DOTNET_PROJECT/DOTNET-PROJECT.csproj": {
+    "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/ahmedyusuf/Documents/GitHub/DotNET-project/DOTNET_PROJECT/DOTNET-PROJECT.csproj",
+        "projectUniqueName": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj",
         "projectName": "DOTNET-PROJECT",
-        "projectPath": "/Users/ahmedyusuf/Documents/GitHub/DotNET-project/DOTNET_PROJECT/DOTNET-PROJECT.csproj",
-        "packagesPath": "/Users/ahmedyusuf/.nuget/packages/",
-        "outputPath": "/Users/ahmedyusuf/Documents/GitHub/DotNET-project/DOTNET_PROJECT/obj/",
+        "projectPath": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj",
+        "packagesPath": "C:\\Users\\realm\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/ahmedyusuf/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\realm\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -141,14 +141,6 @@
               "target": "Package",
               "version": "[9.0.9, )"
             },
-            "Serilog.Extensions.Logging": {
-              "target": "Package",
-              "version": "[9.0.2, )"
-            },
-            "Serilog.Sinks.File": {
-              "target": "Package",
-              "version": "[7.0.0, )"
-            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.6.2, )"
@@ -173,7 +165,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/Users/ahmedyusuf/.dotnet/sdk/8.0.411/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.413/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
