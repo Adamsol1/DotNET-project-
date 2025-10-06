@@ -1,0 +1,58 @@
+# =========================
+# .NET / C# related files
+# =========================
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.dbmdl
+*.log
+.vs/
+_ReSharper*/
+*.DotSettings.user
+
+# Entity Framework / test databases
+*.mdf
+*.ldf
+
+# NuGet packages
+packages/
+*.nupkg
+.nuget/
+
+# =========================
+# Node / frontend related
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+package-lock.json
+yarn-error.log*
+
+# =========================
+# Editor / IDE
+# =========================
+.vscode/
+.idea/
+.DS_Store
+
+# =========================
+# Build / output folders
+# =========================
+dist/
+build/
+.next/
+.nuxt/
+
+# =========================
+# Temporary files
+# =========================
+*.tmp
+*.bak
+*.swp
