@@ -1,33 +1,58 @@
-# .NET related files to ignore
+# =========================
+# .NET / C# related files
+# =========================
 bin/
 obj/
-*.user
-*.suo
+*.dll
+*.exe
+*.pdb
 *.cache
-.vs/
-.idea/
-*.rsuser
+*.suo
+*.user
 *.userosscache
 *.sln.docstates
+*.dbmdl
+*.log
+.vs/
+_ReSharper*/
+*.DotSettings.user
 
-# Node related files to ignore
+# Entity Framework / test databases
+*.mdf
+*.ldf
+
+# NuGet packages
+packages/
+*.nupkg
+.nuget/
+
+# =========================
+# Node / frontend related
+# =========================
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 package-lock.json
 yarn-error.log*
 
-# Code Editor enviroment files to ignore
+# =========================
+# Editor / IDE
+# =========================
 .vscode/
 .idea/
 .DS_Store
 
-
-# OS related files to ignore
-.DS_Store
-
-# Build files to ignore
+# =========================
+# Build / output folders
+# =========================
 dist/
 build/
 .next/
 .nuxt/
+
+# =========================
+# Temporary files
+# =========================
+*.tmp
+*.bak
+*.swp
