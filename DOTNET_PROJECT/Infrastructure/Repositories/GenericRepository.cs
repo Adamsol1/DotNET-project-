@@ -2,8 +2,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using DOTNET_PROJECT.Application.Interfaces;
-using DOTNET_PROJECT.Application.Exceptions;
-
+using DOTNET_PROJECT.Infrastructure.Data;
 
 namespace DOTNET_PROJECT.Infrastructure.Repositories;
 

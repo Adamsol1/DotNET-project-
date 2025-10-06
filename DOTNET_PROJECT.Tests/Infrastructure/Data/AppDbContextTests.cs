@@ -5,7 +5,7 @@ using Xunit;
 using System.Linq;
 using System;
 
-namespace DOTNET_PROJECT.Tests;
+namespace DOTNET_PROJECT.Tests.Infrastructure.Data;
 
 public class AppDbContextTests
 {
