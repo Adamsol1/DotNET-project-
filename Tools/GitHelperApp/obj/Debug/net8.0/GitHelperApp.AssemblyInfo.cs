@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GitHelperApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+601249069187ea54d9878066206d3ac3f7489867")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+95ba5058818afde85921f84c5bb7f5f2cd1746dc")]
 [assembly: System.Reflection.AssemblyProductAttribute("GitHelperApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GitHelperApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

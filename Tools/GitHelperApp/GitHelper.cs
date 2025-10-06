@@ -14,7 +14,7 @@ class GitHelper
 		Console.WriteLine("GitHelper for dummies,");
 		Console.WriteLine("This file is meant to help you with git pull/push if you cant do it in Desktop or commandline:");
 
-		var repoPath = Directory.GetCurrentDirectory();
+		var repoPath = GetRepoRoot() ?? Directory.GetCurrentDirectory();
 		Console.WriteLine($"Your repository path: {repoPath}");
 
 		// find your current Branch
@@ -103,9 +103,10 @@ class GitHelper
 
 	static int RunGit(string args, string workingDir, out string stdout, out string stderr)
 	{
+		var gitPath = GetGitExecutablePath();
 		var psi = new ProcessStartInfo
 		{
-			FileName = "git",
+			FileName = gitPath,
 			Arguments = args,
 			WorkingDirectory = workingDir,
 			RedirectStandardOutput = true,
@@ -130,6 +131,29 @@ class GitHelper
 		stdout = sbOut.ToString();
 		stderr = sbErr.ToString();
 		return p.ExitCode;
+	}
+
+	static string GetGitExecutablePath()
+	{
+		// On macOS, git is typically at /usr/bin/git; fall back to PATH
+		var macGit = "/usr/bin/git";
+		if (OperatingSystem.IsMacOS() && File.Exists(macGit)) return macGit;
+		return "git";
+	}
+
+	static string? GetRepoRoot()
+	{
+		try
+		{
+			var code = RunGit("rev-parse --show-toplevel", Directory.GetCurrentDirectory(), out var outStr, out var _);
+			if (code == 0)
+			{
+				var root = outStr.Trim();
+				if (!string.IsNullOrWhiteSpace(root) && Directory.Exists(root)) return root;
+			}
+		}
+		catch { /* ignore */ }
+		return null;
 	}
 
 	static string Quote(string s)
