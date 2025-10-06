@@ -17,7 +17,7 @@ public class Character
     /// <summary>
     /// A brief description of the character.
     /// </summary>
-    public string Description { get; set; } = string.Empty;
+    public string? Description { get; set; } = string.Empty;
     /// <summary>
     /// URL to an image representing the character.
     /// </summary>
