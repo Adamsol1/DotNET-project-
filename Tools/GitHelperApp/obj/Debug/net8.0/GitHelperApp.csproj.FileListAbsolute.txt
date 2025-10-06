@@ -1,0 +1,15 @@
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/obj/Debug/net8.0/GitHelperApp.GeneratedMSBuildEditorConfig.editorconfig
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/obj/Debug/net8.0/GitHelperApp.AssemblyInfoInputs.cache
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/obj/Debug/net8.0/GitHelperApp.AssemblyInfo.cs
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/obj/Debug/net8.0/GitHelperApp.csproj.CoreCompileInputs.cache
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/obj/Debug/net8.0/GitHelperApp.sourcelink.json
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/bin/Debug/net8.0/GitHelperApp
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/bin/Debug/net8.0/GitHelperApp.deps.json
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/bin/Debug/net8.0/GitHelperApp.runtimeconfig.json
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/bin/Debug/net8.0/GitHelperApp.dll
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/bin/Debug/net8.0/GitHelperApp.pdb
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/obj/Debug/net8.0/GitHelperApp.dll
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/obj/Debug/net8.0/refint/GitHelperApp.dll
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/obj/Debug/net8.0/GitHelperApp.pdb
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/obj/Debug/net8.0/GitHelperApp.genruntimeconfig.cache
+/Users/ahmedyusuf/Documents/GitHub/DotNET-project/Tools/GitHelperApp/obj/Debug/net8.0/ref/GitHelperApp.dll
