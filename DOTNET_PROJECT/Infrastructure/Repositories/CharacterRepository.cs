@@ -19,7 +19,7 @@ public class CharacterRepository : GenericRepository<Character>, ICharacterRepos
     /// The method will return the first character found with the given name.
     /// </summary>
 
-    public async Task<Character> GetCharacterByName(string name)
+    public async Task<Character?> GetCharacterByName(string name)
     {
         /// Query to get a character by name
         var character = _db.Characters

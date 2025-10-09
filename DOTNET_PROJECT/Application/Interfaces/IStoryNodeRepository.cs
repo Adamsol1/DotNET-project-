@@ -15,7 +15,7 @@ public interface IStoryNodeRepository : IGenericRepository<StoryNode>
     /// <summary>
     /// Get the story node with given title
     /// </summary>
-    Task<StoryNode> GetStoryNodeByTitle(string title);
+    Task<StoryNode?> GetStoryNodeByTitle(string title);
 
     /// <summary>
     /// Get description of the story node with given ID

@@ -36,7 +36,7 @@ public class DialogueRepository : GenericRepository<Dialogue>, IDialogueReposito
         /// The method expects either one or zero results because the storynode ID is unique.
         /// </summary>
 
-        public async Task<StoryNode> GetStoryNode(int id)
+        public async Task<StoryNode?> GetStoryNode(int id)
         {
             /// Query to get StoryNode this choice belongs to
             var storyNode = _db.Dialogues

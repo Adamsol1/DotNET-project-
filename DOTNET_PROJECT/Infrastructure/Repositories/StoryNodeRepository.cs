@@ -33,7 +33,7 @@ public class StoryNodeRepository : GenericRepository<StoryNode>, IStoryNodeRepos
     /// Get the story node with given title
     /// </summary>
 
-    public async Task<StoryNode> GetStoryNodeByTitle(string title)
+    public async Task<StoryNode?> GetStoryNodeByTitle(string title)
     {
         /// Query to get story node with given title
         var storyNode = _db.StoryNodes

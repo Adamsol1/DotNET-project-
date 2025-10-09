@@ -13,7 +13,7 @@ public interface IDialogueRepository : IGenericRepository<Dialogue>
     /// <summary>
     /// Get the storynode the dialogue is shown in
     /// </summary>
-    Task<StoryNode> GetStoryNode(int dialogueId);
+    Task<StoryNode?> GetStoryNode(int dialogueId);
 
     /// <summary>
     /// Get the order the dialogues in current story node is shown

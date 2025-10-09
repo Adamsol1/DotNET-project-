@@ -37,7 +37,7 @@ public class ChoiceRepository : GenericRepository<Choice>, IChoiceRepository
     /// The method expects either one or zero results because the storynode ID is unique.
     /// </summary>
 
-    public async Task<StoryNode> GetStoryNode(int id)
+    public async Task<StoryNode?> GetStoryNode(int id)
     {
         /// Query to get StoryNode this choice belongs to
         var storyNode = _db.Choices
@@ -53,7 +53,7 @@ public class ChoiceRepository : GenericRepository<Choice>, IChoiceRepository
     /// The method expects either one or zero results because the next storynode ID is unique.
     /// </summary>
 
-    public async Task<StoryNode> GetNextStoryNode(int id)
+    public async Task<StoryNode?> GetNextStoryNode(int id)
     {
         /// Query to get id of story node this choice leads to
         var nextStoryNodeId = _db.Choices

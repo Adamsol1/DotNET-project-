@@ -1,6 +1,7 @@
 using DOTNET_PROJECT.Domain.Models;
 using DOTNET_PROJECT.Application.Interfaces;
 using DOTNET_PROJECT.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 namespace DOTNET_PROJECT.Infrastructure.Repositories;
 
 
@@ -19,7 +20,7 @@ public class PlayerCharacterRepository : GenericRepository<PlayerCharacter>, IPl
     public async Task<int> GetHealthByIdAsync(int id)
     {
         /// Query to get health of a player character by its ID.
-        var health = _db.PlayerCharacter
+        var health = _db.Characters.OfType<PlayerCharacter>()
                     .Where(PlayerCharacter => PlayerCharacter.Id == id)
                     .Select(PlayerCharacter => PlayerCharacter.Health)
                     .SingleOrDefaultAsync();

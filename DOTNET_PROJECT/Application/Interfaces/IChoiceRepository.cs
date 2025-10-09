@@ -14,7 +14,7 @@ public interface IChoiceRepository : IGenericRepository<Choice>
     /// Get StoryNode this choice belongs to
     /// </summary>
 
-    Task<StoryNode> GetStoryNode(int id);
+    Task<StoryNode?> GetStoryNode(int id);
 
     /// <summary>
     /// Get id of story node this choice leads to
@@ -25,7 +25,7 @@ public interface IChoiceRepository : IGenericRepository<Choice>
     /// <summary>
     /// Get the story node this choice leads to'
     /// </summary>
-    Task<StoryNode> GetNextStoryNode(int id);
+    Task<StoryNode?> GetNextStoryNode(int id);
     
     /// <summary>
     /// Get text given in this choice

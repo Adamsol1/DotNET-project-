@@ -18,7 +18,7 @@ public interface ICharacterRepository : IGenericRepository<Character>
     /// Get a character associated with given name
     /// </summary>
  
-    Task<Character> GetCharacterByName(string name);
+    Task<Character?> GetCharacterByName(string name);
     /// <summary>
     /// Get all characters associated with given name
     /// </summary>
