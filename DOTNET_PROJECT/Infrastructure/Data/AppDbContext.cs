@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<StoryNode> StoryNodes { get; set; } = null!;
     public DbSet<Dialogue> Dialogues { get; set; } = null!;
     public DbSet<Choice> Choices { get; set; } = null!;
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

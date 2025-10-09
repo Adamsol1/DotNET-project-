@@ -4,7 +4,7 @@ using DOTNET_PROJECT.Domain.Models;
 
 namespace DOTNET_PROJECT.Application.Interfaces;
 
-public interface StoryNodeRepository : IGenericRepository<StoryNode>
+public interface IStoryNodeRepository : IGenericRepository<StoryNode>
 {
     /// <summary>
     /// Get the story node title with ID

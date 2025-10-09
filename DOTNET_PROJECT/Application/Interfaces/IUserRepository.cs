@@ -2,7 +2,7 @@ using DOTNET_PROJECT.Domain.Models;
 
 namespace DOTNET_PROJECT.Application.Interfaces;
 
-public interface UserRepository : IGenericRepository<User>
+public interface IUserRepository : IGenericRepository<User>
 {
     /// <summary>
     /// Get user by their username
@@ -23,7 +23,8 @@ public interface UserRepository : IGenericRepository<User>
 
     /// <summary>
     /// Get the role of the user associated with given user ID
+    /// Only one role can be applied to a user
     /// </summary>
     
-    Task<string> GetUserRoleById(int id);
+    Task<string?> GetUserRoleById(int id);
 }

@@ -6,7 +6,7 @@ using DOTNET_PROJECT.Domain.Models;
 namespace DOTNET_PROJECT.Application.Interfaces;
 
 
-public interface CharacterRepository : IGenericRepository<Character>
+public interface ICharacterRepository : IGenericRepository<Character>
 {
     /// <summary>
     /// Get character name with ID
@@ -23,7 +23,7 @@ public interface CharacterRepository : IGenericRepository<Character>
     /// Get all characters associated with given name
     /// </summary>
     
-    Task<IEnumerable<Character>> GetAllCharactersByName(string name);
+    Task<IEnumerable<Character>> GetAllCharactersWithName(string name);
     /// <summary>
     /// Get description of the character given by ID
     /// </summary>
