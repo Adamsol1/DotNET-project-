@@ -6,7 +6,7 @@ import { Card } from './ui/Card';
 import { Text } from './ui/Text';
 import { DialoguePanel } from './components/DialoguePanel';
 
-
+//root react component that sets up a single scene
 export default function App() {
   //placeholder scene
   var text= 'you have to do something! you are running out of time.';
@@ -15,7 +15,7 @@ export default function App() {
     { id: 'scream', text: 'scream' },
     { id: 'look', text: 'look around' },
   ];
-
+  //function that is called when user clicks one of the buttons
   function handleChoice(c) {
     console.log('choice: ', c);
   }
@@ -23,12 +23,14 @@ export default function App() {
     <div
       style={{
         minHeight: '100vh',
-        background: tokens.color.bg,
-        color: tokens.color.text,
-        padding: tokens.space.md,
+        background: tokens.color.bg, //gets the token background color
+        color: tokens.color.text, //gets the token text color
+        padding: tokens.space.md, //uses token padding
       }}
       >
+        {/*Gets the background froom assets/bg folder*/}
         <SceneLayout backgroundUrl="/assets/bg/space-tunnel.png">
+        {/*Dialogue panel contains the avatar, text and choice buttons*/}
         <DialoguePanel
         avatarUrl="/assets/char/hero.png"
         text={text}

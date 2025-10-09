@@ -1,5 +1,6 @@
 import React from 'react';
 
+//renders the scene background 
 export function Background ({ imageUrl }) {
     const style = imageUrl
     ? {
@@ -15,7 +16,7 @@ export function Background ({ imageUrl }) {
     return (
         <div
             style={{ position: 'absolute', inset: 0, ...style }}
-            aria-label="bg"
+            aria-label="bg" //for screen readers
             />
         );
  

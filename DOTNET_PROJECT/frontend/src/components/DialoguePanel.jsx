@@ -4,11 +4,12 @@ import { Card } from '../ui/Card';
 import { Text } from '../ui/Text';
 import { Button } from '../ui/Button';
 
+//Shows dialogue area with avatar, text and buttons
 export function DialoguePanel({ avatarUrl, text, choices  = [], onSelect }){
     return(
         <div style={{ position: 'absolute', left: 24, right: 24, bottom: 24, zIndex: tokens.z.panel }}>
         <Card style={{ padding: 20, display:'grid', gridTemplateColumns: 'auto 1fr 260px', gap: 20}}>
-            {/*avatar */}
+            {/*avatar portrait*/}
             <div style={{
                 width:96,
                 height:96, 
@@ -23,7 +24,7 @@ export function DialoguePanel({ avatarUrl, text, choices  = [], onSelect }){
                 ) : null}
             </div>
 
-            {/* Speech bubble */}
+            {/* dialogue bubble */}
         <div style={{ display:'flex', alignItems:'center' }}>
           <div style={{
             background:'#070b0d',
@@ -37,7 +38,7 @@ export function DialoguePanel({ avatarUrl, text, choices  = [], onSelect }){
           </div>
         </div>
 
-        {/* Choices */}
+        {/* Choice buttons */}
         <div style={{ display:'grid', gap:12, alignContent:'center' }}>
           {choices.map(c => (
             <Button key={c.id} onClick={()=>onSelect(c)}>{c.text}</Button>

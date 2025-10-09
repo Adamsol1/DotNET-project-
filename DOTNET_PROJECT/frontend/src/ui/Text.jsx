@@ -1,6 +1,7 @@
 import React from 'react';
 import { tokens } from '../design/tokens';
 
+//consistent text element with optional color size and weight 
 export function Text({as: Tag = 'p', muted=false, size=16, weight= 500, style, children }) {
     return (
         <Tag style={{

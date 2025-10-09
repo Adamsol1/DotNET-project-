@@ -1,6 +1,7 @@
 import React from 'react';
 import { tokens } from '../design/tokens';
 
+//reusable button with hover and press animations
 export function Button ({ children, style, ...rest }) {
     return( 
         <button

@@ -1,13 +1,14 @@
 import React from 'react';
 import { tokens } from '../design/tokens';
 
+//simple container with color, rounded corners and shadow
 export function Card ({ style, children }) {
     return( 
         <div style={{
             background: tokens.color.surface,
             border: '1px solid ' + tokens.color.surfaceBorder,
             borderRadius: tokens.radius.xl,
-            backdropFilter: 'blur(6px)',
+            backdropFilter: 'blur(6px)', //blur effect for glass look 
             boxShadow: tokens.shadow.md,
             ...style
         }}>
