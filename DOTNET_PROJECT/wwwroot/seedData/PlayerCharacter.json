@@ -1,0 +1,9 @@
+[
+  {
+    "Id": 1,
+    "Name": "Protagonist",
+    "Desciption": "The protagnist",
+    "ImageUrl": "/images/characters/protagonist.png",
+    "Health": 100
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "StoryNode": 1,
+    "NextStoryNodeId": 2,
+    "Text": "Break glass"
+  },
+  {
+    "StoryNode": 1,
+    "NextStoryNodeId": 2,
+    "Text": "Wait until lock thaws"
+  }
+]

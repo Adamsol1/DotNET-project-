@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<StoryNode> StoryNodes { get; set; } = null!;
     public DbSet<Dialogue> Dialogues { get; set; } = null!;
     public DbSet<Choice> Choices { get; set; } = null!;
+    public DbSet<PlayerCharacter> PlayerCharacters { get; set; } = null!;
     
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,5 +44,8 @@ public class AppDbContext : DbContext
             .WithMany(sn => sn.Dialogues)
             .HasForeignKey(d => d.StoryNodeId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<PlayerCharacter>()
+            .HasBaseType<Character>();
     }
 }
