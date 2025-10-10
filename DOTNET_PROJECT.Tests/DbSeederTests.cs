@@ -60,6 +60,7 @@ namespace DOTNET_PROJECT.Tests
                 {
                     new() { Description = "Go left", StoryNodeId = 1, NextNodeId = 2 }
                 }));
+                
             // Act
             await DbSeeder.SeedAsync(context);
 

@@ -7,6 +7,13 @@ namespace DOTNET_PROJECT.Infrastructure.Data;
 
 public static class DbSeeder
 {
+   /// <summary>
+   /// Seed the database with initial data from JSON files if the tables are empty. 
+   /// The method also applies any pending migrations to the database.
+   /// The JSON files should be located in the "wwwroot/seedData" directory.
+   /// </summary>
+   /// <param name="context"></param>
+   /// <returns></returns>
     public static async Task SeedAsync(AppDbContext context)
     {
         // Apply migrations
@@ -16,10 +23,12 @@ public static class DbSeeder
         // 1. Characters
         if (!await context.Characters.AnyAsync())
         {
+            // Path to the JSON file
             var path = Path.Combine(AppContext.BaseDirectory, "wwwroot", "seedData", "characters.json");
             var jsonData = await File.ReadAllTextAsync(path);
             var characters = JsonSerializer.Deserialize<List<Character>>(jsonData);
 
+            // If there are characters in the JSON file, add them to the database
             if (characters != null && characters.Count > 0)
             {
                 await context.Characters.AddRangeAsync(characters);
