@@ -1,5 +1,5 @@
- using DOTNET_PROJECT.Threading.Tasks;
-using DOTNET_PROJECT.Collections.Generic;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace DOTNET_PROJECT.Application.Interfaces;
 
@@ -25,6 +25,13 @@ public interface IUserService
 
     Task<UserDto> RegisterAccount(RegisterUserDto registerUserDto);
     Task<UserDto> Login(LoginUserDto loginUserDto);
-    Task<UserDto> Logout();
-    Task<UserDto> ChangePassword(ChangePasswordDto changePasswordDto);
+    Task<bool> Logout(int userId);
+    Task<bool> ChangePassword(int userId, string oldPassword, string newPassword);
+    
+    // Admin methods
+    Task<IEnumerable<UserDto>> GetAllUsers();
+    Task<UserDto> GetUserById(int id);
+    Task<bool> CheckUserRole(int userId, string role);
+    Task<UserDto> UpdateUser(int id, string username);
+    Task<bool> DeleteUser(int id);
 }
