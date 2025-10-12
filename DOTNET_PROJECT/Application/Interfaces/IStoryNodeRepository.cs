@@ -37,4 +37,7 @@ public interface IStoryNodeRepository : IGenericRepository<StoryNode>
     /// Get all choices associated with a story node given by ID
     /// </summary>
     Task<IEnumerable<Choice>> GetAllChoicesOfStoryNode(int id);
+    
+    // Added this method to get all characters in a story node
+    Task<IEnumerable<Character>> GetAllCharactersOfStoryNode(int id);
 }

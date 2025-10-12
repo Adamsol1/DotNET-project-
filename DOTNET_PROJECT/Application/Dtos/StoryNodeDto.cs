@@ -6,6 +6,8 @@ public sealed class StoryNodeDto
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string BackgroundUrl { get; set; } = string.Empty;
+    public List<DialogueDto> Dialogues { get; set; } = new List<DialogueDto>();
+    public List<ChoiceDto> Choices { get; set; } = new List<ChoiceDto>();
 }
 
 public sealed class CreateStoryNodeDto {

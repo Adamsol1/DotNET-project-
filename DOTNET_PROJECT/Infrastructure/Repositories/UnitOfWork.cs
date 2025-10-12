@@ -27,14 +27,24 @@ public class UnitOfWork : IUnitOfWork {
     // and context transaction.
     private IDbContextTransaction? _transaction;
 
-    // add all the repositories here as interface - Repository
-    // dependancy injections. 
-    // Public IplayerRepository PlayerRepository {get; }
+    // Registering all the repositories as Dependancy Injections.
+    public IUserRepository UserRepository { get; }
+    public IStoryRepository StoryRepository { get; }
+    public ICharacterRepository CharacterRepository { get; }
+    public IChoiceRepository ChoiceRepository { get; }
+    public IDialogueRepository DialogueRepository { get; }
+    public IPlayerCharacterRepository PlayerCharacterRepository { get; }
 
     public UnitOfWork(AppDbContext context) {
         _context = context;
+
         // add the repositories in construtor and assign them new instaces.
-        // PlayerRepository = new PlayerRepository(_context);
+        UserRepository = new UserRepository(_context);
+        StoryRepository = new StoryRepository(_context);
+        CharacterRepository = new CharacterRepository(_context);
+        ChoiceRepository = new ChoiceRepository(_context);
+        DialogueRepository = new DialogueRepository(_context);
+        PlayerCharacterRepository = new PlayerCharacterRepository(_context);
     }
 
     // save changes;
@@ -71,15 +81,38 @@ public class UnitOfWork : IUnitOfWork {
 
     // rollback a transaction.
     public async Task RollBackAsync(){
+        
+        // we check if the transactions are null
+        if (_transaction != null) {
+            // if not null we roll back the transaction and dispose of it.
+            await _transaction.RollbackAsync();
+            _transaction.Dispose();
+
+            // we set the transaction to null.
+            _transaction = null;
+        }
+
+        // we then check the state of the entries
+        // and set them to detached.
         foreach (var entry in _context.ChangeTracker.Entries()) {
             switch (entry.State)
             {
                 case EntityState.Added:
                     entry.State = EntityState.Detached;
                     break;
+
+                case EntityState.Modified:
+                    entry.State = EntityState.Detached;
+                    break;
+
+                case EntityState.Deleted:
+                    entry.State = EntityState.Detached;
+                    break;
             }
         }
     }
+
+    
     public void Dispose()
     {
         _transaction?.Dispose();

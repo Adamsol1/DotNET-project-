@@ -100,4 +100,21 @@ public class StoryNodeRepository : GenericRepository<StoryNode>, IStoryNodeRepos
         return await choices;
     }
 
+    // Ahmed, 11.10 Added GetAllCharactersOfStoryNode method
+    public async Task<IEnumerable<Character>> GetAllCharactersOfStoryNode(int id)
+    {
+        // Query to get charachters in a storynode by Id
+        // Characters are found through dialogues in the story node
+        // We might need to delink characters from dialogues in the future?
+        // so we dont need to go through the dialogues to get the characters
+        // but for now, I will just do it like this to avoid changing alot and touch AppContext
+        var characters = _db.Dialogues
+                    .Where(d => d.StoryNodeId == id && d.CharacterId != null)
+                    .Select(d => d.Character)
+                    .Where(c => c != null)
+                    .Distinct()
+                    .ToListAsync();
+        return await characters;
+    }
+
 }
