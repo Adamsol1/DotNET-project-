@@ -2,6 +2,9 @@ using DOTNET_PROJECT.Application.Dtos;
 using DOTNET_PROJECT.Application.Interfaces;
 using DOTNET_PROJECT.Domain.Models;
 using DOTNET_PROJECT.Infrastructure.Repositories;
+
+namespace DOTNET_PROJECT.Application;
+
 public class userService : IUserService
 {
     private readonly IUnitOfWork unitOfWork;
@@ -13,10 +16,10 @@ public class userService : IUserService
     }
 
 
-    public async Task<UserDto> registerAccount(RegisterUserDto registerUserDto)
+    public async Task<UserDto> RegisterAccount(RegisterUserDto registerUserDto)
     {
-        try
-        {
+        try{
+
             await unitOfWork.BeginAsync();
 
             var user = new User
@@ -46,7 +49,7 @@ public class userService : IUserService
 
     
 
-    public async Task<UserDto> login(LoginUserDto loginUserDto)
+    public async Task<UserDto> Login(LoginUserDto loginUserDto)
     {
         try
         {

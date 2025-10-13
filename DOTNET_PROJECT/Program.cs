@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using DOTNET_PROJECT.Infrastructure.Data;
 using Serilog;
 using Serilog.Events;
-using DOTNET_PROJECT.Application.Interfaces;
-using DOTNET_PROJECT.Infrastructure.Repositories;
+
 using DOTNET_PROJECT.Application;
+using DOTNET_PROJECT.Infrastructure.Data;
+using DOTNET_PROJECT.Infrastructure.Repositories;
+using DOTNET_PROJECT.Application.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

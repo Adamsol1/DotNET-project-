@@ -1,3 +1,4 @@
+/*
 using Microsoft.AspNetCore.Mvc;
 using DOTNET_PROJECT.Application.Interfaces;
 using DOTNET_PROJECT.Application.Dtos;
@@ -37,3 +38,4 @@ public class AuthController : ControllerBase
     
     
 }
+*/

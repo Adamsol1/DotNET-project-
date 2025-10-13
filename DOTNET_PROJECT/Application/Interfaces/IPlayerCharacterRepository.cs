@@ -13,10 +13,10 @@ public interface IPlayerCharacterRepository : IGenericRepository<PlayerCharacter
     /// <summary>
     /// Get all player characters belonging to a specific user
     /// </summary>
-    Task<IEnumerable<PlayerCharacter>> GetAllByUserId(int userId);
+    //Task<IEnumerable<PlayerCharacter>> GetAllByUserId(int userId);
     
     /// <summary>
     /// Get player character by user ID (first one)
     /// </summary>
-    Task<PlayerCharacter?> GetPlayerCharacterByUserId(int userId);
+    //Task<PlayerCharacter?> GetPlayerCharacterByUserId(int userId);
 }

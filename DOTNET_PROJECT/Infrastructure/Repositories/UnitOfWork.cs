@@ -29,7 +29,7 @@ public class UnitOfWork : IUnitOfWork {
 
     // Registering all the repositories as Dependancy Injections.
     public IUserRepository UserRepository { get; }
-    public IStoryRepository StoryRepository { get; }
+    public IStoryNodeRepository StoryNodeRepository { get; }
     public ICharacterRepository CharacterRepository { get; }
     public IChoiceRepository ChoiceRepository { get; }
     public IDialogueRepository DialogueRepository { get; }
@@ -40,7 +40,7 @@ public class UnitOfWork : IUnitOfWork {
 
         // add the repositories in construtor and assign them new instaces.
         UserRepository = new UserRepository(_context);
-        StoryRepository = new StoryRepository(_context);
+        StoryNodeRepository = new StoryNodeRepository(_context);
         CharacterRepository = new CharacterRepository(_context);
         ChoiceRepository = new ChoiceRepository(_context);
         DialogueRepository = new DialogueRepository(_context);

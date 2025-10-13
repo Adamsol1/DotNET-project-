@@ -26,8 +26,8 @@ public interface IUserService
 
     Task<UserDto> RegisterAccount(RegisterUserDto registerUserDto);
     Task<UserDto> Login(LoginUserDto loginUserDto);
-    Task<bool> Logout(int userId);
-    Task<bool> ChangePassword(int userId, string oldPassword, string newPassword);
+    //Task<bool> Logout(int userId);
+    //Task<bool> ChangePassword(int userId, string oldPassword, string newPassword);
     
     // Admin methods
     //Task<IEnumerable<UserDto>> GetAllUsers();

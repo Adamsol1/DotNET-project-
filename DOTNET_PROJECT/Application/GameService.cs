@@ -133,7 +133,7 @@ public class GameService : IGameService
     }
 
     // fetch the game state
-    public async Task<GameStateDto> GetGameState(int playerCharacterId)
+    public async Task<MiniGameStateDto> GetGameState(int playerCharacterId)
     {
         try {
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
@@ -166,15 +166,14 @@ public class GameService : IGameService
             // get the player, might actually just turn get the player into a function.
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
 
-            if (playerCharacter == null) {
-                throw new Exception("Player character not found");
-            }
+            if (playerCharacter == null) throw new Exception("Player character not found");
 
             // get the story node
             var storyNode = await _uow.StoryNodeRepository.GetById(playerCharacter.CurrentStoryNodeId);
-            if (storyNode == null) {
-                throw new Exception("Story node not found");
-            }
+            if (storyNode == null) throw new Exception("Story node not found");
+
+            var dialogues = await _uow.StoryNodeRepository.GetAllDialoguesOfStoryNode(storyNode.Id);
+            var choices = await _uow.StoryNodeRepository.GetAllChoicesOfStoryNode(storyNode.Id);
 
             // return the full object to the user.
 
@@ -210,7 +209,7 @@ public class GameService : IGameService
     }
 
     // make a choice
-    public async Task<GameStateDto> MakeChoice(int playerCharacterId, int choiceId)
+    public async Task<MiniGameStateDto> MakeChoice(int playerCharacterId, int choiceId)
     {
         try {
             // start a transaction

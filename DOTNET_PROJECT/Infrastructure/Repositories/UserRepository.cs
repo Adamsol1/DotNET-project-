@@ -2,12 +2,15 @@ using DOTNET_PROJECT.Domain.Models;
 using DOTNET_PROJECT.Application.Interfaces;
 using DOTNET_PROJECT.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace DOTNET_PROJECT.Infrastructure.Repositories;
 
 public class UserRepository : GenericRepository<User>, IUserRepository
 {
     private readonly AppDbContext _db;
+
     public UserRepository(AppDbContext db) : base(db)
     {
         _db = db;
@@ -20,12 +23,7 @@ public class UserRepository : GenericRepository<User>, IUserRepository
 
     public async Task<User?> GetUserByUsername(string username)
     {
-        /// Query to get user by their username
-        var user = _db.User
-                    .Where(User => User.Username == username)
-                    .SingleOrDefaultAsync;
-
-        return await user;
+        return await _db.User.FirstOrDefaultAsync(u => u.Username == username);
     }
 
 
@@ -37,12 +35,7 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     public async Task<string?> GetUsernameById(int id)
     {
         /// Query to get username by user ID
-        var username = _db.User
-                    .Where(User => User.Id == id)
-                    .Select(User => User.Username)
-                    .SingleOrDefaultAsync();
-
-        return await username;
+        return await _db.User.FirstOrDefaultAsync(u => u.Id == id)?.Username;
     }
 
 
@@ -51,15 +44,10 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     /// Get hashed password associated with given user ID
     /// </summary>
 
-    public async Task<string?> GetPasswordHashById(int id)
+    public async Task<string?> GetPasswordById(int id)
     {
-        /// Query to get hashed password by user ID
-        var passwordHash = _db.User
-                    .Where(User => User.Id == id)
-                    .Select(User => User.PasswordHash)
-                    .SingleOrDefaultAsync();
-
-        return await passwordHash;
+        /// Query to get hashed password by user Id
+        return await _db.User.FirstOrDefaultAsync(u => u.Id == id)?.Password;
     }
 
     /// <summary>
@@ -69,13 +57,8 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     
     public async Task<string?> GetUserRoleById(int id)
     {
-        /// Query to get user role by user ID
-        var userRole = _db.User
-                    .Where(User => User.Id == id)
-                    .Select(User => User.Role)
-                    .SingleOrDefaultAsync();
-
-        return await userRole;
+        /// Query to get user role by user Id
+        return await _db.User.FirstOrDefaultAsync(u => u.Id == id)?.Role;
     }
 
 

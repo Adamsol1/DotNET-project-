@@ -19,7 +19,7 @@ public interface IUserRepository : IGenericRepository<User>
     /// Limitied just for authentication testing purpose
     /// Get hashed password associated with given user ID
     /// </summary>
-    Task<string?> GetPasswordHashById(int id);
+    Task<string?> GetPasswordById(int id);
 
     /// <summary>
     /// Get the role of the user associated with given user ID

@@ -20,7 +20,7 @@ public class GameController : ControllerBase
     // start game, can route to a button that creates the game instance. and saves it to the user.
     // remeber to create Request DTOS 
     [HttpPost("start/{userId}")]
-    public async Task<GameSessionDto> StartGame(int userId, [FromBody] string name)
+    public async Task<ActionResult<GameSessionDto>> StartGame(int userId, [FromBody] string name)
     {
         try
         {
@@ -46,7 +46,7 @@ public class GameController : ControllerBase
 
     // resume and fetch an existing game
     [HttpPost("resume/{userId}/{playerCharacterId}")]
-    public async Task<GameSessionDto> ResumeGame(int userId, int playerCharacterId)
+    public async Task<ActionResult<GameSessionDto>> ResumeGame(int userId, int playerCharacterId)
     {
         try {
             // call the service controller to get the game.
@@ -67,13 +67,13 @@ public class GameController : ControllerBase
     {
         try
         {
-            // save through the Service. 
+            // save the game through the service. 
             var result = await _gameService.SaveGame(playerCharacterId);
             return Ok(result);
         }
         catch (Exception ex)
         {
-            return BadRequest($"Failed to save game: {ex.Message}");
+            return BadRequest(ex.Message);
         }
     }
     
@@ -95,7 +95,7 @@ public class GameController : ControllerBase
     }
     
     [HttpGet("state/{playerCharacterId}")]
-    public async Task<MiniGameStateDto> GetGameState(int playerCharacterId)
+    public async Task<ActionResult<MiniGameStateDto>> GetGameState(int playerCharacterId)
     {
         try {
             // fet the game state from service method.

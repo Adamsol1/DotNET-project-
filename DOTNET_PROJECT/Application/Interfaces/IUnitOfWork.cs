@@ -18,7 +18,7 @@ public interface IUnitOfWork : IDisposable
 {
     // register repositories here.
     IUserRepository UserRepository { get; }
-    IStoryRepository StoryRepository { get; }
+    IStoryNodeRepository StoryNodeRepository { get; }
     ICharacterRepository CharacterRepository { get; }
     IChoiceRepository ChoiceRepository { get; }
     IDialogueRepository DialogueRepository { get; }
