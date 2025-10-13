@@ -51,7 +51,8 @@ public class GameController : ControllerBase
         try {
             // call the service controller to get the game.
             var gameSession = await _gameService.ResumeGame(userId, playerCharacterId);
-            if (gameSession = null) return Exception("Could not find a game");
+
+            if (gameSession = null) return NotFound("Could not find a game");
 
             // return the game session. 
             return Ok(gameSession);
@@ -69,6 +70,8 @@ public class GameController : ControllerBase
         {
             // save the game through the service. 
             var result = await _gameService.SaveGame(playerCharacterId);
+
+            if (result == false) return NotFound("Could not find a game");
             return Ok(result);
         }
         catch (Exception ex)
