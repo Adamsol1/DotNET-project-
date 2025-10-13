@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using DOTNET_PROJECT.Infrastructure.Data;
 using Serilog;
 using Serilog.Events;
+using DOTNET_PROJECT.Application.Interfaces;
+using DOTNET_PROJECT.Infrastructure.Repositories;
+using DOTNET_PROJECT.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +16,24 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// DI registrations
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// Specific repositories
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
+builder.Services.AddScoped<IPlayerCharacterRepository, PlayerCharacterRepository>();
+builder.Services.AddScoped<IStoryNodeRepository, StoryNodeRepository>();
+builder.Services.AddScoped<IDialogueRepository, DialogueRepository>();
+builder.Services.AddScoped<IChoiceRepository, ChoiceRepository>();
+
+// Application services
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPlayerService, PlayerService>();
+builder.Services.AddScoped<IStoryService, StoryService>();
+builder.Services.AddScoped<IGameService, GameService>();
 
 var loggerConfiguration = new LoggerConfiguration()
     .MinimumLevel.Information()

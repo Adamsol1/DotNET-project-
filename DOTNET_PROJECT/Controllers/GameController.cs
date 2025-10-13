@@ -4,13 +4,13 @@ using DOTNET_PROJECT.Application.Dtos;
 
 namespace DOTNET_PROJECT.Controllers;
 
-[ApiController]
 // route = api/game as it removed the controller from GameController
+[ApiController]
 [Route("api/[controller]")]
 public class GameController : ControllerBase
 {
     // we inject the GameController as it only need access to that
-    private readonly IGameService _gameService
+    private readonly IGameService _gameService;
 
     public GameController(IGameService gameService)
     {
@@ -101,7 +101,7 @@ public class GameController : ControllerBase
             // fet the game state from service method.
             var  gameState = await _gameService.GetGameState(playerCharacterId);
 
-            return Ok(gameState)
+            return Ok(gameState);
         } 
         catch ( Exception ex)
         {

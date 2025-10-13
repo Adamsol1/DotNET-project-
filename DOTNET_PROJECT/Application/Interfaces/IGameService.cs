@@ -1,4 +1,5 @@
 using DOTNET_PROJECT.Domain.Models;
+using DOTNET_PROJECT.Application.Dtos;
 
 namespace DOTNET_PROJECT.Application.Interfaces;
 
@@ -41,5 +42,4 @@ public interface IGameService
     Task<GameProgressDto> GetGameProgression(int playerCharacterId);
 
     // Check if the player can make a choice
-    Task<bool> CanMakeChoice(int playerCharacterId, int choiceId);
 }

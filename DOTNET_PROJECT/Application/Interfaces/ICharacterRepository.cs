@@ -1,6 +1,3 @@
-
-
-
 using DOTNET_PROJECT.Domain.Models;
 
 namespace DOTNET_PROJECT.Application.Interfaces;

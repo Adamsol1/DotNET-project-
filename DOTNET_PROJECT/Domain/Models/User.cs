@@ -22,5 +22,11 @@ public class User
     /// <summary>
     /// The role of the user (e.g., Admin, Player).
     /// </summary>
-    public string Role { get; set; } = "Player";
+    public UserRole Role { get; set; } = UserRole.player;
+    
+}
+
+public enum UserRole{
+    admin,
+    player
 }

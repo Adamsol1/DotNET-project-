@@ -1,5 +1,7 @@
 using DOTNET_PROJECT.Application.Interfaces;
 using DOTNET_PROJECT.Application.Dtos;
+using DOTNET_PROJECT.Domain.Models;
+
 
 namespace DOTNET_PROJECT.Application;
 
@@ -280,44 +282,7 @@ public class GameService : IGameService
             };
 
         } catch (Exception ex) {
-                throw new Exception("Player character not found");
-            }
-
-            // return the game progression
-            return new GameProgressDto {
-                PlayerCharacterId = playerCharacterId,
-                CurrentStoryNodeId = playerCharacter.CurrentStoryNodeId,
-                VisitedStoryNodes = new List<int> { playerCharacter.CurrentStoryNodeId },
-                CompletedChoices = new List<int>(),
-                TotalChoicesMade = playerCharacter.TotalChoicesMade
-            };
-
-        } catch (Exception ex) {
-            throw new Exception($"Failed to get game progression: {ex.Message}");
-        }
-    }
-
-
-    // check if the player can make a choice
-    public async Task<bool> CanMakeChoice(int playerCharacterId, int choiceId)
-    {
-        try {
-            var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
-            if (playerCharacter == null) {
-                throw new Exception("Player character not found");
-            }
-
-            var choice = await _uow.ChoiceRepository.GetById(choiceId);
-            if (choice == null) {
-                return false;
-            }
-
-            // check if choice belongs to the story node
-
-            return choice.StoryNodeId == playerCharacter.CurrentStoryNodeId;
-
-        } catch (Exception ex) {
-            throw new Exception($"Failed to check if player can make choice: {ex.Message}");
+            throw new Exception("Player character not found");
         }
     }
 

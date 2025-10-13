@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using DOTNET_PROJECT.Application.Dtos;
 
 // Story Service Interface
 
@@ -77,6 +78,6 @@ public interface IStoryService
     Task<CharacterDto> UpdateCharacter(UpdateCharacterDto request);
     
     // delete a Character
-    Task<bool> DeleteCharacter(int id);
+    //Task<bool> DeleteCharacter(int id);
 
 }
