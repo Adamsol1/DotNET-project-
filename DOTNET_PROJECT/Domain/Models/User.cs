@@ -17,7 +17,7 @@ public class User
     /// <summary>
     /// The hashed password of the user.
     /// </summary>
-    public string PasswordHash { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
 
     /// <summary>
     /// The role of the user (e.g., Admin, Player).
