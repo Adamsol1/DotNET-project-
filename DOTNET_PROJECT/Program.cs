@@ -1,28 +1,43 @@
-using Microsoft.EntityFrameworkCore;
-using Serilog;
-using Serilog.Events;
-
 using DOTNET_PROJECT.Application;
 using DOTNET_PROJECT.Infrastructure.Data;
 using DOTNET_PROJECT.Infrastructure.Repositories;
 using DOTNET_PROJECT.Application.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ------------------------------------------------------
+// Logging configuration (optional but keeps your existing setup)
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+// ------------------------------------------------------
+
+// ------------------------------------------------------
+// Add services to the container
+builder.Services.AddControllersWithViews();
+
+// Fix for IHttpClientFactory injection
+builder.Services.AddHttpClient();
+
+// Database context
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add services to the container.
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// ------------------------------------------------------
+// Dependency Injection registrations
 
-// DI registrations
+// Generic + Unit of Work pattern
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-// Specific repositories
+// Specific Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
 builder.Services.AddScoped<IPlayerCharacterRepository, PlayerCharacterRepository>();
@@ -30,75 +45,31 @@ builder.Services.AddScoped<IStoryNodeRepository, StoryNodeRepository>();
 builder.Services.AddScoped<IDialogueRepository, DialogueRepository>();
 builder.Services.AddScoped<IChoiceRepository, ChoiceRepository>();
 
-// Application services
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IPlayerService, PlayerService>();
-builder.Services.AddScoped<IStoryService, StoryService>();
-builder.Services.AddScoped<IGameService, GameService>();
+// Application Services
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<GameService>();
+builder.Services.AddScoped<PlayerService>();
 
-var loggerConfiguration = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .WriteTo.File($"Logs/app_{DateTime.Now:yyyyMMdd_HHmmss}.log");
-
-loggerConfiguration.Filter.ByExcluding(e => e.Properties.TryGetValue("SourceContext", out var value) &&
-                            e.Level == LogEventLevel.Information &&
-                            e.MessageTemplate.Text.Contains("Executed DbCommand"));
-
-var logger = loggerConfiguration.CreateLogger();
-builder.Logging.AddSerilog(logger);
-
-
+// ------------------------------------------------------
+// Build the app
 var app = builder.Build();
 
-
-// Seed the database and apply migrations
-using (var scope = app.Services.CreateScope())
+// Configure the HTTP request pipeline
+if (!app.Environment.IsDevelopment())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    try
-    {
-        await DbSeeder.SeedAsync(dbContext);
-        logger.Information("Database migration and seeding completed successfully.");
-    }
-    catch (Exception ex)
-    {
-        logger.Error(ex, "An error occurred while migrating or seeding the database.");
-        throw; // Re-throw the exception after logging it
-    }
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
-
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 
 app.UseHttpsRedirection();
-
-/**
-    * Enable static files to serve images from wwwroot folder
-    * Images are stored in wwwroot/images folder
-    * Example: https://localhost:5169/images/character1.png
-    */
 app.UseStaticFiles();
-
-/**
-    * In production, the frontend and backend should be hosted on the same domain
-    * and cors should be configured accordingly.
-    * cors for the frontend to access the api
-    * frontend hosted on localhost:3000
-    * backend hosted on localhost:5169
-    */
-app.UseCors(cors => cors.WithOrigins("http://localhost:3000")
-    .AllowAnyHeader()
-    .AllowAnyMethod()
-    );
-
+app.UseRouting();
 app.UseAuthorization();
 
-app.MapControllers();
+// Default MVC route
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// Run application
 app.Run();
