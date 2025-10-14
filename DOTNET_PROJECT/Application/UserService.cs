@@ -2,19 +2,20 @@ using DOTNET_PROJECT.Application.Dtos;
 using DOTNET_PROJECT.Application.Interfaces;
 using DOTNET_PROJECT.Domain.Models;
 using DOTNET_PROJECT.Infrastructure.Repositories;
+using Serilog;
 
 namespace DOTNET_PROJECT.Application;
 
 public class UserService : IUserService
 {
     private readonly IUnitOfWork _uow;
+    private readonly ILogger<UserService> _logger;
 
-
-    public UserService(IUnitOfWork uow)
+    public UserService(IUnitOfWork uow, ILogger<UserService> logger)
     {
+        _logger = logger;
         _uow = uow; 
     }
-
 
     public async Task<UserDto> RegisterAccount(RegisterUserDto registerUserDto)
     {
@@ -41,14 +42,12 @@ public class UserService : IUserService
         {
             // throw error and rollback transaction which disposes of it
             await _uow.RollBackAsync();
-            throw new Exception("Error with registering account", e);
-
+            _logger.LogError(e, "[Userservice] Error registering account");
+            throw;
         }
         
     }
-
     
-
     public async Task<UserDto> Login(LoginUserDto loginUserDto)
     {
         try
@@ -57,6 +56,7 @@ public class UserService : IUserService
             //Check if user exists
             if(user == null)
             {
+                _logger.LogWarning("[Userservice] User with username {Username} doesn't exist", loginUserDto.Username);
                 return null;
             }
 
@@ -64,7 +64,8 @@ public class UserService : IUserService
         }
         catch (Exception e)
         {
-            throw new Exception("Failed to login", e);
+            _logger.LogError(e, "[Userservice] Error during login for username {Username}", loginUserDto.Username);
+            throw;
         }
         
     }
@@ -83,6 +84,7 @@ public class UserService : IUserService
 
             if (user == null)
             {
+                _logger.LogWarning("[Userservice] User with id {id} not found", id);
                 throw new KeyNotFoundException($"User with ID {id} not found.");
             }
 
@@ -90,11 +92,10 @@ public class UserService : IUserService
         }
         catch (Exception e)
         {
-            throw new Exception("Error fetching user by ID", e);
+            _logger.LogError(e, "[Userservice] Error fetching user with id {id}", id);
+            throw;
         }
     }
-
-
 }
 
     

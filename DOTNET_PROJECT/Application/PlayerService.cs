@@ -1,16 +1,19 @@
 using DOTNET_PROJECT.Application.Dtos;
 using DOTNET_PROJECT.Application.Interfaces;
 using DOTNET_PROJECT.Domain.Models;
+using Serilog;
 
 namespace DOTNET_PROJECT.Application;
 
 public class PlayerService : IPlayerService
 {
     private readonly IUnitOfWork _uow;
+    private readonly ILogger<PlayerService> _logger;
 
     // constructor
-    public PlayerService(IUnitOfWork uow)
+    public PlayerService(IUnitOfWork uow, ILogger<PlayerService> logger)
     {
+        _logger = logger;
         _uow = uow;
     }
     //
@@ -108,7 +111,8 @@ public class PlayerService : IPlayerService
             // if player character is not found, throw an exception
             if (playerCharacter == null)
             {
-                throw new Exception("Player character not found");
+                _logger.LogWarning("[Playerservice] Player character with id {ID} not found", id);
+                return false;
             }
 
             // delete player character
@@ -121,7 +125,8 @@ public class PlayerService : IPlayerService
         catch (Exception ex)
         {
             await _uow.RollBackAsync();
-            throw new Exception($"Failed to delete player character: {ex.Message}");
+            _logger.LogError(ex, "[Playerservice] Error deleting player character with id {id}", id);
+            throw;
         }
     }
 
@@ -136,6 +141,7 @@ public class PlayerService : IPlayerService
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
             if (playerCharacter == null)
             {
+                _logger.LogWarning("[Playerservice] Player character with playerCharacterId {playerCharacterId} not found", playerCharacterId);
                 throw new Exception("Player character not found");
             }
 
@@ -153,7 +159,8 @@ public class PlayerService : IPlayerService
         catch (Exception ex)
         {
             await _uow.RollBackAsync();
-            throw new Exception($"Failed to set health: {ex.Message}");
+            _logger.LogError(ex, "[Playerservice] Error setting health to Player character with playerCharacterId {playerCharacterId}", playerCharacterId);
+            throw;
         }
     }
 
@@ -167,6 +174,7 @@ public class PlayerService : IPlayerService
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
             if (playerCharacter == null)
             {
+                _logger.LogWarning("[Playerservice] Player character with playerCharacterId {playerCharacterId} not found", playerCharacterId);
                 throw new Exception("Player character not found");
             }
 
@@ -174,7 +182,8 @@ public class PlayerService : IPlayerService
         }
         catch (Exception ex)
         {
-            throw new Exception($"Failed to get health: {ex.Message}");
+            _logger.LogError(ex, "[Playerservice] Error retrieving health for Player character with playerCharacterId {playerCharacterId}", playerCharacterId);
+            throw;
         }
     }
 
@@ -188,7 +197,8 @@ public class PlayerService : IPlayerService
         }
         catch (Exception ex)
         {
-            throw new Exception($"Failed to check if alive: {ex.Message}");
+            _logger.LogError(ex, "[Playerservice] Error checking Player characther with playerCharacterId {playerCharacterid} is alive", playerCharacterId);
+            throw;
         }
     }
 
@@ -202,6 +212,7 @@ public class PlayerService : IPlayerService
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
             if (playerCharacter == null)
             {
+                _logger.LogWarning("[PlayerService] Player character with playerCharacterId {playerCharacterId} not found", playerCharacterId);
                 throw new Exception("Player character not found");
             }
 
@@ -217,7 +228,8 @@ public class PlayerService : IPlayerService
         catch (Exception ex)
         {
             await _uow.RollBackAsync();
-            throw new Exception($"Failed to modify health: {ex.Message}");
+            _logger.LogError(ex, "[Playerservice] Error modifying health for Playercharacter with playerCharacterId {playerCharacterId}", playerCharacterId);
+            throw;
         }
     }
 
