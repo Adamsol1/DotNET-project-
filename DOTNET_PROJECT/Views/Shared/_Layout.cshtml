@@ -24,12 +24,13 @@
         .container { max-width: 960px; margin: 0 auto; padding: 24px; }
         header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
         .card { background:var(--panel); border-radius:16px; padding:20px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
-        .btn { display:inline-block; padding: 10px 14px; border-radius: 10px; border:1px solid #2b3445; text-decoration:none; color:var(--text);}
-        .btn:hover { background:#1b2433; }
-        .btn-accent { border-color: var(--accent); }
+        .btn { display:inline-block; padding: 10px 14px; border-radius: 10px; border:1px solid #1b2433; text-decoration:none; color:var(--text); background:#1b2433; transition:all .2s ease-in-out; }
+        .btn:hover { background:#273347; border-color:var(--accent); color:#fff; }
+        .btn-accent { background:var(--accent); color:#fff; border:none; }
+        .btn-accent:hover { background:#3b82f6; box-shadow:0 0 10px rgba(96,165,250,.4); }
         .choices { display:grid; gap:12px; margin-top:16px; }
         .bg {
-            background-size: cover; background-position:center; border-radius:16px; min-height: 220px; margin-bottom:16px;
+            background-size: cover; background-position:center; border-radius:16px; min-height: 520px; margin-bottom:16px;
             outline:1px solid #1f2a44;
         }
         .muted { color: var(--muted); }
@@ -47,10 +48,6 @@
         <main>
             @RenderBody()
         </main>
-
-        <footer>
-            <div>Server-rendered Razor UI • No React</div>
-        </footer>
     </div>
 </body>
 </html>

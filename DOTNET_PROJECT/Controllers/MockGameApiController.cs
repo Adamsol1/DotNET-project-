@@ -24,7 +24,7 @@ namespace DOTNET_PROJECT.Controllers
             {
                 Id = 1,
                 Title = "Awakening in Cryopod",
-                BackgroundUrl = "assets/bg/space-tunnel.png",
+                BackgroundUrl = "bg/space-tunnel.png",
                 Description = "Cold. Darkness. Why am I awake?",
                 Dialogues = new List<DialogueDto>
                 {
