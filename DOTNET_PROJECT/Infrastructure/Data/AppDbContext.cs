@@ -46,16 +46,24 @@ public class AppDbContext : DbContext
             .HasForeignKey(d => d.StoryNodeId)
             .OnDelete(DeleteBehavior.Cascade);
         
+        
+        
         modelBuilder.Entity<PlayerCharacter>()
-            .HasOne(pc => pc.User)
-            .WithOne(u => u.PlayerCharacter)
-            .HasForeignKey<User>(u => u.Id)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<User>()
-            .HasMany(u => u.PlayerCharacter)
-            .WithOne(pc => pc.User)
-            .HasForeignKey<PlayerCharacter>(pc => pc.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasBaseType<Character>();
+        
+        
+        // This will have to be fixed later on when we get the save entity :)
+        //
+        // modelBuilder.Entity<PlayerCharacter>()
+        //     .HasOne(pc => pc.User)
+        //     .WithOne(u => u.PlayerCharacter)
+        //     .HasForeignKey<User>(u => u.Id)
+        //     .OnDelete(DeleteBehavior.Cascade);
+        //
+        // modelBuilder.Entity<User>()
+        //     .HasMany(u => u.PlayerCharacter)
+        //     .WithOne(pc => pc.User)
+        //     .HasForeignKey<PlayerCharacter>(pc => pc.UserId)
+        //     .OnDelete(DeleteBehavior.Cascade);
     }
 }

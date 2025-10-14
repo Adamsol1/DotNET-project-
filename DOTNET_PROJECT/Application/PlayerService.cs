@@ -13,86 +13,92 @@ public class PlayerService : IPlayerService
     {
         _uow = uow;
     }
+    //
+    // // create a player character
+    // public async Task<PlayerCharacterDto> CreatePlayerCharacter(CreatePlayerCharacterDto request) 
+    // {
+    //     try {
+    //         // begin transaction
+    //         await _uow.BeginAsync();
+    //
+    //         // create player character
+    //         var playerCharacter = new PlayerCharacter {
+    //             Name = request.Name,
+    //             UserId = request.UserId,
+    //             CurrentStoryNodeId = request.CurrentStoryNodeId,
+    //             Health = 100 // Default health
+    //         };
+    //
+    //         // add player character to database
+    //         await _uow.PlayerCharacterRepository.Create(playerCharacter);
+    //         await _uow.SaveAsync();
+    //         await _uow.CommitAsync();
+    //
+    //         return ReturnPlayerCharacterDto(playerCharacter);
+    //
+    //     } catch (Exception ex) {
+    //         await _uow.RollBackAsync();
+    //         throw new Exception($"Failed to create player character: {ex.Message}");
+    //     }
+    // }
 
-    // create a player character
-    public async Task<PlayerCharacterDto> CreatePlayerCharacter(CreatePlayerCharacterDto request) 
-    {
-        try {
-            // begin transaction
-            await _uow.BeginAsync();
 
-            // create player character
-            var playerCharacter = new PlayerCharacter {
-                Name = request.Name,
-                UserId = request.UserId,
-                CurrentStoryNodeId = request.CurrentStoryNodeId,
-                Health = 100 // Default health
-            };
-
-            // add player character to database
-            await _uow.PlayerCharacterRepository.Create(playerCharacter);
-            await _uow.SaveAsync();
-            await _uow.CommitAsync();
-
-            return ReturnPlayerCharacterDto(playerCharacter);
-
-        } catch (Exception ex) {
-            await _uow.RollBackAsync();
-            throw new Exception($"Failed to create player character: {ex.Message}");
-        }
-    }
+    //TODO: Again change to save when implemented
 
     // get a player character by id
-    public async Task<PlayerCharacterDto> GetPlayerCharacterById(int id) 
-    {
-        try {
-            // begin transaction
-            await _uow.BeginAsync();
-
-            // get player character by id
-            var playerCharacter = await _uow.PlayerCharacterRepository.GetById(id);
-
-            // if player character is not found, throw an exception
-            if (playerCharacter == null) {
-                throw new Exception("Player character not found");
-            }
-
-            // return player character
-            return ReturnPlayerCharacterDto(playerCharacter);
-        } catch (Exception ex) {
-            await _uow.RollBackAsync();
-            throw new Exception($"Failed to get player character: {ex.Message}");
-        }
-    }
-
+    // public async Task<PlayerCharacterDto> GetPlayerCharacterById(int id) 
+    // {
+    //     try {
+    //         // begin transaction
+    //         await _uow.BeginAsync();
+    //
+    //         // get player character by id
+    //         var playerCharacter = await _uow.PlayerCharacterRepository.GetById(id);
+    //
+    //         // if player character is not found, throw an exception
+    //         if (playerCharacter == null) {
+    //             throw new Exception("Player character not found");
+    //         }
+    //
+    //         // return player character
+    //         return ReturnPlayerCharacterDto(playerCharacter);
+    //     } catch (Exception ex) {
+    //         await _uow.RollBackAsync();
+    //         throw new Exception($"Failed to get player character: {ex.Message}");
+    //     }
+    // }
+    //TODO change to save when save is implemented
     // get all player characters belonging to a user
-    public async Task<IEnumerable<PlayerCharacterDto>> GetAllPlayerCharactersByUserId(int userId) 
-    {
-        try {
-            // begin transaction
-            await _uow.BeginAsync();
-
-            // get all player characters by user id
-            var playerCharacters = await _uow.PlayerCharacterRepository.GetAllByUserId(userId);
-
-            // if player characters are not found, throw an exception
-            if (playerCharacters == null) {
-                throw new Exception("Player characters not found");
-            }
-
-            // return player characters
-            return playerCharacters.Select(ReturnPlayerCharacterDto);
-        }
-        catch (Exception ex) {
-            await _uow.RollBackAsync();
-            throw new Exception($"Failed to get player characters: {ex.Message}");
-        }
-    }
+    // public async Task<IEnumerable<PlayerCharacterDto>> GetAllPlayerCharactersByUserId(int userId) 
+    // {
+    //     try {
+    //         // begin transaction
+    //         await _uow.BeginAsync();
+    //         
+    //         //TODO: Fix to save entity later on when save is added as an entity
+    //         //
+    //         // get all player characters by user id 
+    //         //var playerCharacters = await _uow.PlayerCharacterRepository.GetAllByUserId(userId);
+    //
+    //         // if player characters are not found, throw an exception
+    //         // if (playerCharacters == null) {
+    //         //     throw new Exception("Player characters not found");
+    //         // }
+    //
+    //         // // return player characters
+    //         // return playerCharacters.Select(ReturnPlayerCharacterDto);
+    //     }
+    //     catch (Exception ex) {
+    //         await _uow.RollBackAsync();
+    //         throw new Exception($"Failed to get player characters: {ex.Message}");
+    //     }
+    // }
 
     // delete player character
-    public async Task<bool> DeleteCharacter(int id) 
+    public async Task<bool> DeleteCharacter(int id)
     {
-        try {
+        try
+        {
             // begin transaction
             await _uow.BeginAsync();
 
@@ -100,7 +106,8 @@ public class PlayerService : IPlayerService
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(id);
 
             // if player character is not found, throw an exception
-            if (playerCharacter == null) {
+            if (playerCharacter == null)
+            {
                 throw new Exception("Player character not found");
             }
 
@@ -111,7 +118,8 @@ public class PlayerService : IPlayerService
 
             return true;
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             await _uow.RollBackAsync();
             throw new Exception($"Failed to delete player character: {ex.Message}");
         }
@@ -120,18 +128,20 @@ public class PlayerService : IPlayerService
     // Set player's health to a specific value
     public async Task<int> SetHealth(int playerCharacterId, int newHealth)
     {
-        try {
+        try
+        {
             await _uow.BeginAsync();
 
             // get the player from repository
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
-            if (playerCharacter == null) {
+            if (playerCharacter == null)
+            {
                 throw new Exception("Player character not found");
             }
 
             // set health if remove use remove method
             playerCharacter.Health = Math.Max(0, newHealth);
-            
+
             // update the player
             await _uow.PlayerCharacterRepository.Update(playerCharacter);
             // save & commit
@@ -140,7 +150,8 @@ public class PlayerService : IPlayerService
 
             return playerCharacter.Health;
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             await _uow.RollBackAsync();
             throw new Exception($"Failed to set health: {ex.Message}");
         }
@@ -149,17 +160,20 @@ public class PlayerService : IPlayerService
     // Get player's current health
     public async Task<int> GetHealth(int playerCharacterId)
     {
-        try {
+        try
+        {
 
             // get the player
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
-            if (playerCharacter == null) {
+            if (playerCharacter == null)
+            {
                 throw new Exception("Player character not found");
             }
 
             return playerCharacter.Health;
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             throw new Exception($"Failed to get health: {ex.Message}");
         }
     }
@@ -167,11 +181,13 @@ public class PlayerService : IPlayerService
     // Check if player is alive (health > 0)
     public async Task<bool> IsAlive(int playerCharacterId)
     {
-        try {
+        try
+        {
             var health = await GetHealth(playerCharacterId);
             return health > 0;
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             throw new Exception($"Failed to check if alive: {ex.Message}");
         }
     }
@@ -179,24 +195,27 @@ public class PlayerService : IPlayerService
     // Modify player's health by a specific amount (positive or negative)
     public async Task<int> ModifyHealth(int playerCharacterId, int healthChange)
     {
-        try {
+        try
+        {
             await _uow.BeginAsync();
 
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
-            if (playerCharacter == null) {
+            if (playerCharacter == null)
+            {
                 throw new Exception("Player character not found");
             }
 
             // modify health (ensure it doesn't go below 0)
             playerCharacter.Health = Math.Max(0, playerCharacter.Health + healthChange);
-            
+
             await _uow.PlayerCharacterRepository.Update(playerCharacter);
             await _uow.SaveAsync();
             await _uow.CommitAsync();
 
             return playerCharacter.Health;
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             await _uow.RollBackAsync();
             throw new Exception($"Failed to modify health: {ex.Message}");
         }
@@ -214,13 +233,15 @@ public class PlayerService : IPlayerService
         return await ModifyHealth(playerCharacterId, -damageAmount);
     }
 
-    // Helper method to convert PlayerCharacter to DTO
-    private static PlayerCharacterDto ReturnPlayerCharacterDto(PlayerCharacter playerCharacter) => new PlayerCharacterDto
-    {
-        Id = playerCharacter.Id,
-        Name = playerCharacter.Name,
-        Health = playerCharacter.Health,
-        UserId = playerCharacter.UserId,
-        CurrentStoryNodeId = playerCharacter.CurrentStoryNodeId
-    };
+
+//     // Helper method to convert PlayerCharacter to DTO
+//     private static PlayerCharacterDto ReturnPlayerCharacterDto(PlayerCharacter playerCharacter) => new PlayerCharacterDto
+//     {
+//         Id = playerCharacter.Id,
+//         Name = playerCharacter.Name,
+//         Health = playerCharacter.Health,
+//         UserId = playerCharacter.UserId,
+//         CurrentStoryNodeId = playerCharacter.CurrentStoryNodeId
+//     };
+    
 }

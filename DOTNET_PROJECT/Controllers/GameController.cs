@@ -52,7 +52,7 @@ public class GameController : ControllerBase
             // call the service controller to get the game.
             var gameSession = await _gameService.ResumeGame(userId, playerCharacterId);
 
-            if (gameSession = null) return NotFound("Could not find a game");
+            if (gameSession == null) return NotFound("Could not find a game");
 
             // return the game session. 
             return Ok(gameSession);

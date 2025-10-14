@@ -1,9 +1,20 @@
 [
   {
     "Id": 1,
-    "Name": "Protagonist",
-    "Desciption": "The protagnist",
-    "ImageUrl": "/images/characters/protagonist.png",
-    "Health": 100
+    "Name": "Ava",
+    "Health": 100,
+    "UserId": 1,
+    "CurrentStoryNodeId": 1,
+    "DateCreated": "2025-10-14T00:00:00",
+    "DateUpdated": "2025-10-14T00:00:00"
+  },
+  {
+    "Id": 2,
+    "Name": "Liam",
+    "Health": 90,
+    "UserId": 2,
+    "CurrentStoryNodeId": 1,
+    "DateCreated": "2025-10-14T00:00:00",
+    "DateUpdated": "2025-10-14T00:00:00"
   }
 ]

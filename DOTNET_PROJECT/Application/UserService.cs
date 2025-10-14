@@ -5,14 +5,14 @@ using DOTNET_PROJECT.Infrastructure.Repositories;
 
 namespace DOTNET_PROJECT.Application;
 
-public class userService : IUserService
+public class UserService : IUserService
 {
-    private readonly IUnitOfWork unitOfWork;
+    private readonly IUnitOfWork _uow;
 
 
-    public userService(IUnitOfWork _uow)
+    public UserService(IUnitOfWork uow)
     {
-        _uow = unitOfWork; 
+        _uow = uow; 
     }
 
 
@@ -20,7 +20,7 @@ public class userService : IUserService
     {
         try{
 
-            await unitOfWork.BeginAsync();
+            await _uow.BeginAsync();
 
             var user = new User
             {
@@ -29,18 +29,18 @@ public class userService : IUserService
 
             };
 
-            await unitOfWork.UserRepository.Create(user);
+            await _uow.UserRepository.Create(user);
 
             // save changes & commit
-            await unitOfWork.SaveAsync();
-            await unitOfWork.CommitAsync();
+            await _uow.SaveAsync();
+            await _uow.CommitAsync();
 
             return ReturnUserDto(user);
         }
         catch ( Exception e)
         {
             // throw error and rollback transaction which disposes of it
-            await unitOfWork.RollBackAsync();
+            await _uow.RollBackAsync();
             throw new Exception("Error with registering account", e);
 
         }
@@ -53,12 +53,12 @@ public class userService : IUserService
     {
         try
         {
-            var user = await unitOfWork.UserRepository.GetUserByUsername(loginUserDto.Username);
+            var user = await _uow.UserRepository.GetUserByUsername(loginUserDto.Username);
             //Check if user exists
             if(user == null)
-                {
-                    return null;
-                }
+            {
+                return null;
+            }
 
             return ReturnUserDto(user);  
         }
@@ -75,7 +75,24 @@ public class userService : IUserService
             Username = user.Username
         };
 
+    public async Task<UserDto> GetUserById(int id)
+    {
+        try
+        {
+            var user = await _uow.UserRepository.GetById(id);
 
+            if (user == null)
+            {
+                throw new KeyNotFoundException($"User with ID {id} not found.");
+            }
+
+            return ReturnUserDto(user);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Error fetching user by ID", e);
+        }
+    }
 
 
 }

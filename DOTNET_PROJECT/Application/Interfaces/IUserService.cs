@@ -31,7 +31,8 @@ public interface IUserService
     
     // Admin methods
     //Task<IEnumerable<UserDto>> GetAllUsers();
-    //Task<UserDto> GetUserById(int id);
+    Task<UserDto> GetUserById(int id);
+    
     //Task<bool> CheckUserRole(int userId, string role);
     //Task<UserDto> UpdateUser(int id, string username);
     //Task<bool> DeleteUser(int id);

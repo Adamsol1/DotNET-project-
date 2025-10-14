@@ -6,15 +6,16 @@ namespace DOTNET_PROJECT.Application.Interfaces;
 
 public interface IPlayerService
 {
-
-    // create a player character
-    Task<PlayerCharacterDto> CreatePlayerCharacter(CreatePlayerCharacterDto request);
-
-    // get a player character by id
-    Task<PlayerCharacterDto> GetPlayerCharacterById(int id);
-
-    // get all player characters belonging to a user
-    Task<IEnumerable<PlayerCharacterDto>> GetAllPlayerCharactersByUserId(int userId);
+    //TODO: Remove uneeded, if needed change to save entity when implemented
+    
+    // // create a player character
+    // Task<PlayerCharacterDto> CreatePlayerCharacter(CreatePlayerCharacterDto request);
+    //
+    // // get a player character by id
+    // Task<PlayerCharacterDto> GetPlayerCharacterById(int id);
+    //
+    // // get all player characters belonging to a user
+    // Task<IEnumerable<PlayerCharacterDto>> GetAllPlayerCharactersByUserId(int userId);
 
     // delete player character
     Task<bool> DeleteCharacter(int id);

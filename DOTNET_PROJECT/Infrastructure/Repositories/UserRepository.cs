@@ -34,8 +34,8 @@ public class UserRepository : GenericRepository<User>, IUserRepository
 
     public async Task<string?> GetUsernameById(int id)
     {
-        /// Query to get username by user ID
-        return await _db.User.FirstOrDefaultAsync(u => u.Id == id)?.Username;
+        var user = await _db.User.FirstOrDefaultAsync(u => u.Id == id);
+        return user?.Username;
     }
 
 
@@ -46,8 +46,8 @@ public class UserRepository : GenericRepository<User>, IUserRepository
 
     public async Task<string?> GetPasswordById(int id)
     {
-        /// Query to get hashed password by user Id
-        return await _db.User.FirstOrDefaultAsync(u => u.Id == id)?.Password;
+        var user = await _db.User.FirstOrDefaultAsync(u => u.Id == id);
+        return user?.Password;
     }
 
     /// <summary>
@@ -57,8 +57,8 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     
     public async Task<string?> GetUserRoleById(int id)
     {
-        /// Query to get user role by user Id
-        return await _db.User.FirstOrDefaultAsync(u => u.Id == id)?.Role;
+        var user = await _db.User.FirstOrDefaultAsync(u => u.Id == id);
+        return user?.Role.ToString(); // Role is an enum
     }
 
 

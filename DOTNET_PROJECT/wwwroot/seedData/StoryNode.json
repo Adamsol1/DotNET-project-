@@ -1,12 +1,14 @@
 [
   {
+    "Id": 1,
     "Title": "Awakening",
-    "Desciption": "Protagnoist awakens from their crypod with cryosickness, which disorients him. Unsure of when and were they are, they have a goal of fining answers",
+    "Description": "Protagonist awakens...",
     "BackgroundUrl": "images/backgrounds/awakening.jpeg"
   },
   {
-    "Title": "Disoriantation",
-    "Desciption": "The protagnis has just exited the cryopod trying to figure out what happend",
+    "Id": 2,
+    "Title": "Disorientation",
+    "Description": "The protagonist has just exited the cryopod...",
     "BackgroundUrl": "images/backgrounds/outsideCryopod.jpeg"
   }
 ]
