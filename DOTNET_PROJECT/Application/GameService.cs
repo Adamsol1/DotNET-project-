@@ -1,6 +1,7 @@
 using DOTNET_PROJECT.Application.Interfaces;
 using DOTNET_PROJECT.Application.Dtos;
 using DOTNET_PROJECT.Domain.Models;
+using Serilog;
 
 
 namespace DOTNET_PROJECT.Application;
@@ -18,10 +19,13 @@ public class GameService : IGameService
 
     private readonly IUnitOfWork _uow;
 
+    private readonly ILogger<GameService> _logger;
+
     // constructor
-    public GameService(IUnitOfWork uow)
+    public GameService(IUnitOfWork uow, ILogger<GameService> logger)
     {
         _uow = uow;
+        _logger = logger;
     }
 
     // start a game. 
@@ -66,9 +70,8 @@ public class GameService : IGameService
         } catch (Exception ex) {
             // if the try fails, we rollback the transaction. 
             await _uow.RollBackAsync();
-
-            // and give the user an error message.
-            throw new Exception("Failed to create a new game: " + ex.Message);
+            _logger.LogError(ex, "[GameService] Error creating new game for user {userId}", userId);
+            throw;
         }
     }
 
@@ -84,6 +87,7 @@ public class GameService : IGameService
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
 
             if (playerCharacter == null || playerCharacter.UserId != userId) {
+                _logger.LogWarning("[Gameservice] Player character with userId {userId} not found", userId);
                 throw new Exception("Player character not found");
             }
 
@@ -98,9 +102,8 @@ public class GameService : IGameService
         } catch (Exception ex) {
             // if the try fails, we rollback the transaction. 
             await _uow.RollBackAsync();
-
-            // and give the user an error message.
-            throw new Exception("Failed to resume game: " + ex.Message);
+            _logger.LogError(ex, "[Gameservice] Error resuming game for userId {userId}", userId);
+            throw;
         }
     }
 
@@ -115,7 +118,8 @@ public class GameService : IGameService
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
 
             if (playerCharacter == null) {
-                throw new Exception("Player character not found");
+                _logger.LogWarning("[Gameservice] Player character with playerCharacterId {playerCharacterId} not found", playerCharacterId);
+                return false;
             }
 
             // save the gamee, auto saved when the CurrentStoryNodeId is updated.
@@ -126,9 +130,8 @@ public class GameService : IGameService
         } catch (Exception ex) {
             // if the try fails, we rollback the transaction. 
             await _uow.RollBackAsync();
-
-            // and give the user an error message.
-            throw new Exception("Failed to save game: " + ex.Message);
+            _logger.LogError(ex, "[Gameservice] Error saving game for Player character with playerCharacterId {playerCharacterId}", playerCharacterId);
+            throw;
         }
     }
 
@@ -139,6 +142,7 @@ public class GameService : IGameService
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
 
             if (playerCharacter == null) {
+                _logger.LogWarning("[Gameservice] Player character with playerCharacterId {playerCharacterid} not found", playerCharacterId);
                 throw new Exception("Player character not found");
             }
 
@@ -152,9 +156,8 @@ public class GameService : IGameService
         } catch (Exception ex) {
             // if the try fails, we rollback the transaction. 
             await _uow.RollBackAsync();
-
-            // and give the user an error message.
-            throw new Exception("Failed to get game state: " + ex.Message);
+            _logger.LogError(ex, "[Gameservice] Error retrieving GameState for Player character with playerCharacterId {playerCharacterid}", playerCharacterId);
+            throw;
         }
     }
 
@@ -166,11 +169,18 @@ public class GameService : IGameService
             // get the player, might actually just turn get the player into a function.
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
 
-            if (playerCharacter == null) throw new Exception("Player character not found");
+            if (playerCharacter == null) {
+                _logger.LogWarning("[Gameservice] Player character with playerCharacterId {playerCharacterId} not found", playerCharacterId);
+                throw new Exception("Player character not found");
+            } 
 
             // get the story node
             var storyNode = await _uow.StoryNodeRepository.GetById(playerCharacter.CurrentStoryNodeId);
-            if (storyNode == null) throw new Exception("Story node not found");
+            if (storyNode == null)
+            {
+                _logger.LogWarning("[Gameservice] Story node with ID {StoryNodeId} not found", playerCharacter.CurrentStoryNodeId);
+                throw new Exception("Story node not found");
+            } 
 
             var dialogues = await _uow.StoryNodeRepository.GetAllDialoguesOfStoryNode(storyNode.Id);
             var choices = await _uow.StoryNodeRepository.GetAllChoicesOfStoryNode(storyNode.Id);
@@ -202,9 +212,8 @@ public class GameService : IGameService
         } catch (Exception ex) {
             // if the try fails, we rollback the transaction. 
             await _uow.RollBackAsync();
-
-            // and give the user an error message.
-            throw new Exception("Failed to get current story node: " + ex.Message);
+            _logger.LogError(ex, "[Gameservice] Error retireving currentStoryNode for Player character with playerCharacterId {playerCharacterId}", playerCharacterId);
+            throw;
         }
     }
 
@@ -218,18 +227,21 @@ public class GameService : IGameService
             // get the player
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
             if (playerCharacter == null) {
+                _logger.LogWarning("[Gameservice] Player character with playerCharacterId {playerCharacterId} not found", playerCharacterId);
                 throw new Exception("Player character not found");
             }
 
             // get the choice
             var choice = await _uow.ChoiceRepository.GetById(choiceId);
             if (choice == null) {
+                _logger.LogWarning("[Gameservice] Choice with choiceId {choiceId} not found", choiceId);
                 throw new Exception("Choice not found");
             }
 
             // validate if the choice belongs to the storyNode
-            if (choice.StoryNodeId != playerCharacter.CurrentStoryNodeId) 
+            if (choice.StoryNodeId != playerCharacter.CurrentStoryNodeId)
             {
+                _logger.LogWarning("[Gameservice] Choice {ChoiceId} does not belong to the current story node {CurrentNodeId} for playerCharacter {PlayerCharacterId}", choiceId, playerCharacter.CurrentStoryNodeId, playerCharacterId);
                 throw new Exception("Choice does not belong to the current story node");
             }
 
@@ -251,7 +263,8 @@ public class GameService : IGameService
         } catch (Exception ex) {
             // if the try fails, we rollback the transaction. 
             await _uow.RollBackAsync();
-            throw new Exception("Failed to make choice: " + ex.Message);
+            _logger.LogWarning(ex, "[Gameservice] Error making choice with choiceId {choiceId}", choiceId);
+            throw;
         }
 
     }
@@ -262,12 +275,14 @@ public class GameService : IGameService
         try {
             var playerCharacter = await _uow.PlayerCharacterRepository.GetById(playerCharacterId);
             if (playerCharacter == null) {
+                _logger.LogWarning("[Gameservice] Player character with playerCharacterId {playerCharacterId} not found", playerCharacterId);
                 throw new Exception("Player character not found");
             }
 
             // get the story node
             var storyNode = await _uow.StoryNodeRepository.GetById(playerCharacter.CurrentStoryNodeId);
             if (storyNode == null) {
+                _logger.LogWarning("[Gameservice] Story node with ID {CurrentStoryNodeId} not found", playerCharacter.CurrentStoryNodeId);
                 throw new Exception("Story node not found");
             }
 
@@ -281,7 +296,8 @@ public class GameService : IGameService
             };
 
         } catch (Exception ex) {
-            throw new Exception("Player character not found");
+            _logger.LogError(ex, "[Gameservice] Error retrieving GameProgression for Player character {playerCharacterId}", playerCharacterId);
+            throw;
         }
     }
 
