@@ -1,12 +1,12 @@
 [
   {
     "Name": "System AI",
-    "Desciption": "AI for the ship",
+    "Description": "AI for the ship",
     "ImageUrl": "/images/characters/systemAI.png"
   },
   {
     "Name": "Char 2",
-    "Desciption": "Please work",
+    "Description": "Please work",
     "ImageUrl": "/images/characters/isItWorking.png"
   }
 ]

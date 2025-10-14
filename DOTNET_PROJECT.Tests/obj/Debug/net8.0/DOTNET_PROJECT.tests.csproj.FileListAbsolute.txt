@@ -200,3 +200,12 @@ I:/Programing/ITPE3200 - Web Applikasjoner/Examen/DotNET-project/DOTNET_PROJECT.
 /Users/ahmedyusuf/Documents/GitHub/DotNET-project/DOTNET_PROJECT.Tests/obj/Debug/net8.0/DOTNET_PROJECT.tests.dll
 /Users/ahmedyusuf/Documents/GitHub/DotNET-project/DOTNET_PROJECT.Tests/obj/Debug/net8.0/refint/DOTNET_PROJECT.tests.dll
 /Users/ahmedyusuf/Documents/GitHub/DotNET-project/DOTNET_PROJECT.Tests/obj/Debug/net8.0/DOTNET_PROJECT.tests.pdb
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.csproj.AssemblyReference.cache
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.AssemblyInfoInputs.cache
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.AssemblyInfo.cs
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.csproj.CoreCompileInputs.cache
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.sourcelink.json
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.dll
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\refint\DOTNET_PROJECT.tests.dll
+C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.pdb
