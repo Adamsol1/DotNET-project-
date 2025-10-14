@@ -13,6 +13,9 @@ public class AppDbContext : DbContext
     public DbSet<StoryNode> StoryNodes { get; set; } = null!;
     public DbSet<Dialogue> Dialogues { get; set; } = null!;
     public DbSet<Choice> Choices { get; set; } = null!;
+    public DbSet<PlayerCharacter> PlayerCharacters { get; set; } = null!;
+    public DbSet<User> User { get; set; } = null!;
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -41,6 +44,18 @@ public class AppDbContext : DbContext
             .HasOne(d => d.StoryNode)
             .WithMany(sn => sn.Dialogues)
             .HasForeignKey(d => d.StoryNodeId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<PlayerCharacter>()
+            .HasOne(pc => pc.User)
+            .WithOne(u => u.PlayerCharacter)
+            .HasForeignKey<User>(u => u.Id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.PlayerCharacter)
+            .WithOne(pc => pc.User)
+            .HasForeignKey<PlayerCharacter>(pc => pc.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

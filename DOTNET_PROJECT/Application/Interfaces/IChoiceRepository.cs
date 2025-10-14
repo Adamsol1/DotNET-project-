@@ -3,32 +3,32 @@ using DOTNET_PROJECT.Domain.Models;
 namespace DOTNET_PROJECT.Application.Interfaces;
 
 
-public interface ChoiceRepository : IGenericRepository<Choice>
+public interface IChoiceRepository : IGenericRepository<Choice>
 {
     /// <summary>
     /// Get StoryNode id this choice belongs to
     /// </summary>
-    Task<int> GetStoryNodeId(int choiceId);
+    Task<int> GetStoryNodeId(int id);
 
     /// <summary>
     /// Get StoryNode this choice belongs to
     /// </summary>
 
-    Task<StoryNode> GetStoryNode(int choiceId);
+    Task<StoryNode?> GetStoryNode(int id);
 
     /// <summary>
     /// Get id of story node this choice leads to
     /// </summary>
 
-    Task<StoryNode> GetNextStoryNodeId(int choiceId);
+    Task<int> GetNextStoryNodeId(int id);
 
     /// <summary>
     /// Get the story node this choice leads to'
     /// </summary>
-    Task<StoryNode> GetNextStoryNode(int choiceId);
+    Task<StoryNode?> GetNextStoryNode(int id);
     
     /// <summary>
     /// Get text given in this choice
     /// </summary>
-    Task<string> GetChoiceText(int choiceId);
+    Task<string> GetChoiceText(int id);
 }

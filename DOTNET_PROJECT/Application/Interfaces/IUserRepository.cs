@@ -2,7 +2,7 @@ using DOTNET_PROJECT.Domain.Models;
 
 namespace DOTNET_PROJECT.Application.Interfaces;
 
-public interface UserRepository : IGenericRepository<User>
+public interface IUserRepository : IGenericRepository<User>
 {
     /// <summary>
     /// Get user by their username
@@ -19,11 +19,12 @@ public interface UserRepository : IGenericRepository<User>
     /// Limitied just for authentication testing purpose
     /// Get hashed password associated with given user ID
     /// </summary>
-    Task<string?> GetPasswordHashById(int id);
+    Task<string?> GetPasswordById(int id);
 
     /// <summary>
     /// Get the role of the user associated with given user ID
+    /// Only one role can be applied to a user
     /// </summary>
     
-    Task<string> GetUserRoleById(int id);
+    Task<string?> GetUserRoleById(int id);
 }

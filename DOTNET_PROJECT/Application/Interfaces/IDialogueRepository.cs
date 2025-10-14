@@ -3,7 +3,7 @@ using DOTNET_PROJECT.Domain.Models;
 namespace DOTNET_PROJECT.Application.Interfaces;
 
 
-public interface DialogueRepository : IGenericRepository<Dialogue>
+public interface IDialogueRepository : IGenericRepository<Dialogue>
 {
     /// <summary>
     /// Get the id of the story node where dialogue is shown
@@ -13,7 +13,7 @@ public interface DialogueRepository : IGenericRepository<Dialogue>
     /// <summary>
     /// Get the storynode the dialogue is shown in
     /// </summary>
-    Task<StoryNode> GetStoryNode(int dialogueId);
+    Task<StoryNode?> GetStoryNode(int dialogueId);
 
     /// <summary>
     /// Get the order the dialogues in current story node is shown
@@ -29,7 +29,7 @@ public interface DialogueRepository : IGenericRepository<Dialogue>
     /// Optional as not all dialogues have a character. For example, narration and sound effects. 
     /// Get the character speaking the dialogue
     /// </summary>
-    Task<Character> GetCharacter(int dialogueId);
+    Task<Character?> GetCharacter(int dialogueId);
 
     /// <summary>
     /// Get the dialogues text

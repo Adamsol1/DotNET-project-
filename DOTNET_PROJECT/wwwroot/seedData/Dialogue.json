@@ -1,0 +1,20 @@
+[
+  {
+    "StoryNodeId": 1,
+    "CharacterId": 1,
+    "Order": 1,
+    "Text": "Where am i?"
+  },
+  {
+    "StoryNodeId": 1,
+    "CharacterId": 1,
+    "Order": 2,
+    "Text": "What is happening..."
+  },
+  {
+    "StoryNodeId": 1,
+    "CharacterId": 2,
+    "Order": 3,
+    "Text": "Crypod is experienceing malfunctioning. Please exit."
+  }
+]

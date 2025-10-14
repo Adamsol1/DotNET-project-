@@ -1,3 +1,7 @@
+using DOTNET_PROJECT.Application.Dtos;
+
+// Player Service Interface
+
 namespace DOTNET_PROJECT.Application.Interfaces;
 
 public interface IPlayerService
@@ -14,14 +18,36 @@ public interface IPlayerService
 
     // delete player character
     Task<bool> DeleteCharacter(int id);
-
-    // game state and choices.
-    Task<GameStateDto> GetGameState(int playerCharacterId);
-
-    //get current story node
-    Task<StoryNodeDto> GetCurrentStoryNode(int playerCharacterId);
-
-    //make a choice
-    Task<(GameStateDto, StoryNodeDto)> MakeChoice(MakeChoiceDto request);
     
+    // ===== HEALTH MANAGEMENT METHODS =====
+    
+    /// <summary>
+    /// Modify player's health by a specific amount (positive or negative)
+    /// </summary>
+    Task<int> ModifyHealth(int playerCharacterId, int healthChange);
+    
+    /// <summary>
+    /// Set player's health to a specific value
+    /// </summary>
+    Task<int> SetHealth(int playerCharacterId, int newHealth);
+    
+    /// <summary>
+    /// Get player's current health
+    /// </summary>
+    Task<int> GetHealth(int playerCharacterId);
+    
+    /// <summary>
+    /// Check if player is alive (health > 0)
+    /// </summary>
+    Task<bool> IsAlive(int playerCharacterId);
+    
+    /// <summary>
+    /// Heal player by a specific amount
+    /// </summary>
+    Task<int> Heal(int playerCharacterId, int healAmount);
+    
+    /// <summary>
+    /// Damage player by a specific amount
+    /// </summary>
+    Task<int> Damage(int playerCharacterId, int damageAmount);
 }

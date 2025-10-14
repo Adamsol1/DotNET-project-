@@ -4,7 +4,7 @@ using DOTNET_PROJECT.Domain.Models;
 
 namespace DOTNET_PROJECT.Application.Interfaces;
 
-public interface StoryNodeRepository : IGenericRepository<StoryNode>
+public interface IStoryNodeRepository : IGenericRepository<StoryNode>
 {
     /// <summary>
     /// Get the story node title with ID
@@ -15,7 +15,7 @@ public interface StoryNodeRepository : IGenericRepository<StoryNode>
     /// <summary>
     /// Get the story node with given title
     /// </summary>
-    Task<StoryNode> GetStoryNodeByTitle(string title);
+    Task<StoryNode?> GetStoryNodeByTitle(string title);
 
     /// <summary>
     /// Get description of the story node with given ID
@@ -37,4 +37,7 @@ public interface StoryNodeRepository : IGenericRepository<StoryNode>
     /// Get all choices associated with a story node given by ID
     /// </summary>
     Task<IEnumerable<Choice>> GetAllChoicesOfStoryNode(int id);
+    
+    // Added this method to get all characters in a story node
+    Task<IEnumerable<Character>> GetAllCharactersOfStoryNode(int id);
 }

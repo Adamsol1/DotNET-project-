@@ -16,7 +16,7 @@ public class StoryNode
     /// <summary>
     /// A brief description of the story node.
     /// </summary>
-    public string Desciption { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     /// <summary>
     /// URL to a background image for the story node.
     /// </summary>
