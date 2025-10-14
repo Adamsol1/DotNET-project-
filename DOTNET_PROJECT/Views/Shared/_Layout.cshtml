@@ -2,11 +2,11 @@
     Shared layout file for all Razor views.
     Defines the global HTML structure, header, footer, and styling used across the site.
 
-    - Dynamically sets the <title> based on the current page’s ViewData["Title"].
-    - Provides consistent design (dark theme, rounded cards, accent buttons, etc.).
-    - Contains a header with a “New Game” button linking back to the start page.
-    - The @RenderBody() call inserts each view’s unique content inside this layout.
-    - Ideal for a simple, clean CYOA (Choose Your Own Adventure) Razor UI without React.
+    Dynamically sets the <title> based on the current page’s ViewData["Title"].
+    Provides consistent design (dark theme, rounded cards, accent buttons, etc.).
+    Contains a header with a “New Game” button linking back to the start page.
+    The @RenderBody() call inserts each view’s unique content inside this layout.
+    Ideal for a simple, clean CYOA (Choose Your Own Adventure) Razor UI without React.
 *@
 @{
     var title = ViewData["Title"] as string ?? "CYOA";
