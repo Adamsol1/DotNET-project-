@@ -1,0 +1,50 @@
+@model DOTNET_PROJECT.Models.PlayViewModel
+@{
+    ViewData["Title"] = Model.Node?.Title ?? "Scene";
+    var bg = string.IsNullOrWhiteSpace(Model.Node?.BackgroundUrl) ? "" : Model.Node.BackgroundUrl;
+}
+
+<div class="card">
+    @if (!string.IsNullOrWhiteSpace(bg))
+    {
+        <div class="bg" style="background-image:url('@Url.Content("~/" + bg.TrimStart('/'))');"></div>
+    }
+
+    <h2 style="margin:0 0 6px 0;">@Model.Node?.Title</h2>
+    <div class="muted" style="margin-bottom:12px;">Node #@Model.Node?.Id</div>
+
+    <div class="dialogue">
+        @if (!string.IsNullOrWhiteSpace(Model.Node?.Description))
+        {
+            <p>@Model.Node.Description</p>
+        }
+        @if (Model.Node?.Dialogues != null && Model.Node.Dialogues.Any())
+        {
+            foreach (var line in Model.Node.Dialogues.OrderBy(d => d.Order))
+            {
+                <p>@line.Text</p>
+            }
+        }
+    </div>
+
+    @if (Model.Node?.Choices != null && Model.Node.Choices.Any())
+    {
+        <div class="choices">
+            @foreach (var c in Model.Node.Choices)
+            {
+                <form asp-controller="GameMvc" asp-action="Choice" method="post">
+                    <input type="hidden" name="playerId" value="@Model.PlayerCharacterId" />
+                    <input type="hidden" name="choiceId" value="@c.Id" />
+                    <button class="btn btn-accent" type="submit">@c.Text</button>
+                </form>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="muted" style="margin-top:10px;">No choices available. (End of path?)</div>
+        <div style="margin-top:12px;">
+            <a class="btn" href="@Url.Action("Index","Home")">Back to Start</a>
+        </div>
+    }
+</div>

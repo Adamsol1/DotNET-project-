@@ -1,0 +1,16 @@
+@model DOTNET_PROJECT.Models.StartGameViewModel
+@{
+    ViewData["Title"] = "Start";
+}
+<h2>Start a Game (Frontend Safe Mode)</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="error">@TempData["Error"]</div>
+}
+
+<form asp-controller="GameMvc" asp-action="Start" method="post">
+    <label for="name">Your name</label>
+    <input id="name" name="Name" type="text" value="Test Pilot" />
+    <button type="submit">Start</button>
+</form>
