@@ -114,5 +114,5 @@ app.MapControllerRoute(
 app.MapControllers();
 
 app.MapControllers();
-
+app.MapGet("/", () => Results.Redirect("/Auth/Login"));
 app.Run();
