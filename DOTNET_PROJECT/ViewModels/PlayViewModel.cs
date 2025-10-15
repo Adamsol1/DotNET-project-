@@ -8,7 +8,7 @@ namespace DOTNET_PROJECT.Viewmodels
 {
     public class PlayViewModel
     {
-        public int PlayerCharacterId { get; set; }
+        public int CurrentNodeId { get; set; }
         public StoryNodeDto Node { get; set; } = new StoryNodeDto();
     }
 }

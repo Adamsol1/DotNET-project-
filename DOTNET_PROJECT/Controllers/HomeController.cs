@@ -9,6 +9,6 @@ namespace DOTNET_PROJECT.Controllers
     public class HomeController : Controller
     {
         [HttpGet]
-        public IActionResult Index() => View(new StartGameViewModel());
+        public IActionResult Index() => View();
     }
 }
