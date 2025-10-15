@@ -15,14 +15,14 @@
     var bg = string.IsNullOrWhiteSpace(Model.Node?.BackgroundUrl) ? "" : Model.Node.BackgroundUrl;
 }
 
-<div class="card">
+<div class="Page-Container">
     @if (!string.IsNullOrWhiteSpace(bg))
     {
-        <div class="bg" style="background-image:url('@Url.Content("~/" + bg.TrimStart('/'))');"></div>
+        <div class="Background-Game" style="background-image:url('@Url.Content("~/" + bg.TrimStart('/'))');"></div>
     }
 
-    <h2 style="margin:0 0 6px 0;">@Model.Node?.Title</h2>
-    <div class="dialogue">
+    <h2 class="Title">@Model.Node?.Title</h2>
+    <div class="DescriptionsAndDialogues">
         @if (!string.IsNullOrWhiteSpace(Model.Node?.Description))
         {
             <p>@Model.Node.Description</p>
@@ -38,7 +38,7 @@
 
     @if (Model.Node?.Choices != null && Model.Node.Choices.Any())
     {
-        <div class="choices">
+        <div class="Choices-Box">
             @foreach (var c in Model.Node.Choices)
             {
                 <form asp-controller="GameMvc" asp-action="Choice" method="post">
