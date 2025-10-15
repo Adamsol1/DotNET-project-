@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT.Tests\\DOTNET_PROJECT.tests.csproj": {}
+    "C:\\Users\\adamt\\Documents\\GitHub\\DotNET-project-\\DOTNET_PROJECT.Tests\\DOTNET_PROJECT.tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT.Tests\\DOTNET_PROJECT.tests.csproj": {
+    "C:\\Users\\adamt\\Documents\\GitHub\\DotNET-project-\\DOTNET_PROJECT.Tests\\DOTNET_PROJECT.tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT.Tests\\DOTNET_PROJECT.tests.csproj",
+        "projectUniqueName": "C:\\Users\\adamt\\Documents\\GitHub\\DotNET-project-\\DOTNET_PROJECT.Tests\\DOTNET_PROJECT.tests.csproj",
         "projectName": "DOTNET_PROJECT.tests",
-        "projectPath": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT.Tests\\DOTNET_PROJECT.tests.csproj",
-        "packagesPath": "C:\\Users\\realm\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT.Tests\\obj\\",
+        "projectPath": "C:\\Users\\adamt\\Documents\\GitHub\\DotNET-project-\\DOTNET_PROJECT.Tests\\DOTNET_PROJECT.tests.csproj",
+        "packagesPath": "C:\\Users\\adamt\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\adamt\\Documents\\GitHub\\DotNET-project-\\DOTNET_PROJECT.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\realm\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\adamt\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -26,8 +26,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj": {
-                "projectPath": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj"
+              "C:\\Users\\adamt\\Documents\\GitHub\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj": {
+                "projectPath": "C:\\Users\\adamt\\Documents\\GitHub\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj"
               }
             }
           }
@@ -94,17 +94,17 @@
         }
       }
     },
-    "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj": {
+    "C:\\Users\\adamt\\Documents\\GitHub\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj",
+        "projectUniqueName": "C:\\Users\\adamt\\Documents\\GitHub\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj",
         "projectName": "DOTNET-PROJECT",
-        "projectPath": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj",
-        "packagesPath": "C:\\Users\\realm\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\realm\\Documents\\GitHub\\ITPE3200 - Webapplikasjoner\\DotNET-project-\\DOTNET_PROJECT\\obj\\",
+        "projectPath": "C:\\Users\\adamt\\Documents\\GitHub\\DotNET-project-\\DOTNET_PROJECT\\DOTNET-PROJECT.csproj",
+        "packagesPath": "C:\\Users\\adamt\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\adamt\\Documents\\GitHub\\DotNET-project-\\DOTNET_PROJECT\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\realm\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\adamt\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"

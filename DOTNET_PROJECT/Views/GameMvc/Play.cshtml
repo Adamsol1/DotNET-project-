@@ -9,7 +9,7 @@
     If no choices exist, shows an end-of-path message and a link to return to the start page.
 *@
 
-@model DOTNET_PROJECT.Models.PlayViewModel
+@model DOTNET_PROJECT.Viewmodels.PlayViewModel
 @{
     ViewData["Title"] = Model.Node?.Title ?? "Scene";
     var bg = string.IsNullOrWhiteSpace(Model.Node?.BackgroundUrl) ? "" : Model.Node.BackgroundUrl;
@@ -42,7 +42,7 @@
             @foreach (var c in Model.Node.Choices)
             {
                 <form asp-controller="GameMvc" asp-action="Choice" method="post">
-                    <input type="hidden" name="playerId" value="@Model.PlayerCharacterId" />
+                    <input type="hidden" name="nodeId" value="@Model.CurrentNodeId" />
                     <input type="hidden" name="choiceId" value="@c.Id" />
                     <button class="btn btn-accent" type="submit">@c.Text</button>
                 </form>
@@ -51,9 +51,9 @@
     }
     else
     {
-        <div class="muted" style="margin-top:10px;">No choices available. (End of path?)</div>
-        <div style="margin-top:12px;">
-            <a class="btn" href="@Url.Action("Index","Home")">Back to Start</a>
-        </div>
+        @* <div class="muted" style="margin-top:10px;">No choices available. (End of path?)</div> *@
+        @* <div style="margin-top:12px;"> *@
+        @*     <a class="btn" href="@Url.Action("Index","Home")">Back to Start</a> *@
+        @* </div> *@
     }
 </div>

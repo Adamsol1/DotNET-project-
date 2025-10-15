@@ -5,7 +5,9 @@
     Shows any TempData["Error"] messages from the controller (e.g., if no name was entered).
     On submission, the form posts to GameMvcController.Start to begin the game session.
 *@
-@model DOTNET_PROJECT.Models.StartGameViewModel
+
+
+@*
 @{
     ViewData["Title"] = "Start";
 }
@@ -21,3 +23,34 @@
     <input id="name" name="Name" type="text" value="Test Pilot" />
     <button type="submit">Start</button>
 </form>
+
+*@
+
+@{
+    Layout = null;
+}
+
+<!-- TODO : legg til deisgn -->
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Home page</title>
+
+    <link rel="stylesheet" href="~/css/site.css"/>
+
+</head>
+<body>
+<div class="Background-Home">
+<div class="Home-Options">
+    <a asp-controller="GameMvc" asp-action="Start" class="Primary-Button">Play</a>
+</div>
+</div>
+
+</body>
+
+</html>

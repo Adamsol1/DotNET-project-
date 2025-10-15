@@ -209,3 +209,12 @@ C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\DOTN
 C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.dll
 C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\refint\DOTNET_PROJECT.tests.dll
 C:\Users\realm\Documents\GitHub\ITPE3200 - Webapplikasjoner\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.pdb
+C:\Users\adamt\Documents\GitHub\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.csproj.AssemblyReference.cache
+C:\Users\adamt\Documents\GitHub\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\adamt\Documents\GitHub\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.AssemblyInfoInputs.cache
+C:\Users\adamt\Documents\GitHub\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.AssemblyInfo.cs
+C:\Users\adamt\Documents\GitHub\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.csproj.CoreCompileInputs.cache
+C:\Users\adamt\Documents\GitHub\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.sourcelink.json
+C:\Users\adamt\Documents\GitHub\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.dll
+C:\Users\adamt\Documents\GitHub\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\refint\DOTNET_PROJECT.tests.dll
+C:\Users\adamt\Documents\GitHub\DotNET-project-\DOTNET_PROJECT.Tests\obj\Debug\net8.0\DOTNET_PROJECT.tests.pdb
