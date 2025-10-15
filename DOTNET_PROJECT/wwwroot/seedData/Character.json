@@ -5,8 +5,13 @@
     "ImageUrl": "/images/characters/systemAI.png"
   },
   {
-    "Name": "Char 2",
-    "Description": "Please work",
-    "ImageUrl": "/images/characters/isItWorking.png"
+    "Name": "Irene",
+    "Description": "",
+    "ImageUrl": "/images/characters/irene.png"
+  },
+  {
+    "Name": "Darius",
+    "Description": "",
+    "ImageUrl": "/images/characters/darius.png"
   }
 ]

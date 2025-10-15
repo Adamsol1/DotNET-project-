@@ -7,6 +7,7 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
+        
     }
 
     public DbSet<Character> Characters { get; set; } = null!;
@@ -16,30 +17,35 @@ public class AppDbContext : DbContext
     public DbSet<PlayerCharacter> PlayerCharacters { get; set; } = null!;
     public DbSet<User> User { get; set; } = null!;
     
+    public DbSet<GameSave> GameSaves { get; set; }
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        // Configure relationships and constraints if needed
+        // Choice rel with StoryNode
         modelBuilder.Entity<Choice>()
             .HasOne(c => c.StoryNode)
             .WithMany(sn => sn.Choices)
             .HasForeignKey(c => c.StoryNodeId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        // Choice rel with NextStoryNode
         modelBuilder.Entity<Choice>()
             .HasOne(c => c.NextStoryNode)
             .WithMany()
             .HasForeignKey(c => c.NextStoryNodeId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        // Dialogue rel with Character
         modelBuilder.Entity<Dialogue>()
             .HasOne(d => d.Character)
             .WithMany(c => c.Dialogues)
             .HasForeignKey(d => d.CharacterId)
             .OnDelete(DeleteBehavior.SetNull);
 
+        // Dialogue rel with StoryNode
         modelBuilder.Entity<Dialogue>()
             .HasOne(d => d.StoryNode)
             .WithMany(sn => sn.Dialogues)
@@ -47,7 +53,7 @@ public class AppDbContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
         
         
-        
+        // PlayerCharacter rel with Character
         modelBuilder.Entity<PlayerCharacter>()
             .HasBaseType<Character>();
         
@@ -64,6 +70,32 @@ public class AppDbContext : DbContext
         //     .HasMany(u => u.PlayerCharacter)
         //     .WithOne(pc => pc.User)
         //     .HasForeignKey<PlayerCharacter>(pc => pc.UserId)
-        //     .OnDelete(DeleteBehavior.Cascade);
+        //
+        //
+        
+        
+        //TODO: Uncomment these when GameSave (save progresstions) are to be implemented
+    //     
+    //     //Gamesave rel with user
+    //     modelBuilder.Entity<GameSave>()
+    //         .HasOne(gs => gs.User)
+    //         .WithMany(u => u.GameSaves)
+    //         .HasForeignKey(gs => gs.UserId)
+    //         .OnDelete(DeleteBehavior.Cascade);
+    //     
+    //     //Gamesave rel with player character
+    //     modelBuilder.Entity<GameSave>()
+    //         .HasOne(gs => gs.PlayerCharacter)
+    //         .WithOne()
+    //         .HasForeignKey<GameSave>(gs => gs.PlayerCharacterId)
+    //         .OnDelete(DeleteBehavior.Cascade);
+    //     
+    //     //Gamesave rel with story node
+    //     modelBuilder.Entity<GameSave>()
+    //         .HasOne(gs => gs.CurrentStoryNode)
+    //         .WithMany()
+    //         .HasForeignKey(gs => gs.CurrentStoryNodeId)
+    //         .OnDelete(DeleteBehavior.Restrict);
+    
     }
 }

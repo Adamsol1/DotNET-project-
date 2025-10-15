@@ -2,11 +2,91 @@
   {
     "StoryNodeId": 1,
     "NextStoryNodeId": 2,
-    "Text": "Break glass"
+    "Text": "Force the hatch open"
   },
   {
     "StoryNodeId": 1,
     "NextStoryNodeId": 2,
-    "Text": "Wait until lock thaws"
+    "Text": "Wait for the emergency release"
+  },
+  {
+    "StoryNodeId": 1,
+    "NextStoryNodeId": 1,
+    "Text": "Scream"
+  },
+  {
+    "StoryNodeId": 2,
+    "NextStoryNodeId": 3,
+    "Text": "Check nearby pods"
+  },
+  {
+    "StoryNodeId": 2,
+    "NextStoryNodeId": 4,
+    "Text": "Keep walking"
+  },
+  {
+    "StoryNodeId": 2,
+    "NextStoryNodeId": 2,
+    "Text": "Search the storage lockers"
+  },
+  {
+    "StoryNodeId": 4,
+    "NextStoryNodeId": 5,
+    "Text": "Walk through them"
+  },
+  {
+    "StoryNodeId": 4,
+    "NextStoryNodeId": 5,
+    "Text": "Jump"
+  },
+  {
+    "StoryNodeId": 4,
+    "NextStoryNodeId": 2,
+    "Text": "Go back"
+  },
+  {
+    "StoryNodeId": 5,
+    "NextStoryNodeId": 6,
+    "Text": "Approach them"
+  },
+  {
+    "StoryNodeId": 5,
+    "NextStoryNodeId": 2,
+    "Text": "Flee"
+  },
+  {
+    "StoryNodeId": 5,
+    "NextStoryNodeId": 6,
+    "Text": "Do nothing"
+  },
+  {
+    "StoryNodeId": 6,
+    "NextStoryNodeId": 7,
+    "Text": "“I’ll help you.”"
+  },
+  {
+    "StoryNodeId": 6,
+    "NextStoryNodeId": 7,
+    "Text": "“I don’t know you.”"
+  },
+  {
+    "StoryNodeId": 6,
+    "NextStoryNodeId": 7,
+    "Text": "Insult"
+  },
+  {
+    "StoryNodeId": 9,
+    "NextStoryNodeId": 9,
+    "Text": "Open it"
+  },
+  {
+    "StoryNodeId": 9,
+    "NextStoryNodeId": 9,
+    "Text": "Go back"
+  },
+  {
+    "StoryNodeId": 9,
+    "NextStoryNodeId": 9,
+    "Text": "Give up"
   }
 ]

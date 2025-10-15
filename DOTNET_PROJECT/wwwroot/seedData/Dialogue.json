@@ -3,18 +3,36 @@
     "StoryNodeId": 1,
     "CharacterId": 1,
     "Order": 1,
-    "Text": "Where am i?"
+    "Text": "Where am I?"
   },
   {
     "StoryNodeId": 1,
     "CharacterId": 1,
     "Order": 2,
-    "Text": "What is happening..."
+    "Text": "What is happening…"
   },
   {
     "StoryNodeId": 1,
     "CharacterId": 2,
     "Order": 3,
-    "Text": "Crypod is experienceing malfunctioning. Please exit."
+    "Text": "Cryopod is experiencing malfunctioning. Please exit."
+  },
+  {
+    "StoryNodeId": 6,
+    "CharacterId": 3,
+    "Order": 1,
+    "Text": "You’re awake too? Thank god. The pods—they’re failing. We shouldn’t be out this early, not by decades. Something’s wrong with the ship."
+  },
+  {
+    "StoryNodeId": 6,
+    "CharacterId": 3,
+    "Order": 2,
+    "Text": "The AI’s offline. Life support’s degrading fast. We need to reach the control deck before it’s too late."
+  },
+  {
+    "StoryNodeId": 6,
+    "CharacterId": 3,
+    "Order": 3,
+    "Text": "I need to know—can I trust you to help us, or are you just looking out for yourself?"
   }
 ]
