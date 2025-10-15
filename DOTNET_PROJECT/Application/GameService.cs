@@ -293,7 +293,7 @@ private readonly IUnitOfWork _uow;
 
     // constructor
     public GameService(IUnitOfWork uow, ILogger<GameService> logger)
-    public GameService(IUnitOfWork uow)
+   
     {
         _uow = uow;
         _logger = logger;
