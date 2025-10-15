@@ -4,7 +4,7 @@
 // and displayed properly in Razor forms.
 using System.ComponentModel.DataAnnotations;
 
-namespace DOTNET_PROJECT.Models
+namespace DOTNET_PROJECT.Viewmodels
 {
     public class StartGameViewModel
     {

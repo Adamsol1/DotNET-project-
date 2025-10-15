@@ -4,7 +4,7 @@
 // the correct story text, background, and available choices.
 using DOTNET_PROJECT.Application.Dtos;
 
-namespace DOTNET_PROJECT.Models
+namespace DOTNET_PROJECT.Viewmodels
 {
     public class PlayViewModel
     {

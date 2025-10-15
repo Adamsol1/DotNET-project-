@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using DOTNET_PROJECT.Application.Interfaces;
 using DOTNET_PROJECT.Application.Dtos;
+using DOTNET_PROJECT.Viewmodels;
 
 namespace DOTNET_PROJECT.Controllers;
 
 
-[Route("auth")]
-public class AuthController : ControllerBase
+[Route("Auth")]
+public class AuthController : Controller
 {
     private readonly IUserService _userService;
 
@@ -25,7 +26,7 @@ public class AuthController : ControllerBase
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     [HttpPost("register")]
-    public async Task<ActionResult> Register(RegisterUserDto registerUserDto)
+    public async Task<IActionResult> Register(RegisterUserDto registerUserDto)
     {
         // Attempt to contact service layer about the account registration
         try
@@ -36,7 +37,7 @@ public class AuthController : ControllerBase
             if (userDto == null)
             {
                 // TODO : Inform user about the error
-                return view(registerUserDto)
+                return View(registerUserDto);
                 
             }
             //If account registration succesfull the user will be informed and redirected to the login page. 
@@ -46,7 +47,7 @@ public class AuthController : ControllerBase
         } catch(Exception e)
         {
             // TODO : Log error
-            return view(registerUserDto);
+            return View(registerUserDto);
         }
     }
 
@@ -60,19 +61,23 @@ public class AuthController : ControllerBase
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     [HttpPost("login")]
-    public async Task<ActionResult> Login( LoginUserDto loginUserDto)
+    public async Task<IActionResult> Login( LogInViewModel vm)
     {
+        if (!ModelState.IsValid)
+                return View(vm);
         // Try to use user service for login
         try
         {
-            var userDto = await _userService.Login(loginUserDto);
+            var dto = new LoginUserDto { Username = vm.Username, Password = vm.Password };
+
+            var userDto = await _userService.Login(dto);
 
             //Checks if the user service found a user with given username and password
             if (userDto == null)
             {
                 // TODO: Legge til korrekt feilmelding}
                 //Error
-                return View(loginUserDto);
+                return View(vm);
             }
 
             // If the service returns a valid userDTO the webpage will navigate to the Home page. 
@@ -82,7 +87,7 @@ public class AuthController : ControllerBase
             catch (Exception e)
             {
                 // TODO : Legge til korrekt feilmelding
-                return View(loginUserDto);
+                return View(vm);
             }
         }
     
@@ -104,7 +109,7 @@ public class AuthController : ControllerBase
     [HttpGet("login")]
     public IActionResult login()
     {
-        return View();
+        return View(new LogInViewModel());
     }
 
     ///<summary

@@ -9,7 +9,7 @@
     If no choices exist, shows an end-of-path message and a link to return to the start page.
 *@
 
-@model DOTNET_PROJECT.Models.PlayViewModel
+@model DOTNET_PROJECT.Viewmodels.PlayViewModel
 @{
     ViewData["Title"] = Model.Node?.Title ?? "Scene";
     var bg = string.IsNullOrWhiteSpace(Model.Node?.BackgroundUrl) ? "" : Model.Node.BackgroundUrl;
