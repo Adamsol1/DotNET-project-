@@ -108,11 +108,10 @@ app.UseCors(cors => cors.WithOrigins("http://localhost:3000")
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}"
+    pattern: "{controller=Auth}/{action=Login}/{id?}"
 );
 
 app.MapControllers();
 
-app.MapControllers();
 app.MapGet("/", () => Results.Redirect("/Auth/Login"));
 app.Run();
