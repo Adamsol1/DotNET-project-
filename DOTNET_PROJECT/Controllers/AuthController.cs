@@ -10,10 +10,13 @@ namespace DOTNET_PROJECT.Controllers;
 public class AuthController : Controller
 {
     private readonly IUserService _userService;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(IUserService userService)
+    public AuthController(IUserService userService, ILogger<AuthController> logger)
     {
         _userService = userService;
+        _logger = logger;
+        
     }
     
     
@@ -26,28 +29,40 @@ public class AuthController : Controller
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterUserDto registerUserDto)
+    public async Task<IActionResult> Register(LogInViewModel vm)
     {
+
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("[AuthController] User input did not pass validation");
+            return View(vm);
+        }
+            
         // Attempt to contact service layer about the account registration
         try
         {
+            var registerUserDto = new RegisterUserDto{Username = vm.Username, Password = vm.Password};
             //Await the answer given by the service layer. 
             var userDto = await _userService.RegisterAccount(registerUserDto);
             //If the service layer was unable to create the account inform the user. 
             if (userDto == null)
             {
                 // TODO : Inform user about the error
-                return View(registerUserDto);
-                
+                _logger.LogError("[AuthController] Error registering account!");
+                return View(vm);
+            
             }
             //If account registration succesfull the user will be informed and redirected to the login page. 
             // TODO : Inform user about account registration
+            _logger.LogInformation("[AuthController] Account successfully created!");
+            
             return RedirectToAction("Login", "Auth");
         //If unable to contact service layer error will be given
         } catch(Exception e)
         {
             // TODO : Log error
-            return View(registerUserDto);
+            _logger.LogError(e, "[AuthController] Unable to contact service layer");
+            return View(vm);
         }
     }
 
@@ -64,7 +79,11 @@ public class AuthController : Controller
     public async Task<IActionResult> Login( LogInViewModel vm)
     {
         if (!ModelState.IsValid)
-                return View(vm);
+        {
+            _logger.LogError("[AuthController] User input did not pass validation");
+            return View(vm);
+        }
+
         // Try to use user service for login
         try
         {
@@ -76,17 +95,19 @@ public class AuthController : Controller
             if (userDto == null)
             {
                 // TODO: Legge til korrekt feilmelding}
-                //Error
+                _logger.LogError("[AuthController] Error logging in!");
                 return View(vm);
             }
 
             // If the service returns a valid userDTO the webpage will navigate to the Home page. 
+            _logger.LogInformation("[AuthController] Account successfully logged in!");
             return RedirectToAction("index", "home");
         }
             //If unable to use the service the user will be given an error message. 
             catch (Exception e)
             {
                 // TODO : Legge til korrekt feilmelding
+                _logger.LogError(e, "[AuthController] Error logging in!");
                 return View(vm);
             }
         }
@@ -118,7 +139,7 @@ public class AuthController : Controller
     [HttpGet("register")]
     public IActionResult Register()
     {
-        return View();
+        return View(new LogInViewModel());
     }
     
     
