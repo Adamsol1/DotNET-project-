@@ -309,7 +309,11 @@ private readonly IUnitOfWork _uow;
     public async Task<StoryNodeDto?> GetNodeAsync(int nodeId)
     {
         var storyNode = await _uow.StoryNodeRepository.GetById(nodeId);
-        if (storyNode == null) return null;
+        if (storyNode == null)
+        {
+            _logger.LogWarning("[Gameservice] StoryNode with id {StoryNodeId} not found", nodeId);
+            return null;
+        } 
 
         var dialogues = await _uow.StoryNodeRepository.GetAllDialoguesOfStoryNode(storyNode.Id);
         var choices   = await _uow.StoryNodeRepository.GetAllChoicesOfStoryNode(storyNode.Id);
@@ -348,9 +352,16 @@ private readonly IUnitOfWork _uow;
     {
         // Valider at choice tilhører currentNodeId
         var choice = await _uow.ChoiceRepository.GetById(choiceId);
-        if (choice == null) return null;
+        if (choice == null)
+        {
+            _logger.LogWarning("[Gameservice] Choice with id {ChoiceId} not found", choiceId);
+            return null;
+        }
         if (choice.StoryNodeId != currentNodeId)
+        {
+            _logger.LogError("[Gameservice] Choice with id {ChoiceId} does not belong to {CurrentNodeId}", choiceId, currentNodeId);
             throw new InvalidOperationException("Choice does not belong to current node.");
+        }
 
         // Ingen lagring av spillerstate – vi returnerer kun neste node
         return choice.NextStoryNodeId; // kan være null (slutt)

@@ -10,10 +10,12 @@ namespace DOTNET_PROJECT.Controllers;
 public class AuthController : Controller
 {
     private readonly IUserService _userService;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(IUserService userService)
+    public AuthController(IUserService userService, ILogger<AuthController> logger)
     {
         _userService = userService;
+        _logger = logger;
     }
     
     
@@ -36,9 +38,8 @@ public class AuthController : Controller
             //If the service layer was unable to create the account inform the user. 
             if (userDto == null)
             {
-                // TODO : Inform user about the error
+                _logger.LogWarning("[AuthController] Unable to create account");
                 return View(registerUserDto);
-                
             }
             //If account registration succesfull the user will be informed and redirected to the login page. 
             // TODO : Inform user about account registration
@@ -46,7 +47,7 @@ public class AuthController : Controller
         //If unable to contact service layer error will be given
         } catch(Exception e)
         {
-            // TODO : Log error
+            _logger.LogError(e, "[AuthController] Error contacting service layer");
             return View(registerUserDto);
         }
     }
@@ -75,8 +76,7 @@ public class AuthController : Controller
             //Checks if the user service found a user with given username and password
             if (userDto == null)
             {
-                // TODO: Legge til korrekt feilmelding}
-                //Error
+                _logger.LogWarning("[AuthController] Username for user {Username} not found", vm.Username);
                 return View(vm);
             }
 
@@ -86,7 +86,7 @@ public class AuthController : Controller
             //If unable to use the service the user will be given an error message. 
             catch (Exception e)
             {
-                // TODO : Legge til korrekt feilmelding
+                _logger.LogError(e, "[AuthController] Error occurred during login for user {Username}", vm.Username);
                 return View(vm);
             }
         }
