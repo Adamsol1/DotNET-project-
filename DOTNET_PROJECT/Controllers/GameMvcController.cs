@@ -143,7 +143,12 @@ public class GameMvcController : Controller
 public class GameMvcController : Controller
 {
     private readonly IGameService _game;
-    public GameMvcController(IGameService game) => _game = game;
+    private readonly ILogger<GameMvcController> _logger;
+    public GameMvcController(IGameService game, ILogger<GameMvcController> logger)
+    {
+        _game = game;
+        _logger = logger;
+    }
 
     [HttpGet]
     public async Task<IActionResult> Start()
@@ -157,6 +162,7 @@ public class GameMvcController : Controller
         var node = await _game.GetNodeAsync(nodeId);
         if (node is null)
         {
+            _logger.LogWarning("[GameMvcController] StoryNode with id {StoryNodeId} not found", nodeId);
             TempData["Error"] = $"Story node {nodeId} not found.";
             return RedirectToAction(nameof(Start));
         }
@@ -172,6 +178,7 @@ public class GameMvcController : Controller
         if (next is null)
         {
             // slutt – vis samme node eller send til “game over”/summary
+            _logger.LogWarning("[GameMvcController] Choice {ChoiceId} reached end of path on node {NodeId}", choiceId, nodeId);
             TempData["Info"] = "End of path.";
             return RedirectToAction(nameof(Play), new { nodeId });
         }
