@@ -15,6 +15,8 @@
     var bg = string.IsNullOrWhiteSpace(Model.Node?.BackgroundUrl) ? "" : Model.Node.BackgroundUrl;
 }
 
+<link rel="stylesheet" href="~/css/Play.css" />
+
 <div class="Page-Container">
     @if (!string.IsNullOrWhiteSpace(bg))
     {
@@ -22,11 +24,13 @@
     }
 
     <h2 class="Title">@Model.Node?.Title</h2>
+
     <div class="DescriptionsAndDialogues">
         @if (!string.IsNullOrWhiteSpace(Model.Node?.Description))
         {
             <p>@Model.Node.Description</p>
         }
+
         @if (Model.Node?.Dialogues != null && Model.Node.Dialogues.Any())
         {
             foreach (var line in Model.Node.Dialogues.OrderBy(d => d.Order))

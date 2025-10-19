@@ -22,17 +22,17 @@
   {
     "Title": "The Corridor Door",
     "Description": "Metallic hallway, dim blue strips of light. A sealed door with a weak access panel flickers faintly.",
-    "BackgroundUrl": "images/backgrounds/corridor.png"
+    "BackgroundUrl": "images/backgrounds/encounter.png"
   },
   {
     "Title": "Corridor Encounter",
     "Description": "Dim metallic hallway. Irene and Darius approach, breath clouding in cold air.",
-    "BackgroundUrl": "images/backgrounds/corridor.png"
+    "BackgroundUrl": "images/backgrounds/encounter.png"
   },
   {
     "Title": "Maintenance Corridor",
     "Description": "Long, dimly lit hallway with flickering blue lights and mist along the floor.",
-    "BackgroundUrl": "images/backgrounds/maintenenceCorridor.png"
+    "BackgroundUrl": "images/backgrounds/Corridor.png"
   },
   {
     "Title": "Airlock Door",
