@@ -19,10 +19,6 @@
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
-  <!-- ADDED: FRONTEND-ONLY STUFF -->
-  <PropertyGroup Condition="'$(Configuration)'=='FrontendOnly'">
-    <DefineConstants>$(DefineConstants);FRONTEND_ONLY</DefineConstants>
-  </PropertyGroup>
 
   <ItemGroup>
     <Content Update="wwwroot\seedData\Character.json">
@@ -45,11 +41,8 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(Configuration)'=='FrontendOnly'">
-    <Compile Remove="Infrastructure\**\*.cs" />
-    <Compile Remove="Application\**\*.cs" />
-    <Compile Remove="Migrations\**\*.cs" />
-    <Compile Include="Application\Dtos\**\*.cs" />
-    <Compile Remove="Controllers\GameController.cs" />
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\bg\space-tunnel.png" />
   </ItemGroup>
+
 </Project>

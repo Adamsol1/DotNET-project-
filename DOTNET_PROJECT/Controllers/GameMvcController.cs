@@ -1,3 +1,4 @@
+/**
 // MVC controller that connects the Razor frontend to the game API.
 // It acts as a bridge between the user's actions in the browser and the backend endpoints.
 //cd
@@ -9,12 +10,16 @@
 // Uses IHttpClientFactory to communicate with the API, which allows easy testing and separation
 // between the MVC layer and backend logic. If the API is mocked (MockGameApiController),
 // this controller still works seamlessly without a real database.
+*/
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
 using System.Text.Json;
-using DOTNET_PROJECT.Models;
+using DOTNET_PROJECT.Viewmodels;
 using DOTNET_PROJECT.Application.Dtos;
+using DOTNET_PROJECT.Application.Interfaces;
 
+
+/**
 namespace DOTNET_PROJECT.Controllers;
 
 public class GameMvcController : Controller
@@ -87,3 +92,92 @@ public class GameMvcController : Controller
         return RedirectToAction("Play", new { playerId });
     }
 }
+
+
+// MVC controller that connects the Razor frontend to the game API.
+// Now starts directly on StoryNode 1 (no PlayerCharacter).
+
+public class GameMvcController : Controller
+{
+    private readonly IGameService _game;
+    public GameMvcController(IGameService game) => _game = game;
+
+    [HttpGet]
+    public async Task<IActionResult> Start()
+    {
+        var startId = await _game.GetStartNodeIdAsync();
+        return RedirectToAction(nameof(Play), new { nodeId = startId });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Play(int nodeId)
+    {
+        var node = await _game.GetNodeAsync(nodeId);
+        if (node is null)
+        {
+            TempData["Error"] = $"Story node {nodeId} not found.";
+            return RedirectToAction(nameof(Start));
+        }
+
+        return View(new PlayViewModel { CurrentNodeId = nodeId, Node = node });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Choice(int nodeId, int choiceId)
+    {
+        var next = await _game.ApplyChoiceAsync(nodeId, choiceId);
+        if (next is null)
+        {
+            // slutt – vis samme node eller send til “game over”/summary
+            TempData["Info"] = "End of path.";
+            return RedirectToAction(nameof(Play), new { nodeId });
+        }
+        return RedirectToAction(nameof(Play), new { nodeId = next.Value });
+    }
+}
+**/
+
+//TODO: Make comments
+
+public class GameMvcController : Controller
+{
+    private readonly IGameService _game;
+    public GameMvcController(IGameService game) => _game = game;
+
+    [HttpGet]
+    public async Task<IActionResult> Start()
+    {
+        return  RedirectToAction(nameof(Play), new { nodeId= 1});
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Play(int nodeId)
+    {
+        var node = await _game.GetNodeAsync(nodeId);
+        if (node is null)
+        {
+            TempData["Error"] = $"Story node {nodeId} not found.";
+            return RedirectToAction(nameof(Start));
+        }
+
+        return View(new PlayViewModel { CurrentNodeId = nodeId, Node = node });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Choice(int nodeId, int choiceId)
+    {
+        var next = await _game.ApplyChoiceAsync(nodeId, choiceId);
+        if (next is null)
+        {
+            // slutt – vis samme node eller send til “game over”/summary
+            TempData["Info"] = "End of path.";
+            return RedirectToAction(nameof(Play), new { nodeId });
+        }
+        return RedirectToAction(nameof(Play), new { nodeId = next.Value }); //TODO: check is nextstorynode Exists
+    }
+}
+
+
+

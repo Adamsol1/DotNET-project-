@@ -100,6 +100,39 @@ namespace DOTNET_PROJECT.Migrations
                     b.ToTable("Dialogues");
                 });
 
+            modelBuilder.Entity("DOTNET_PROJECT.Domain.Models.GameSave", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CurrentStoryNodeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PlayerCharacterId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SaveName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurrentStoryNodeId");
+
+                    b.HasIndex("PlayerCharacterId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GameSaves");
+                });
+
             modelBuilder.Entity("DOTNET_PROJECT.Domain.Models.StoryNode", b =>
                 {
                     b.Property<int>("Id")
@@ -206,6 +239,33 @@ namespace DOTNET_PROJECT.Migrations
                     b.Navigation("Character");
 
                     b.Navigation("StoryNode");
+                });
+
+            modelBuilder.Entity("DOTNET_PROJECT.Domain.Models.GameSave", b =>
+                {
+                    b.HasOne("DOTNET_PROJECT.Domain.Models.StoryNode", "CurrentStoryNode")
+                        .WithMany()
+                        .HasForeignKey("CurrentStoryNodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DOTNET_PROJECT.Domain.Models.PlayerCharacter", "PlayerCharacter")
+                        .WithMany()
+                        .HasForeignKey("PlayerCharacterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DOTNET_PROJECT.Domain.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CurrentStoryNode");
+
+                    b.Navigation("PlayerCharacter");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DOTNET_PROJECT.Domain.Models.PlayerCharacter", b =>

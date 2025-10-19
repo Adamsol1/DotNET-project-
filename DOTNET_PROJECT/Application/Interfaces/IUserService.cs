@@ -18,7 +18,7 @@ public interface IUserService
 
     // admin methods ?
     GetAllUsers() -> gets all users.
-    GetUserById() -> gets a user by id.
+    GetUserById() -> gets a user by id. 
     checkUserRole() -> checks a user's role.
     UpdateUser() -> updates a user.
     DeleteUser() -> deletes a user.

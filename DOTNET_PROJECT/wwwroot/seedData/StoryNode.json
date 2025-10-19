@@ -1,14 +1,42 @@
 [
   {
-    "Id": 1,
     "Title": "Awakening",
-    "Description": "Protagonist awakens...",
-    "BackgroundUrl": "images/backgrounds/awakening.jpeg"
+    "Description": "Protagonist awakens from their cryopod with cryosickness, which disorients them. Unsure of when and where they are, they begin searching for answers.",
+    "BackgroundUrl": "images/backgrounds/awakening.png"
   },
   {
-    "Id": 2,
     "Title": "Disorientation",
-    "Description": "The protagonist has just exited the cryopod...",
-    "BackgroundUrl": "images/backgrounds/outsideCryopod.jpeg"
+    "Description": "The protagonist has just exited the cryopod, trying to figure out what happened.",
+    "BackgroundUrl": "images/backgrounds/outsideCryopod.png"
+  },
+  {
+    "Title": "Cryo Bay",
+    "Description": "Rows of pods, most sealed, a few cracked. Silence, except for the hum of failing systems.",
+    "BackgroundUrl": "images/backgrounds/outsideCryopod.png"
+  },
+  {
+    "Title": "Exposed Wiring",
+    "Description": "Narrow maintenance corridor, flickering blue lights. Ozone in the air. Loose burned cables dangle from the ceiling.",
+    "BackgroundUrl": "images/backgrounds/exposedWires.png"
+  },
+  {
+    "Title": "The Corridor Door",
+    "Description": "Metallic hallway, dim blue strips of light. A sealed door with a weak access panel flickers faintly.",
+    "BackgroundUrl": "images/backgrounds/corridor.png"
+  },
+  {
+    "Title": "Corridor Encounter",
+    "Description": "Dim metallic hallway. Irene and Darius approach, breath clouding in cold air.",
+    "BackgroundUrl": "images/backgrounds/corridor.png"
+  },
+  {
+    "Title": "Maintenance Corridor",
+    "Description": "Long, dimly lit hallway with flickering blue lights and mist along the floor.",
+    "BackgroundUrl": "images/backgrounds/maintenenceCorridor.png"
+  },
+  {
+    "Title": "Airlock Door",
+    "Description": "Thick blast door labeled AIRLOCK under a single flickering red light.",
+    "BackgroundUrl": "images/backgrounds/airlock.png"
   }
 ]
