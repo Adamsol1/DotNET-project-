@@ -21,31 +21,30 @@
     <div class="Background-login">
         <div class="login-box">
             <a asp-controller="Auth" asp-action="UpdatePassword" class="Secondary-Button">Update password</a>
+            <br/>
             <form asp-controller="Auth" asp-action="Login" method="post">
-
-
+                <span asp-validation-for="Username" class="Error-text"></span>
+                <br>
                 <input asp-for="Username"
                        class="input-login"
                        type="text"
                        placeholder="Username"/>
                 <br/>
-                <span asp-validation-for="Username" class="Error-text"></span>
+                <span asp-validation-for="Password" class="Error-text"></span>
                 <br>
                 <input asp-for="Password"
                        class="input-login"
                        type="password"
                        placeholder="Password"/>
                 <br/>
-                <span asp-validation-for="Password" class="Error-text"></span>
-                <br>
                 <button
-                    class="button-login"
+                    class="Primary-Button"
                     type="submit"
                     value="submit">Log in
                 </button>
             </form>
             <br/>
-            <a asp-controller="Auth" asp-action="Register" class="Primary-Button">Registrer</a>
+            <a asp-controller="Auth" asp-action="Register" class="Secondary-Button">Registrer</a>
 
         </div>
     </div >

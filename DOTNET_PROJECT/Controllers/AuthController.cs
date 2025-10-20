@@ -94,8 +94,8 @@ public class AuthController : Controller
             //Checks if the user service found a user with given username and password
             if (userDto == null)
             {
-                // TODO: Legge til korrekt feilmelding}
-                _logger.LogError("[AuthController] Error logging in!");
+                ModelState.AddModelError(nameof(vm.Username), "Wrong username or password");
+                _logger.LogError("[AuthController] Error logging in! Invalid username or password");
                 return View(vm);
             }
 
@@ -142,7 +142,7 @@ public class AuthController : Controller
             if (userDto == null)
             {
                 //If no user with given credentials inform the user and return the view. 
-                // TODO: Legge til korrekt feilmelding}
+                ModelState.AddModelError(nameof(vm.Username), "User does not exist");
                 _logger.LogError("[AuthController] Error logging in!");
                 return View(vm);
             }

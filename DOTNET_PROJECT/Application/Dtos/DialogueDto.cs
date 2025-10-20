@@ -21,7 +21,7 @@ public sealed class DialogueDto
     /// <summary>
     /// The identifier of the character this dialogue belongs to
     /// </summary>
-    public int CharacterId { get; set; }
+    
     /// <summary>
     /// The text used to present the dialogue
     /// </summary>
