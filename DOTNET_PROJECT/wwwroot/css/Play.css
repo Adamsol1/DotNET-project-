@@ -1,0 +1,28 @@
+html, body {
+    background-color: var(--panel);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+button, .btn {
+    background-color: var(--panel);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover, .btn:hover {
+    background-color: var(--accent, #00bfff);
+    color: #000;
+}
+.Background-Game {
+    height: 50vh; 
+    position: relative;
+    width: 60%;
+    background-position: center;
+    margin: 0 auto 1.5rem auto;
+}

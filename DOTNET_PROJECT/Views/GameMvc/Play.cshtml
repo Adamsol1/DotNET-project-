@@ -16,6 +16,7 @@
     Layout = "_Layout";
 }
 
+<link rel="stylesheet" href="~/css/Play.css" />
 
 <div class="Page-Container">
     <a asp-controller="Home" asp-action="Index" class="Secondary-Button">Back to home</a>
@@ -25,11 +26,13 @@
     }
 
     <h2 class="Title">@Model.Node?.Title</h2>
+
     <div class="DescriptionsAndDialogues">
         @if (!string.IsNullOrWhiteSpace(Model.Node?.Description))
         {
             <p>@Model.Node.Description</p>
         }
+
         @if (Model.Node?.Dialogues != null && Model.Node.Dialogues.Any())
         {
             foreach (var line in Model.Node.Dialogues.OrderBy(d => d.Order))

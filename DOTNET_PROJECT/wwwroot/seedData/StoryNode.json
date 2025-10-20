@@ -1,40 +1,54 @@
 [
   {
+    "Id": 1,
     "Title": "Awakening",
-    "Description": "Protagonist awakens from their cryopod with cryosickness, which disorients them. Unsure of when and where they are, they begin searching for answers.",
+    "Description": "Protagonist awakens from their crypod with cryosickness, which disorients him. Unsure of when and where they are, they have a goal of finding answers.",
     "BackgroundUrl": "images/backgrounds/awakening.png"
   },
   {
-    "Title": "Disorientation",
-    "Description": "The protagonist has just exited the cryopod, trying to figure out what happened.",
-    "BackgroundUrl": "images/backgrounds/outsideCryopod.png"
+    "Id": 2,
+    "Title": "Release hatch",
+    "Description": "You see an release hatch on your left",
+    "BackgroundUrl": "images/backgrounds/releaseHatch.png"
   },
   {
+    "Id": 3,
     "Title": "Cryo Bay",
-    "Description": "Rows of pods, most sealed, a few cracked. Silence, except for the hum of failing systems.",
+    "Description": "Rows of pods, most sealed, a few cracked. Silence, except the hum of failing systems.",
     "BackgroundUrl": "images/backgrounds/outsideCryopod.png"
   },
   {
+    "Id": 4,
+    "Title": "Medkit",
+    "Description": "You pry open a panel a medkit is found inside, you use it and feel much better",
+    "BackgroundUrl": "images/backgrounds/medkit.png"
+  },
+  {
+    "Id": 5,
     "Title": "Exposed Wiring",
-    "Description": "Narrow maintenance corridor, flickering blue lights. Ozone in the air. Loose burned cables dangle from the ceiling.",
+    "Description": "Narrow maintenance corridor, flickering blue lights. Ozone. Loose burned cables.",
     "BackgroundUrl": "images/backgrounds/exposedWires.png"
   },
   {
+    "Id": 6,
     "Title": "The Corridor Door",
-    "Description": "Metallic hallway, dim blue strips of light. A sealed door with a weak access panel flickers faintly.",
-    "BackgroundUrl": "images/backgrounds/corridor.png"
+    "Description": "Metallic hallway, dim blue strips. Sealed door with weak access panel.",
+    "BackgroundUrl": "images/backgrounds/hallway.png"
   },
   {
+    "Id": 7,
     "Title": "Corridor Encounter",
     "Description": "Dim metallic hallway. Irene and Darius approach, breath clouding in cold air.",
-    "BackgroundUrl": "images/backgrounds/corridor.png"
+    "BackgroundUrl": "images/backgrounds/encounter.png"
   },
   {
+    "Id": 8,
     "Title": "Maintenance Corridor",
-    "Description": "Long, dimly lit hallway with flickering blue lights and mist along the floor.",
+    "Description": "Long, dimly lit hallway, flickering blue lights. Mist along the floor.",
     "BackgroundUrl": "images/backgrounds/maintenenceCorridor.png"
   },
   {
+    "Id": 9,
     "Title": "Airlock Door",
     "Description": "Thick blast door labeled AIRLOCK under a single flickering red light.",
     "BackgroundUrl": "images/backgrounds/airlock.png"

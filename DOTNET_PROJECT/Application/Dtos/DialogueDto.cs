@@ -25,6 +25,7 @@ public sealed class DialogueDto
     /// <summary>
     /// The text used to present the dialogue
     /// </summary>
+    public int? CharacterId { get; set; }
     public string Text { get; set; } = string.Empty;
 }
 /// <summary>

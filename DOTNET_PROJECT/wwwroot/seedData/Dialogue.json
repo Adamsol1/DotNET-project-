@@ -1,38 +1,46 @@
 [
-  {
-    "StoryNodeId": 1,
-    "CharacterId": 1,
-    "Order": 1,
-    "Text": "Where am I?"
-  },
-  {
-    "StoryNodeId": 1,
-    "CharacterId": 1,
-    "Order": 2,
-    "Text": "What is happening…"
-  },
-  {
-    "StoryNodeId": 1,
-    "CharacterId": 2,
-    "Order": 3,
-    "Text": "Cryopod is experiencing malfunctioning. Please exit."
-  },
-  {
-    "StoryNodeId": 6,
-    "CharacterId": 3,
-    "Order": 1,
-    "Text": "You’re awake too? Thank god. The pods—they’re failing. We shouldn’t be out this early, not by decades. Something’s wrong with the ship."
-  },
-  {
-    "StoryNodeId": 6,
-    "CharacterId": 3,
-    "Order": 2,
-    "Text": "The AI’s offline. Life support’s degrading fast. We need to reach the control deck before it’s too late."
-  },
-  {
-    "StoryNodeId": 6,
-    "CharacterId": 3,
-    "Order": 3,
-    "Text": "I need to know—can I trust you to help us, or are you just looking out for yourself?"
-  }
+  {"StoryNodeId":1,"CharacterId":1,"Order":1,"Text":"What is happening… Where am I???"},
+  {"StoryNodeId":1,"CharacterId":3,"Order":2,"Text":"Cryopod is malfunctioning. Please exit."},
+  {"StoryNodeId":1,"CharacterId":3,"Order":3,"Text":"Please exit"},
+  {"StoryNodeId":1,"CharacterId":1,"Order":4,"Text":"Ugh… My head…"},
+
+  {"StoryNodeId":2,"CharacterId":2,"Order":1,"Text":"A layer of dew covers the seal of your cryopod, preventing you from seeing outside"},
+  {"StoryNodeId":2,"CharacterId":1,"Order":2,"Text":"I need to find a way out"},
+  {"StoryNodeId":2,"CharacterId":2,"Order":3,"Text":"You look around your surroundings, you see a hatch to your left. You could also break out. That would be cool"},
+
+  {"StoryNodeId":3,"CharacterId":2,"Order":1,"Text":"You step outside your cryopod. Cold air bites you, and as you take a breath you feel the stale air. Flickering lights and an aggressive alarm with its accompanying sounds cover you."},
+  {"StoryNodeId":3,"CharacterId":2,"Order":2,"Text":"You look around to see other cryopods, some still sealed others opened"},
+  {"StoryNodeId":3,"CharacterId":1,"Order":3,"Text":"The bay… looks like most are still asleep."},
+  {"StoryNodeId":3,"CharacterId":1,"Order":4,"Text":"I should try to find someone"},
+
+  {"StoryNodeId":4,"CharacterId":2,"Order":1,"Text":"As you take a closer look at the other cryopods, you see alarms blinking at all of them, ceiling panels across the floor, wires spread across the room, and a faint mist covering the room."},
+  {"StoryNodeId":4,"CharacterId":1,"Order":2,"Text":"What happened here? We were supposed to be awaken when we arrived at Terminus."},
+
+  {"StoryNodeId":5,"CharacterId":1,"Order":1,"Text":"Oh my god!"},
+  {"StoryNodeId":5,"CharacterId":1,"Order":2,"Text":"He is dead…"},
+  {"StoryNodeId":5,"CharacterId":1,"Order":3,"Text":"…looks like he died in cryostasis. Guess he wasn't so lucky"},
+
+  {"StoryNodeId":6,"CharacterId":2,"Order":1,"Text":"You enter a corridor stretching a fair distance. The corridor is covered by mist seeping from the cryobay, preventing you from seeing the end."},
+  {"StoryNodeId":6,"CharacterId":2,"Order":2,"Text":"As you look around in the corridor, you see two dark figures. As they approach, you tense up. When they close in, you see them wearing cryosuits, faces grim."},
+  {"StoryNodeId":6,"CharacterId":4,"Order":3,"Text":"Good to see someone else awake too. She smiles nervously. There are not many of us left. She gestures to man beside her."},
+  {"StoryNodeId":6,"CharacterId":2,"Order":4,"Text":"You recognize her. Her name is Irene; she is one of the members of the mechanical team. For the man, you do not recognize him."},
+  {"StoryNodeId":6,"CharacterId":1,"Order":5,"Text":"What happened?"},
+  {"StoryNodeId":6,"CharacterId":2,"Order":6,"Text":"Irene’s lips stiffen and she pauses for a moment. As she opens her mouth to speak, the man besides her speaks up."},
+  {"StoryNodeId":6,"CharacterId":5,"Order":7,"Text":"We were attacked, he says bitterly"},
+  {"StoryNodeId":6,"CharacterId":1,"Order":8,"Text":"By who?"},
+  {"StoryNodeId":6,"CharacterId":5,"Order":9,"Text":"Pirates, he spits out. Venom in his words"},
+  {"StoryNodeId":6,"CharacterId":2,"Order":10,"Text":"There is a quiet moment following the statement"},
+  {"StoryNodeId":6,"CharacterId":1,"Order":11,"Text":"And who are you again?"},
+  {"StoryNodeId":6,"CharacterId":5,"Order":12,"Text":"I am Darius. That is all you need to know"},
+  {"StoryNodeId":6,"CharacterId":2,"Order":13,"Text":"A moment of silence follows. There is tension in the air"},
+  {"StoryNodeId":6,"CharacterId":2,"Order":14,"Text":"Before it can manifest too deeply the ship trembles"},
+  {"StoryNodeId":6,"CharacterId":4,"Order":15,"Text":"We need to escape this ship. It won't last much longer"},
+  {"StoryNodeId":6,"CharacterId":1,"Order":16,"Text":"Escape to where? you say in a hurry"},
+  {"StoryNodeId":6,"CharacterId":4,"Order":17,"Text":"The escape pods are on the other side of the ship. We need to go past an airlock first."},
+  {"StoryNodeId":6,"CharacterId":4,"Order":18,"Text":"The airlock is in the maintenance corridor. She finishes and turns in the direction they came from"},
+  {"StoryNodeId":6,"CharacterId":4,"Order":19,"Text":"We need at least three persons to clear the way. Can you help us"},
+  {"StoryNodeId":6,"CharacterId":3,"Order":20,"Text":"The ship quakes again, making all of you stumble as you try to find your balance."},
+
+  {"StoryNodeId":7,"CharacterId":2,"Order":1,"Text":"The ship creaks and trembles as you enter the corridor. The devastation has hit even this deep in the ship."},
+  {"StoryNodeId":7,"CharacterId":2,"Order":2,"Text":"One of the paths has the sign Airlock"}
 ]
