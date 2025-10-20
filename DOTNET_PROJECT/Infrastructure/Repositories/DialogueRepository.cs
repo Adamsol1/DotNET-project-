@@ -70,13 +70,24 @@ public class DialogueRepository : GenericRepository<Dialogue>, IDialogueReposito
 
     public async Task<int> GetCharacterId(int id)
     {
-        /// Query to get the character id of the character speaking the dialogue
-        var characterId = _db.Dialogues
-                    .Where(Dialogues => Dialogues.Id == id)
-                    .Select(Dialogues => Dialogues.CharacterId)
-                    .SingleOrDefaultAsync();
+        // /// Query to get the character id of the character speaking the dialogue
+        // var characterId = _db.Dialogues
+        //     .Where(Dialogues => Dialogues.Id == id)
+        //     .Select(Dialogues => Dialogues.CharacterId)
+        //
+        //     
+        // return await characterId;
+        
+        var characterIdNullable = await _db.Dialogues
+            .Where(d => d.Id == id)
+            .Select(d => d.CharacterId)
+            .SingleOrDefaultAsync();
 
-        return await characterId;
+        // Convert nullable int to int (use 0 or throw if null)
+        if (characterIdNullable == null)
+            throw new InvalidOperationException($"Dialogue with Id {id} has no character assigned.");
+
+        return characterIdNullable.Value;
     }
 
     /// <summary>

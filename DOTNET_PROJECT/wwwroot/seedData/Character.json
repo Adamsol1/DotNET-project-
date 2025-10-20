@@ -1,17 +1,6 @@
 [
-  {
-    "Name": "System AI",
-    "Description": "AI for the ship",
-    "ImageUrl": "/images/characters/systemAI.png"
-  },
-  {
-    "Name": "Irene",
-    "Description": "",
-    "ImageUrl": "/images/characters/irene.png"
-  },
-  {
-    "Name": "Darius",
-    "Description": "",
-    "ImageUrl": "/images/characters/darius.png"
-  }
+  {"Id":2,"Name":"Narrator","Description":"Stories narrator","ImageUrl":"/images/characters/narrator.png"},
+  {"Id":3,"Name":"SystemAI","Description":"NPC","ImageUrl":"/images/characters/systemAI.png"},
+  {"Id":4,"Name":"Irene","Description":"NPC","ImageUrl":"/images/characters/irene.png"},
+  {"Id":5,"Name":"Darius","Description":"NPC","ImageUrl":"/images/characters/darius.png"}
 ]

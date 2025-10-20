@@ -29,7 +29,7 @@ public class Dialogue
     /// <summary>
     /// The identifier of the character speaking this dialogue, if any.
     /// </summary>
-    public int CharacterId { get; set; }
+    public int? CharacterId { get; set; }
     /// <summary>
     /// The character speaking this dialogue, if any.
     /// </summary>
