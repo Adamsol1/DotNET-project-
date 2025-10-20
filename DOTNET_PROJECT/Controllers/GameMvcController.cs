@@ -18,152 +18,59 @@ using DOTNET_PROJECT.Viewmodels;
 using DOTNET_PROJECT.Application.Dtos;
 using DOTNET_PROJECT.Application.Interfaces;
 
-
-/**
-namespace DOTNET_PROJECT.Controllers;
-
-public class GameMvcController : Controller
-{
-    private readonly IHttpClientFactory _http;
-    private const int DefaultUserId = 1;
-
-    public GameMvcController(IHttpClientFactory http) => _http = http;
-
-    [HttpPost]
-    public async Task<IActionResult> Start(StartGameViewModel vm)
-    {
-        if (!ModelState.IsValid || string.IsNullOrWhiteSpace(vm.Name))
-        {
-            TempData["Error"] = "Please enter a name.";
-            return RedirectToAction("Index", "Home");
-        }
-
-        var client = _http.CreateClient();
-        client.BaseAddress ??= new Uri($"{Request.Scheme}://{Request.Host}/");
-
-        var payload = new { userId = DefaultUserId, name = vm.Name };
-        var resp = await client.PostAsJsonAsync("api/game/start", payload);
-        if (!resp.IsSuccessStatusCode)
-        {
-            TempData["Error"] = $"Start failed ({(int)resp.StatusCode}).";
-            return RedirectToAction("Index", "Home");
-        }
-
-        using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync());
-        var playerId = doc.RootElement.GetProperty("playerCharacterId").GetInt32();
-
-        return RedirectToAction("Play", new { playerId });
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> Play(int playerId)
-    {
-        var client = _http.CreateClient();
-        client.BaseAddress ??= new Uri($"{Request.Scheme}://{Request.Host}/");
-
-        var resp = await client.GetAsync($"api/game/current?playerId={playerId}");
-        if (!resp.IsSuccessStatusCode)
-        {
-            TempData["Error"] = $"Load failed ({(int)resp.StatusCode}).";
-            return RedirectToAction("Index", "Home");
-        }
-
-        var json = await resp.Content.ReadAsStringAsync();
-        var node = System.Text.Json.JsonSerializer.Deserialize<StoryNodeDto>(
-            json,
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-        );
-
-        var model = new PlayViewModel { PlayerCharacterId = playerId, Node = node ?? new StoryNodeDto() };
-        return View(model);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Choice(int playerId, int choiceId)
-    {
-        var client = _http.CreateClient();
-        client.BaseAddress ??= new Uri($"{Request.Scheme}://{Request.Host}/");
-
-        var resp = await client.PostAsJsonAsync("api/game/choice", new { playerId, choiceId });
-        if (!resp.IsSuccessStatusCode)
-        {
-            TempData["Error"] = $"Choice failed ({(int)resp.StatusCode}).";
-        }
-        return RedirectToAction("Play", new { playerId });
-    }
-}
-
-
-// MVC controller that connects the Razor frontend to the game API.
-// Now starts directly on StoryNode 1 (no PlayerCharacter).
-
-public class GameMvcController : Controller
-{
-    private readonly IGameService _game;
-    public GameMvcController(IGameService game) => _game = game;
-
-    [HttpGet]
-    public async Task<IActionResult> Start()
-    {
-        var startId = await _game.GetStartNodeIdAsync();
-        return RedirectToAction(nameof(Play), new { nodeId = startId });
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> Play(int nodeId)
-    {
-        var node = await _game.GetNodeAsync(nodeId);
-        if (node is null)
-        {
-            TempData["Error"] = $"Story node {nodeId} not found.";
-            return RedirectToAction(nameof(Start));
-        }
-
-        return View(new PlayViewModel { CurrentNodeId = nodeId, Node = node });
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Choice(int nodeId, int choiceId)
-    {
-        var next = await _game.ApplyChoiceAsync(nodeId, choiceId);
-        if (next is null)
-        {
-            // slutt – vis samme node eller send til “game over”/summary
-            TempData["Info"] = "End of path.";
-            return RedirectToAction(nameof(Play), new { nodeId });
-        }
-        return RedirectToAction(nameof(Play), new { nodeId = next.Value });
-    }
-}
-**/
-
 //TODO: Make comments
 
+/// <summary>
+/// Game controller that connects the frontend to the backend.
+/// The page is responsible for the user to be able to play the game.
+/// Loags the current node, process player choices and the node the choice will lead to from the database. 
+/// </summary>
 public class GameMvcController : Controller
 {
     private readonly IGameService _game;
+    /// <summary>
+    /// Constructor for the controller
+    /// </summary>
+ 
     public GameMvcController(IGameService game) => _game = game;
 
+    /// <summary>
+    /// Starts the game. Will redirect the user to the first story node.
+    /// Note : The game does not currently have a save feature. To ensure that the user will always start from the beginning it is hardcoded that the game will start on gamenode with id 1. 
+    /// </summary>
     [HttpGet]
     public async Task<IActionResult> Start()
     {
+       //Redirects to the first story node
         return  RedirectToAction(nameof(Play), new { nodeId= 1});
     }
+    /// <summary>
+    /// Display for the current story node and its choices. 
+    /// </summary>
+    /// <param name="nodeId">The id of the node currently used. </param>
+    
 
     [HttpGet]
     public async Task<IActionResult> Play(int nodeId)
     {
+        
         var node = await _game.GetNodeAsync(nodeId);
         if (node is null)
         {
+            //If the node is not found, the game will restart itself. 
             TempData["Error"] = $"Story node {nodeId} not found.";
             return RedirectToAction(nameof(Start));
         }
-
+        //Creates and returns the viewmodel with the information of the current node
         return View(new PlayViewModel { CurrentNodeId = nodeId, Node = node });
     }
 
+    /// <summary>
+    /// Takes in user choice and will move to the next story node. 
+    /// </summary>
+    /// <param name="nodeId">Id of the current node</param>
+    /// <param name="choiceId">Id of the choice the user has taken</param>
+    /// <returns></returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Choice(int nodeId, int choiceId)
@@ -171,11 +78,12 @@ public class GameMvcController : Controller
         var next = await _game.ApplyChoiceAsync(nodeId, choiceId);
         if (next is null)
         {
-            // slutt – vis samme node eller send til “game over”/summary
+            //If the next node is null, it means that the game is over. Informs the user
             TempData["Info"] = "End of path.";
             return RedirectToAction(nameof(Play), new { nodeId });
         }
-        return RedirectToAction(nameof(Play), new { nodeId = next.Value }); //TODO: check is nextstorynode Exists
+        //Moves to the next node. 
+        return RedirectToAction(nameof(Play), new { nodeId = next.Value });
     }
 }
 

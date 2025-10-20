@@ -1,36 +1,13 @@
 @* 
-    Razor view for the game's start screen.
-    Displays a simple form where the player can enter their name to begin a new game.
-    Uses StartGameViewModel for validation and binding.
-    Shows any TempData["Error"] messages from the controller (e.g., if no name was entered).
-    On submission, the form posts to GameMvcController.Start to begin the game session.
+    
 *@
 
-
-@*
-@{
-    ViewData["Title"] = "Start";
-}
-<h2>Start a Game (Frontend Safe Mode)</h2>
-
-@if (TempData["Error"] != null)
-{
-    <div class="error">@TempData["Error"]</div>
-}
-
-<form asp-controller="GameMvc" asp-action="Start" method="post">
-    <label for="name">Your name</label>
-    <input id="name" name="Name" type="text" value="Test Pilot" />
-    <button type="submit">Start</button>
-</form>
-
-*@
 
 @{
     Layout = null;
 }
 
-<!-- TODO : legg til deisgn -->
+
 
 <!DOCTYPE html>
 
@@ -45,12 +22,27 @@
 
 </head>
 <body>
+@if (TempData["Error"] != null)
+{
+    <div class="alert error">@TempData["Error"]</div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert success">@TempData["Success"]</div>
+}
+
+
 <div class="Background-Home">
-<div class="Home-Options">
-    <a asp-controller="GameMvc" asp-action="Start" class="Primary-Button">Play</a>
-</div>
+    <div class="Home-Options">
+        <a asp-controller="GameMvc" asp-action="Start" class="Primary-Button">Play</a>
+        <form asp-controller="Auth" asp-action="Delete" method="post">
+            <button type="submit" class="Error-Button" onclick="return confirm('Are you sure you want to delete your account?')">Delete account</button>
+        </form>
+        <a asp-controller="Auth" asp-action="Login" class="Secondary-Button">Log out</a>
+    </div>
 </div>
 
 </body>
 
 </html>
+    

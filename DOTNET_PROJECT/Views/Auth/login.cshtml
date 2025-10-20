@@ -13,15 +13,16 @@
     <title>Log in</title>
 
         <link rel="stylesheet" href="~/css/LogInPage.css" />
-        <script src="~/js/jquery.validate.js "></script>
-        <script src="~/js/jquery.validate.unobtrusive.js"></script>
+       <!-- <script src="~/js/jquery.validate.js "></script>
+        <script src="~/js/jquery.validate.unobtrusive.js"></script> -->
 <!-- TODO : FIks input validering -->
 </head>
 <body>
     <div class="Background-login">
         <div class="login-box">
+            <a asp-controller="Auth" asp-action="UpdatePassword" class="Secondary-Button">Update password</a>
             <form asp-controller="Auth" asp-action="Login" method="post">
-                
+
 
                 <input asp-for="Username"
                        class="input-login"
@@ -35,7 +36,7 @@
                        type="password"
                        placeholder="Password"/>
                 <br/>
-                <span asp-validation-for="Password" class="Error-text"></span>  
+                <span asp-validation-for="Password" class="Error-text"></span>
                 <br>
                 <button
                     class="button-login"
@@ -44,7 +45,8 @@
                 </button>
             </form>
             <br/>
-                <a asp-controller="Auth" asp-action="Register" class="Primary-Button">Registrer</a>
+            <a asp-controller="Auth" asp-action="Register" class="Primary-Button">Registrer</a>
+
         </div>
     </div >
 </body>

@@ -36,7 +36,7 @@ body {
 
 }
 
-.button-login {
+.Primary-Button {
     padding: 10px;
     border-Radius: 5px;
     background-color : #ff8055;
@@ -68,13 +68,22 @@ body {
 
 }
 
-.Primary-Button {
-    background-color: #89d4e4;
+    .Secondary-Button {
+        background-color: #1e2a3a;
+        padding: 10px;
+        margin: 3px;
+        margin-bottom: 7px;
+        border-Radius: 5px;
+        color: #f3f5ff;
+    
+    }
+
+.Error-Button {
+    background-color: red;
     padding: 10px;
     margin: 3px;
     border-Radius: 5px;
-    color: #f3f5ff;
-
+    color: white;
 }
 
 

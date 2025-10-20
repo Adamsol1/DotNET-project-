@@ -6,9 +6,19 @@ using DOTNET_PROJECT.Application.Dtos;
 
 namespace DOTNET_PROJECT.Viewmodels
 {
+ /// <summary>
+ /// Viewmodel used for the game.
+ /// Contains the current node and its id. This allows the page to load in background, dialogue etc. 
+ /// </summary>
     public class PlayViewModel
     {
+        /// <summary>
+        /// Id of the current story node
+        /// </summary>
         public int CurrentNodeId { get; set; }
+        /// <summary>
+        /// The story node data. Contains the information connected to the storynode. 
+        /// </summary>
         public StoryNodeDto Node { get; set; } = new StoryNodeDto();
     }
 }

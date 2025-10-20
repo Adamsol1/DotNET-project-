@@ -53,18 +53,35 @@ body {
 }
 
 .Primary-Button {
-    background-color: #89d4e4;
+    background-color: #ff8055;
     padding: 10px;
     margin: 3px;
     border-Radius: 5px;
     color: #f3f5ff;
 
-}
-
+}  
 .Secondary-Button {
-    background-color: #89d4e4;
+    background-color: #1e2a3a;
     padding: 10px;
     margin: 3px;
     border-Radius: 5px;
     color: white;
+}
+
+.Error-Button {
+    background-color: red;
+    padding: 10px;
+    margin: 3px;
+    border-Radius: 5px;
+    color: white;
+}
+
+.alert {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
 }

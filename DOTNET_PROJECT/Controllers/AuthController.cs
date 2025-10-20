@@ -87,8 +87,8 @@ public class AuthController : Controller
         // Try to use user service for login
         try
         {
+            //Makes a new dto used for transer between layers and contacts service layer for a login with given credentials. 
             var dto = new LoginUserDto { Username = vm.Username, Password = vm.Password };
-
             var userDto = await _userService.Login(dto);
 
             //Checks if the user service found a user with given username and password
@@ -101,6 +101,8 @@ public class AuthController : Controller
 
             // If the service returns a valid userDTO the webpage will navigate to the Home page. 
             _logger.LogInformation("[AuthController] Account successfully logged in!");
+            //Sets a session id that is used when deleting an account. The id matches the user id. 
+            HttpContext.Session.SetInt32("UserId", userDto.Id);
             return RedirectToAction("index", "home");
         }
             //If unable to use the service the user will be given an error message. 
@@ -111,7 +113,96 @@ public class AuthController : Controller
                 return View(vm);
             }
         }
+    /// <summary>
+    /// Method for updating password on given user.
+    /// If the password is changed the user will be redirected to the login page where they now can use their new credentials.
+    /// If the password change is failed the page will be updated with an error message. 
+    /// </summary>
+    /// <param name="vm"></param>
+    /// <returns></returns>
+    [HttpPost("updatepassword")]
+    public async Task<IActionResult> UpdatePassword(UpdatePasswordViewModel vm)
+    {
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("[AuthController] User input did not pass validation");
+            return View(vm);
+        }
+
+        // Try to use user service for Update password
+        try
+        {
+            //Creates the updated user information
+            var dto = new UpdatePasswordDto() { Username = vm.Username, Password = vm.Password };
+            
+            //Checks if there is a given account with username
+            var userDto = await _userService.UpdatePassword(dto);
+
+            //Checks if the user service found a user with given username and password
+            if (userDto == null)
+            {
+                //If no user with given credentials inform the user and return the view. 
+                // TODO: Legge til korrekt feilmelding}
+                _logger.LogError("[AuthController] Error logging in!");
+                return View(vm);
+            }
+            
+            _logger.LogInformation("[AuthController] Account successfully updated!");
+
+            // If the service returns a valid userDTO the webpage will navigate to the Home page. 
+           
+            return RedirectToAction("Login", "Auth");
+        }
+        //If unable to use the service the user will be given an error message. 
+        catch (Exception e)
+        {
+            // TODO : Legge til korrekt feilmelding
+            _logger.LogError(e, "[AuthController] Error logging in!");
+            return View(vm);
+        }
+        
+    }
     
+    /// <summary>
+    /// Delete method used to delete account. The method will use the session id to be able to retrieve the correct user from the database.
+    /// If successful the user is logged out.
+    /// If unsuccessful the user will be informed. 
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    [HttpPost("Delete")]
+    public async Task<IActionResult> Delete()
+    {
+        //Tries to contact the service layer
+        try
+        {
+            //Retrieves the id of the current session/user
+            var userId = HttpContext.Session.GetInt32("UserId")
+                         ?? throw new Exception("UserId not found in current session");
+            //Contacts user service for the delete with given userid
+            bool delete = await _userService.Delete(userId);
+            if (delete == false)
+            {
+                //Informs the user and loggs error
+                TempData["Error"] = "Deletion of account failed";
+                _logger.LogError("[AuthController] Error deleting account!");
+                
+            }
+            
+            //Logout if account is deleted
+            _logger.LogInformation("[AuthController] Account successfully deleted!");
+            return RedirectToAction("Login", "Auth");
+        }
+        //Error if unable to contact service layer
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[AuthController] Error deleting account!");
+            return  RedirectToAction("Index", "Home");
+
+
+        }
+
+    } 
 
 
     /// <summary>
@@ -142,5 +233,14 @@ public class AuthController : Controller
         return View(new LogInViewModel());
     }
     
+    /// <summary>
+    /// Get method for displaying the update page
+    /// </summary>
+    
+    [HttpGet("updatepassword")]
+    public IActionResult UpdatePassword()
+    {
+        return View(new UpdatePasswordViewModel());
+    }
     
 }

@@ -16,7 +16,11 @@ public class UserService : IUserService
         _logger = logger;
         _uow = uow; 
     }
-
+/// <summary>
+/// Method used to register an account. 
+/// </summary>
+/// <param name="registerUserDto"></param>
+/// <returns></returns>
     public async Task<UserDto> RegisterAccount(RegisterUserDto registerUserDto)
     {
         try{
@@ -70,6 +74,59 @@ public class UserService : IUserService
         
     }
 
+    public async Task<bool> Delete(int id)
+    {
+        await _uow.BeginAsync();
+        try
+        {
+            var user = await _uow.UserRepository.GetById(id);
+            if (user == null)
+            {
+                await _uow.RollBackAsync();
+                _logger.LogWarning("[Userservice] User with id {Id} doesn't exist", id);
+                return false;
+            }
+
+            await _uow.UserRepository.Delete(id);
+            await _uow.CommitAsync();
+            _logger.LogInformation("[Userservice] User with id {Id} deleted", id);
+            return true;
+        }
+        catch
+        {
+            await  _uow.RollBackAsync();
+            _logger.LogError($"[Userservice] User with id {id} was not deleted");
+            return false;
+        }
+    }
+
+
+    public async Task<UserDto> UpdatePassword(UpdatePasswordDto updatePasswordDto)
+    {
+        await  _uow.BeginAsync();
+        try
+        {
+            var user = await _uow.UserRepository.GetUserByUsername(updatePasswordDto.Username);
+            if (user == null)
+            {
+                _logger.LogWarning("[Userservice] User with username {Username} not found", updatePasswordDto.Username);
+                return null;
+            }
+
+            user.Password = updatePasswordDto.Password;
+            await _uow.UserRepository.Update(user);
+            await _uow.CommitAsync();
+            _logger.LogInformation("[Userservice] User with username {Username} updated", user.Username);
+            return ReturnUserDto(user);
+        }
+        catch (Exception e)
+        {
+         await _uow.RollBackAsync();
+         _logger.LogError(e, "[Userservice] Error updating password");
+         throw;
+        }
+    }
+
     private static UserDto ReturnUserDto(User user) => new UserDto
         {
             Id = user.Id,
@@ -98,4 +155,3 @@ public class UserService : IUserService
     }
 }
 
-    

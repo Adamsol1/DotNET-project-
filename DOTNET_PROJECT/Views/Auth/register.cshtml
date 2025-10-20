@@ -18,29 +18,27 @@
 <body>
     <div class="Background-login">
         <div class="login-box">
-            <form asp-controller="Auth" asp-action="Register" method="post">     
+            <a asp-controller="Auth" asp-action="Login" class="Secondary-Button">Back to loginpage</a>
+            <form asp-controller="Auth" asp-action="Register" method="post">
                 <input asp-for="Username"
-                       class="input-login" 
-                       type="text" 
-                       placeholder="Username" 
-                />
+                       class="input-login"
+                       type="text"
+                       placeholder="Username"/>
                 <span asp-validation-for="Username" class="Error-text"></span>
                 <br>
                 <input asp-for="Password"
-                       class ="input-login" 
-                       type="password" 
-                       placeholder="Password" 
-                />
+                       class="input-login"
+                       type="password"
+                       placeholder="Password"/>
                 <span asp-validation-for="Password" class="Error-text"></span>
                 <br>
                 <button
-                    class = "button-login" 
-                    type = "submit" 
-                    value = "submit"
-                >Registrer
+                    class="button-login"
+                    type="submit"
+                    value="submit">Registrer
                 </button>
             </form>
-                
+
         </div>
     </div >
 </body>

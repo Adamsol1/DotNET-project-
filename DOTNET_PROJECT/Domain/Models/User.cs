@@ -30,6 +30,9 @@ public class User
     
 }
 
+/// <summary>
+///  Will be implemented in future
+/// </summary>
 public enum UserRole{
     admin,
     player

@@ -19,3 +19,17 @@ public sealed class LoginUserDto
     public string Password { get; set; } = string.Empty;
 }
 
+
+public sealed class DeleteAccountDto
+{
+    public string Username { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+    
+}
+
+public sealed class UpdatePasswordDto
+{
+    public string Username { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+}
+

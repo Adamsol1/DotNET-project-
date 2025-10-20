@@ -26,14 +26,12 @@ public interface IUserService
 
     Task<UserDto> RegisterAccount(RegisterUserDto registerUserDto);
     Task<UserDto> Login(LoginUserDto loginUserDto);
-    //Task<bool> Logout(int userId);
-    //Task<bool> ChangePassword(int userId, string oldPassword, string newPassword);
     
-    // Admin methods
-    //Task<IEnumerable<UserDto>> GetAllUsers();
+    
+    Task<UserDto> UpdatePassword(UpdatePasswordDto updatePasswordDto);
+    Task<bool> Delete(int it);
+  
     Task<UserDto> GetUserById(int id);
     
-    //Task<bool> CheckUserRole(int userId, string role);
-    //Task<UserDto> UpdateUser(int id, string username);
-    //Task<bool> DeleteUser(int id);
+    
 }
