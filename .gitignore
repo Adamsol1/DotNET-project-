@@ -13,6 +13,9 @@ obj/
 *.sln.docstates
 *.dbmdl
 *.log
+*.deps.json
+*.runtimeconfig.json
+*.staticwebassets.runtime.json
 .vs/
 _ReSharper*/
 *.DotSettings.user
@@ -20,6 +23,14 @@ _ReSharper*/
 # Entity Framework / test databases
 *.mdf
 *.ldf
+*.db-shm
+*.db-wal
+
+# Additional .NET build artifacts
+*.so
+*.dylib
+*.dll.config
+*.exe.config
 
 # NuGet packages
 packages/
