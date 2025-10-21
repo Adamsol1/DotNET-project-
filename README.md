@@ -4,7 +4,8 @@ This project is our implementation of basic project task 3. Note that the game i
 
 
 ## How to run:
-In terminal write dotnet run. The program will be run at local host 5169. link : http://localhost:5169 NB! Check that you are in the DOTNET_PROJECT folder.
+In terminal write dotnet run. The program will be run at local host 5169. link : http://localhost:5169 NB! Check that you are in the DOTNET_PROJECT folder.  
+Note: Use node version 22.18.0
 
 ## Excpected game flow
 1. You should be sent to "Auth/Login" when opening the local host link. Here you can either register your own account or use the admin account with following credentials : username = admin, password = admin.
