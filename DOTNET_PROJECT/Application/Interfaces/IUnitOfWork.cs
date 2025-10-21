@@ -23,6 +23,7 @@ public interface IUnitOfWork : IDisposable
     IChoiceRepository ChoiceRepository { get; }
     IDialogueRepository DialogueRepository { get; }
     IPlayerCharacterRepository PlayerCharacterRepository { get; }
+    IGameRepository GameRepository { get; }
 
 
     //Methods that the unit of work has.

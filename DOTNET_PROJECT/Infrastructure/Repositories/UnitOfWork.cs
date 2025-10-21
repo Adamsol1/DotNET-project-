@@ -34,6 +34,7 @@ public class UnitOfWork : IUnitOfWork {
     public IChoiceRepository ChoiceRepository { get; }
     public IDialogueRepository DialogueRepository { get; }
     public IPlayerCharacterRepository PlayerCharacterRepository { get; }
+    public IGameRepository GameRepository { get; }
 
     public UnitOfWork(AppDbContext context) {
         _context = context;
@@ -45,6 +46,7 @@ public class UnitOfWork : IUnitOfWork {
         ChoiceRepository = new ChoiceRepository(_context);
         DialogueRepository = new DialogueRepository(_context);
         PlayerCharacterRepository = new PlayerCharacterRepository(_context);
+        GameRepository = new GameRepository(_context);
     }
 
     // save changes;

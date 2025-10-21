@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+
 namespace DOTNET_PROJECT.Application.Interfaces;
 
 /*
@@ -22,4 +27,9 @@ public interface IGenericRepository<T> where T : class
 
     Task<T> Delete(int id);
 
+    Task<T?> GetByProperty<TProperty>(Expression<Func<T, TProperty>> propertySelector, TProperty value);
+
+    Task<IEnumerable<T>> GetAllByProperty<TProperty>(Expression<Func<T, TProperty>> propertySelector, TProperty value);
+
+    Task<TProperty?> GetPropertyValue<TProperty>(int id, Expression<Func<T, TProperty>> propertySelector);
 }

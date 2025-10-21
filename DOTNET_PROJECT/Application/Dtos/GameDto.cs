@@ -35,6 +35,48 @@ public class MiniGameStateDto
     public int Health { get; set; }
 }
 
+public class PlayerCharacterDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public int Health { get; set; }
+    public int UserId { get; set; }
+    public int CurrentStoryNodeId { get; set; }
+}
+
+public class GameStateDto
+{
+    public int SaveId { get; set; }
+    public PlayerCharacterDto PlayerCharacter { get; set; }
+    public StoryNodeDto CurrentStoryNode { get; set; }
+    public IEnumerable<ChoiceDto> AvailableChoices { get; set; }
+}
+
+// start game request dto.
+public class StartGameRequestDto
+{
+    public int UserId { get; set; }
+    public string CharacterName { get; set; }
+    public string SaveName { get; set; }
+}
+
+// make choice request dto.
+public class MakeChoiceRequestDto
+{
+    public int SaveId { get; set; }
+    public int ChoiceId { get; set; }
+}
+
+public class GameSaveDto
+{
+    public int Id { get; set; }
+    public int UserId { get; set; }
+    public int PlayerCharacterId { get; set; }
+    public string SaveName { get; set; }
+    public int CurrentStoryNodeId { get; set; }
+    public DateTime LastUpdate { get; set; }
+}
+
 // game state object to track and return the current game state.
 public class FullGameStateDto
 {
@@ -65,6 +107,12 @@ public class GameProgressDto
     public List<int> CompletedChoices { get; set; }
     // the total choices they have made.
     public int TotalChoicesMade { get; set; }
+}
+
+public class UpdateGameSaveRequest
+{
+    public int SaveId { get; set; }
+    public int CurrentStoryNodeId { get; set; }
 }
 
 // make choice dto.

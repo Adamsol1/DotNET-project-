@@ -21,11 +21,7 @@ public class CharacterRepository : GenericRepository<Character>, ICharacterRepos
 
     public async Task<Character?> GetCharacterByName(string name)
     {
-        /// Query to get a character by name
-        var character = _db.Characters
-                    .Where(Characters => Characters.Name == name)
-                    .FirstOrDefaultAsync();
-        return await character;
+        return await GetByProperty(c => c.Name, name);
     }
 
 
@@ -36,13 +32,7 @@ public class CharacterRepository : GenericRepository<Character>, ICharacterRepos
 
     public async Task<string> GetCharacterNameById(int id)
     {
-        /// Query to get character name by id 
-        var characterName = _db.Characters
-                    .Where(Characters => Characters.Id == id)
-                    .Select(Characters => Characters.Name)
-                    .SingleOrDefaultAsync();
-
-        return await characterName;
+        return await GetPropertyValue(id, c => c.Name);
 
     }
 
@@ -54,12 +44,7 @@ public class CharacterRepository : GenericRepository<Character>, ICharacterRepos
 
     public async Task<IEnumerable<Character>> GetAllCharactersWithName(string name)
     {
-        /// Query to get all characters associated with given name in list
-        var characters = await _db.Characters
-                    .Where(Characters => Characters.Name == name)
-                    .ToListAsync();
-
-        return characters;
+        return await GetAllByProperty(c => c.Name, name);
     }
 
 
@@ -70,14 +55,7 @@ public class CharacterRepository : GenericRepository<Character>, ICharacterRepos
 
     public async Task<string> GetCharacterDescription(int id)
     {
-        /// Query to get character description by id
-
-        var characterDescription = _db.Characters
-                    .Where(Characters => Characters.Id == id)
-                    .Select(Characters => Characters.Description)
-                    .SingleOrDefaultAsync();
-
-        return await characterDescription;
+        return await GetPropertyValue(id, c => c.Description);
     }
 
 
@@ -88,13 +66,7 @@ public class CharacterRepository : GenericRepository<Character>, ICharacterRepos
 
     public async Task<string> GetCharacterImageUrl(int id)
     {
-        /// Query to get character image url by id
-        var imageUrl = _db.Characters
-                    .Where(Characters => Characters.Id == id)
-                    .Select(Characters => Characters.ImageUrl)
-                    .SingleOrDefaultAsync();
-
-        return await imageUrl;
+        return await GetPropertyValue(id, c => c.ImageUrl);
     }
 
 

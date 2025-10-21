@@ -96,4 +96,11 @@ public class ChoiceRepository : GenericRepository<Choice>, IChoiceRepository
         return await choiceText;
     }
 
+    public async Task<IEnumerable<Choice>> GetAllByStoryNodeId(int storyNodeId)
+    {
+        return await _db.Choices
+            .Where(c => c.StoryNodeId == storyNodeId)
+            .ToListAsync();
+    }
+
 }

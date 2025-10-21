@@ -23,7 +23,7 @@ namespace DOTNET_PROJECT.Tests
         public async Task SeedAsync_ShouldSeedDatabase_WhenDatabaseIsEmpty_TempValues()
         {
             // Arrange
-            var options = GetInMemoryOptions("TestDb");
+            var options = GetInMemoryDbOptions();
 
             // Use a fresh context
             await using var context = new AppDbContext(options);
@@ -46,7 +46,7 @@ namespace DOTNET_PROJECT.Tests
             await File.WriteAllTextAsync("wwwroot/seedData/storynodes.json",
                 JsonSerializer.Serialize(new List<StoryNode>
                 {
-                    new() { Title = "Start", Desciption = "Beginning of the story" }
+                    new() { Title = "Start", Description = "Beginning of the story" }
                 }));
 
             await File.WriteAllTextAsync("wwwroot/seedData/dialogues.json",
@@ -58,7 +58,7 @@ namespace DOTNET_PROJECT.Tests
             await File.WriteAllTextAsync("wwwroot/seedData/choices.json",
                 JsonSerializer.Serialize(new List<Choice>
                 {
-                    new() { Description = "Go left", StoryNodeId = 1, NextNodeId = 2 }
+                    new() { Text = "Go left", StoryNodeId = 1, NextStoryNodeId = 2 }
                 }));
                 
             // Act
@@ -85,7 +85,7 @@ namespace DOTNET_PROJECT.Tests
             Assert.Equal("Hello!", dialogue.Text);
 
             var choice = await context.Choices.FirstAsync();
-            Assert.Equal("Go left", choice.Description);
+            Assert.Equal("Go left", choice.Text);
         }
 
         [Fact]

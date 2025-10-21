@@ -56,7 +56,7 @@ public class AppDbContextTests
             var storyNode = new StoryNode
             {
                 Title = "Beginning",
-                Desciption = "This is the start of the adventure."
+                Description = "This is the start of the adventure."
             };
             context.StoryNodes.Add(storyNode);
             context.SaveChanges();
@@ -67,7 +67,7 @@ public class AppDbContextTests
         {
             var storyNode = context.StoryNodes.FirstOrDefault(sn => sn.Title == "Beginning");
             Assert.NotNull(storyNode);
-            Assert.Equal("This is the start of the adventure.", storyNode!.Desciption);
+            Assert.Equal("This is the start of the adventure.", storyNode!.Description);
         }
     }
 
@@ -147,7 +147,7 @@ public class AppDbContextTests
             context.Database.EnsureCreated();
 
             var character = new Character { Name = "Hero", Description = "The main protagonist." };
-            var storyNode = new StoryNode { Title = "Beginning", Desciption = "This is the start of the adventure." };
+            var storyNode = new StoryNode { Title = "Beginning", Description = "This is the start of the adventure." };
             context.Characters.Add(character);
             context.StoryNodes.Add(storyNode);
             context.SaveChanges();
