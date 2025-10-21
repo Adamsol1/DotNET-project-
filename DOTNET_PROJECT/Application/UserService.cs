@@ -51,6 +51,12 @@ public class UserService : IUserService
         }
         
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="loginUserDto"></param>
+    /// <returns></returns>
     
     public async Task<UserDto> Login(LoginUserDto loginUserDto)
     {
@@ -73,20 +79,26 @@ public class UserService : IUserService
         }
         
     }
-
+    /// <summary>
+    /// Attempts to delete account with given id. 
+    /// </summary>
+    /// <param name="id">Identifier of account that is being deleted</param>
+    /// <returns>boolean value</returns>
     public async Task<bool> Delete(int id)
     {
         await _uow.BeginAsync();
         try
         {
+            //Retrieve the user to confirm they exist
             var user = await _uow.UserRepository.GetById(id);
             if (user == null)
             {
+                
                 await _uow.RollBackAsync();
                 _logger.LogWarning("[Userservice] User with id {Id} doesn't exist", id);
                 return false;
             }
-
+            //Delete the user and commit transaction
             await _uow.UserRepository.Delete(id);
             await _uow.CommitAsync();
             _logger.LogInformation("[Userservice] User with id {Id} deleted", id);
@@ -94,6 +106,7 @@ public class UserService : IUserService
         }
         catch
         {
+            //Roll back changes if an error cause
             await  _uow.RollBackAsync();
             _logger.LogError($"[Userservice] User with id {id} was not deleted");
             return false;
@@ -101,26 +114,39 @@ public class UserService : IUserService
     }
 
 
+    /// <summary>
+    /// Updates a user's password by username
+    /// </summary>
+    /// <param name="updatePasswordDto">DTO with username and new password</param>
+    /// <returns>The new updated dto</returns>
     public async Task<UserDto> UpdatePassword(UpdatePasswordDto updatePasswordDto)
     {
         await  _uow.BeginAsync();
         try
         {
+            //Retrieve used by username
             var user = await _uow.UserRepository.GetUserByUsername(updatePasswordDto.Username);
             if (user == null)
             {
                 _logger.LogWarning("[Userservice] User with username {Username} not found", updatePasswordDto.Username);
                 return null;
             }
+            
+            //Update password field
 
             user.Password = updatePasswordDto.Password;
+            
+            //Apply the update and save
             await _uow.UserRepository.Update(user);
             await _uow.CommitAsync();
             _logger.LogInformation("[Userservice] User with username {Username} updated", user.Username);
+            
+            //Return the updated user
             return ReturnUserDto(user);
         }
         catch (Exception e)
         {
+            //Rollback changes if error occurs
          await _uow.RollBackAsync();
          _logger.LogError(e, "[Userservice] Error updating password");
          throw;

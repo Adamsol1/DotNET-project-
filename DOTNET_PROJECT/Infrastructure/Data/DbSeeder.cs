@@ -16,7 +16,7 @@ public static class DbSeeder
     public static async Task SeedAsync(AppDbContext context)
     {
         // Deletes database for seeding
-        //await context.Database.EnsureDeletedAsync();
+        await context.Database.EnsureDeletedAsync();
         
         // Apply migrations
         await context.Database.MigrateAsync();

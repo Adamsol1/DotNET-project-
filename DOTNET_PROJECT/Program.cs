@@ -101,7 +101,6 @@ app.UseRouting();
     * In production, the frontend and backend should be hosted on the same domain
     * and cors should be configured accordingly.
     * cors for the frontend to access the api
-    * frontend hosted on localhost:3000
     * backend hosted on localhost:5169
     */
 app.UseCors(cors => cors.WithOrigins("http://localhost:3000")
