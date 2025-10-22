@@ -1,7 +1,7 @@
 using DOTNET_PROJECT.Domain.Models;
 using DOTNET_PROJECT.Application.Dtos;
 
-namespace DOTNET_PROJECT.Application.Interfaces;
+namespace DOTNET_PROJECT.Application.Interfaces.Services;
 
 /*
 The idea is to have a single service that handles the game logic.

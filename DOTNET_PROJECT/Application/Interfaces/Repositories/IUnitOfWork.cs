@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace DOTNET_PROJECT.Application.Interfaces;
+namespace DOTNET_PROJECT.Application.Interfaces.Repositories;
 
 /*
 Unit of Work Pattern : created to ensure data consistancy and
@@ -16,7 +16,9 @@ Hepls optimize preformance.
 
 public interface IUnitOfWork : IDisposable
 {
-    // register repositories here.
+    // generic repository
+    IGenericRepository<T> GetRepository<T>() where T : class;
+    // entity repositories here.
     IUserRepository UserRepository { get; }
     IStoryNodeRepository StoryNodeRepository { get; }
     ICharacterRepository CharacterRepository { get; }

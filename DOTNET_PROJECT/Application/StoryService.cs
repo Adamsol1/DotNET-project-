@@ -1,4 +1,5 @@
-using DOTNET_PROJECT.Application.Interfaces;
+using DOTNET_PROJECT.Application.Interfaces.Repositories;
+using DOTNET_PROJECT.Application.Interfaces.Services;
 using DOTNET_PROJECT.Application.Dtos;
 using DOTNET_PROJECT.Domain.Models;
 using Serilog;
@@ -8,55 +9,32 @@ namespace DOTNET_PROJECT.Application;
 public class StoryService : IStoryService
 {
     private readonly IUnitOfWork _uow;
-
+    private readonly IGenService _genService;
     private readonly ILogger<StoryService> _logger;
 
     // constructor
-    public StoryService(IUnitOfWork uow, ILogger<StoryService> logger)
+    public StoryService(IUnitOfWork uow, IGenService genService, ILogger<StoryService> logger)
     {
         _logger = logger;
         _uow = uow;
+        _genService = genService;
     }
 
     // get story node by id
-    public async Task<StoryNodeDto> GetStoryNodeById(int id) {
-        // validate request
-
-        try {
-            // begin transaction
-            await _uow.BeginAsync();
-
+    public async Task<StoryNodeDto> GetStoryNodeById(int id) 
+    {
+        return await _genService.Execute(async () =>
+        {
             // get story node by id
-            var storyNode = await _uow.StoryNodeRepository.GetById(id);
-            // if story node is not found, throw an exception
-            if (storyNode == null) {
-                _logger.LogWarning("[Storyservice] StoryNode with id {id} not found", id);
-                throw new Exception("Story node not found");
-            }
-
-            // and get the dialogues & choices that belongs to the storyNode
-            // these methods needs to be created in the repository.
+            var storyNode = await _genService.ValidateEntityExists<StoryNode>(id);
+            
+            // get the dialogues & choices that belongs to the storyNode
             var dialogues = await _uow.StoryNodeRepository.GetAllDialoguesOfStoryNode(id);
             var choices = await _uow.StoryNodeRepository.GetAllChoicesOfStoryNode(id);
 
-            if (dialogues == null) {
-                _logger.LogWarning("[Storyservice] No dialogues for StoryNode with id {StoryNodeId} found", id);
-                throw new Exception("Dialogues not found");
-            }
-            if (choices == null) {
-                _logger.LogWarning("[Storyservice] No choices for StoryNode with id {StoryNodeId} found", id);
-                throw new Exception("Choices not found");
-            }
-
-            // finally, return them to the data transfer object.
-            return ReturnStoryNodeDto(storyNode, dialogues, choices);
-        
-        } catch (Exception ex) {
-            // if the try fails, we rollback the transaction. 
-            await _uow.RollBackAsync();
-            _logger.LogError(ex, "[Storyservice] Error retrieving StoryNode with id {StoryNodeId}", id);
-            throw new Exception("Failed to get story node: " + ex.Message);
-        }
+            // use GenService mapping
+            return _genService.MapStoryNode(storyNode, dialogues, choices);
+        });
     }
 
     // get all story nodes
@@ -81,7 +59,7 @@ public class StoryService : IStoryService
                 var dialogues = await _uow.StoryNodeRepository.GetAllDialoguesOfStoryNode(storyNode.Id);
                 var choices = await _uow.StoryNodeRepository.GetAllChoicesOfStoryNode(storyNode.Id);
                 // error handling later
-                result.Add(ReturnStoryNodeDto(storyNode, dialogues, choices));
+                result.Add(_genService.MapStoryNode(storyNode, dialogues, choices));
             }
 
             // since result array contains a return object for each storyNode, 
@@ -115,7 +93,7 @@ public class StoryService : IStoryService
             await _uow.CommitAsync();
 
             // return the story? or should we return a string? for know i just return the storyNode.
-            return ReturnStoryNodeDto(storyNode, new List<Dialogue>(), new List<Choice>());
+            return _genService.MapStoryNode(storyNode, new List<Dialogue>(), new List<Choice>());
 
         } catch (Exception ex) {
             // rollback, & error handling.
@@ -153,7 +131,7 @@ public class StoryService : IStoryService
             var choices = await _uow.StoryNodeRepository.GetAllChoicesOfStoryNode(request.Id);
 
             // return the storyNode
-            return ReturnStoryNodeDto(storyNode, dialogues, choices);
+            return _genService.MapStoryNode(storyNode, dialogues, choices);
         } catch (Exception ex) {
             // rollback, & error handling.
             await _uow.RollBackAsync();
@@ -209,7 +187,7 @@ public class StoryService : IStoryService
             await _uow.CommitAsync();
 
             // return the dialogue
-            return ReturnDialogueDto(dialogue);
+            return _genService.MapDialogue(dialogue);
         }
         catch (Exception ex) {
             // rollback, & error handling.
@@ -245,7 +223,7 @@ public class StoryService : IStoryService
             await _uow.CommitAsync();
 
             // return the dialogue
-            return ReturnDialogueDto(dialogue);
+            return _genService.MapDialogue(dialogue);
         }
         catch (Exception ex) {
             await _uow.RollBackAsync();
@@ -263,7 +241,7 @@ public class StoryService : IStoryService
 
             // get the dialogues from the repository
             var dialogues = await _uow.StoryNodeRepository.GetAllDialoguesOfStoryNode(storyNodeId);
-            return dialogues.Select(ReturnDialogueDto);
+            return dialogues.Select(_genService.MapDialogue);
         } catch (Exception ex) {
             // rollback, & error handling.
             _logger.LogError(ex, "[Storyservice] Error retrieving dialogues from StoryNode with id {StoryNodeId}", storyNodeId);
@@ -308,7 +286,7 @@ public class StoryService : IStoryService
             await _uow.CommitAsync();
 
             // return the choice
-            return ReturnChoiceDto(choice);
+            return _genService.MapChoice(choice);
 
         }
         catch (Exception ex) {
@@ -344,7 +322,7 @@ public class StoryService : IStoryService
             await _uow.CommitAsync();
 
             // return the choice
-            return ReturnChoiceDto(choice);
+            return _genService.MapChoice(choice);
         }
         catch (Exception ex) {
             await _uow.RollBackAsync();
@@ -367,7 +345,7 @@ public class StoryService : IStoryService
                 throw new Exception("Choices not found");
             }
             // return the choices to DTO object
-            return choices.Select(ReturnChoiceDto);
+            return choices.Select(_genService.MapChoice);
         }
         catch (Exception ex) {
             await _uow.RollBackAsync();
@@ -419,7 +397,7 @@ public class StoryService : IStoryService
             }
 
             // return the character
-            return ReturnCharacterDto(character, dialogues);
+            return _genService.MapCharacter(character, dialogues);
         }
         catch (Exception ex) {
             await _uow.RollBackAsync();
@@ -453,7 +431,7 @@ public class StoryService : IStoryService
                     throw new Exception("Dialogues not found");
                 } 
 
-                result.Add(ReturnCharacterDto(character, dialogues));
+                result.Add(_genService.MapCharacter(character, dialogues));
             }
 
             // return the result
@@ -491,7 +469,7 @@ public class StoryService : IStoryService
                     throw new Exception("Dialogues not found");
                 }
                 
-                result.Add(ReturnCharacterDto(character, dialogues));
+                result.Add(_genService.MapCharacter(character, dialogues));
             }
 
             // return the result
@@ -523,7 +501,7 @@ public class StoryService : IStoryService
             await _uow.CommitAsync();
 
             // return the character
-            return ReturnCharacterDto(character, new List<Dialogue>());
+            return _genService.MapCharacter(character, new List<Dialogue>());
         }
         catch (Exception ex) {
             await _uow.RollBackAsync();
@@ -553,7 +531,7 @@ public class StoryService : IStoryService
             await _uow.CommitAsync();
 
             var dialogues = await _uow.CharacterRepository.GetAllDialoguesOfCharacter(character.Id);
-            return ReturnCharacterDto(character, dialogues);
+            return _genService.MapCharacter(character, dialogues);
         } catch (Exception ex) {
             await _uow.RollBackAsync();
             _logger.LogError(ex, "[Storyservice] Error updating character with id {CharacterId}", request.Id);
@@ -561,45 +539,4 @@ public class StoryService : IStoryService
         }
     }
 
-    // helper methods
-
-    // return story node dto
-     private static StoryNodeDto ReturnStoryNodeDto(StoryNode storyNode, IEnumerable<Dialogue> dialogues, IEnumerable<Choice> choices) => new StoryNodeDto
-    {
-        Id = storyNode.Id,
-        Title = storyNode.Title,
-        Description = storyNode.Description,
-        BackgroundUrl = storyNode.BackgroundUrl ?? string.Empty,
-        Dialogues = dialogues.Select(ReturnDialogueDto).ToList(),
-        Choices = choices.Select(ReturnChoiceDto).ToList()
-    };
-
-    // return dialogue dto
-    private static DialogueDto ReturnDialogueDto(Dialogue dialogue) => new DialogueDto
-    {
-        Id = dialogue.Id,
-        Text = dialogue.Text,
-        CharacterId = dialogue.CharacterId,
-        StoryNodeId = dialogue.StoryNodeId,
-        Order = dialogue.Order
-    };
-
-    // return choice dto
-    private static ChoiceDto ReturnChoiceDto(Choice choice) => new ChoiceDto
-    {
-        Id = choice.Id,
-        Text = choice.Text,
-        StoryNodeId = choice.StoryNodeId,
-        NextStoryNodeId = choice.NextStoryNodeId
-    };
-
-    // return character dto
-    private static CharacterDto ReturnCharacterDto(Character character, IEnumerable<Dialogue> dialogues) => new CharacterDto
-    {
-        Id = character.Id,
-        Name = character.Name,
-        Description = character.Description,
-        ImageUrl = character.ImageUrl,
-        Dialogues = dialogues.Select(ReturnDialogueDto).ToList()
-    };
 }

@@ -6,7 +6,8 @@ using Serilog.Events;
 using DOTNET_PROJECT.Application;
 using DOTNET_PROJECT.Infrastructure.Data;
 using DOTNET_PROJECT.Infrastructure.Repositories;
-using DOTNET_PROJECT.Application.Interfaces;
+using DOTNET_PROJECT.Application.Interfaces.Repositories;
+using DOTNET_PROJECT.Application.Interfaces.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,9 +37,11 @@ builder.Services.AddScoped<IDialogueRepository, DialogueRepository>();
 builder.Services.AddScoped<IChoiceRepository, ChoiceRepository>();
 
 // Application services
+builder.Services.AddScoped<IGenService, GenService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<IStoryService, StoryService>();
+builder.Services.AddScoped<IStoryControllerService, StoryControllerService>();
 builder.Services.AddScoped<IGameService, GameService>();
 
 

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using DOTNET_PROJECT.Application.Interfaces;
+using DOTNET_PROJECT.Application.Interfaces.Repositories;
+using DOTNET_PROJECT.Application.Interfaces.Services;
 using DOTNET_PROJECT.Application.Dtos;
 
 namespace DOTNET_PROJECT.Controllers;

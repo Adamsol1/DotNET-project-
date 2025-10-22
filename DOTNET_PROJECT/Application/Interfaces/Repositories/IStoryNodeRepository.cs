@@ -2,7 +2,7 @@
 
 using DOTNET_PROJECT.Domain.Models;
 
-namespace DOTNET_PROJECT.Application.Interfaces;
+namespace DOTNET_PROJECT.Application.Interfaces.Repositories;
 
 public interface IStoryNodeRepository : IGenericRepository<StoryNode>
 {

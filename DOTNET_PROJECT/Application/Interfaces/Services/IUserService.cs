@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using DOTNET_PROJECT.Application.Dtos;
 
-namespace DOTNET_PROJECT.Application.Interfaces;
+namespace DOTNET_PROJECT.Application.Interfaces.Services;
 
 public interface IUserService
 {

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using DOTNET_PROJECT.Application.Interfaces;
+using DOTNET_PROJECT.Application.Interfaces.Repositories;
+using DOTNET_PROJECT.Application.Interfaces.Services;
 using DOTNET_PROJECT.Application.Dtos;
 using DOTNET_PROJECT.Viewmodels;
 
@@ -15,7 +16,8 @@ public class AuthController : Controller
     {
         _userService = userService;
     }
-    
+
+    /*
     
     /// <summary>
     /// This controller method will contact the service layer about registering a user with given information.
@@ -121,5 +123,7 @@ public class AuthController : Controller
         return View();
     }
     
+    */
+
     
 }

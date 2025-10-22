@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace DOTNET_PROJECT.Application.Interfaces;
+namespace DOTNET_PROJECT.Application.Interfaces.Repositories;
 
 /*
     Generic Repository interface,

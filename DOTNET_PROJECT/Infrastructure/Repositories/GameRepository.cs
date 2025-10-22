@@ -1,4 +1,4 @@
-using DOTNET_PROJECT.Application.Interfaces;
+using DOTNET_PROJECT.Application.Interfaces.Repositories;
 using DOTNET_PROJECT.Domain.Models;
 using DOTNET_PROJECT.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

@@ -2,7 +2,7 @@ using DOTNET_PROJECT.Application.Dtos;
 
 // Player Service Interface
 
-namespace DOTNET_PROJECT.Application.Interfaces;
+namespace DOTNET_PROJECT.Application.Interfaces.Services;
 
 public interface IPlayerService
 {

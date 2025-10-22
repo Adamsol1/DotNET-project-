@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DOTNET_PROJECT.Application.Dtos;
-using DOTNET_PROJECT.Application.Interfaces;
+using DOTNET_PROJECT.Application.Interfaces.Services;
 using DOTNET_PROJECT.Controllers;
 using DOTNET_PROJECT.Domain.Models;
 using Microsoft.AspNetCore.Mvc;

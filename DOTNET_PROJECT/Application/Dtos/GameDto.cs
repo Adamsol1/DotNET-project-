@@ -60,6 +60,12 @@ public class StartGameRequestDto
     public string SaveName { get; set; }
 }
 
+public class ModifyHealthRequestDto
+{
+    public int choiceId { get; set; }
+    public int healthValue { get; set; }
+}
+
 // make choice request dto.
 public class MakeChoiceRequestDto
 {
