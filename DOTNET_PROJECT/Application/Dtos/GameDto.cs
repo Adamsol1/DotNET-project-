@@ -56,7 +56,6 @@ public class GameStateDto
 public class StartGameRequestDto
 {
     public int UserId { get; set; }
-    public string CharacterName { get; set; }
     public string SaveName { get; set; }
 }
 

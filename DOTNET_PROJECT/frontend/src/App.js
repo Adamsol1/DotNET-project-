@@ -1,43 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
+import { GameProvider } from './context/GameContext';
+import { Home } from './pages/Home';
+import { Game } from './pages/Game';
 import { tokens } from './design/tokens';
-import { SceneLayout} from './components/scene/SceneLayout';
-import { Card } from './ui/Card';
-import { Text } from './ui/Text';
-import { DialoguePanel } from './components/DialoguePanel';
 
-//root react component that sets up a single scene
-export default function App() {
-  //placeholder scene
-  var text= 'you have to do something! you are running out of time.';
-  var choices = [
-    { id: 'bang', text: 'bang on glass' },
-    { id: 'scream', text: 'scream' },
-    { id: 'look', text: 'look around' },
-  ];
-  //function that is called when user clicks one of the buttons
-  function handleChoice(c) {
-    console.log('choice: ', c);
-  }
+//set the appContent routes
+function AppContent() {
+  // set the start page as the home page.
+  const [currentPage, setCurrentPage] = useState('home');
+
+  // navigate to a different page
+  const navigate = (page) => {
+    setCurrentPage(page);
+  };
+
+  // render the current page based on the currentPage state.
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'home':
+        return <Home onNavigate={navigate} />;
+      case 'game':
+        return <Game onNavigate={navigate} />;
+      default:
+        return <Home onNavigate={navigate} />;
+    }
+  };
+
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: tokens.color.bg, //gets the token background color
-        color: tokens.color.text, //gets the token text color
-        padding: tokens.space.md, //uses token padding
-      }}
-      >
-        {/*Gets the background froom assets/bg folder*/}
-        <SceneLayout backgroundUrl="/assets/bg/space-tunnel.png">
-        {/*Dialogue panel contains the avatar, text and choice buttons*/}
-        <DialoguePanel
-        avatarUrl="/assets/char/hero.png"
-        text={text}
-        choices={choices}
-        onSelect={handleChoice}
-        />
-        </SceneLayout>
-      </div>
+    <div style={{
+      minHeight: '100vh',
+      background: tokens.color.bg,
+      color: tokens.color.text
+    }}>
+      {renderPage()}
+    </div>
+  );
+}
+
+// setup the app with the GameProvider and AppContent
+export default function App() {
+  return (
+    <GameProvider>
+      <AppContent />
+    </GameProvider>
   );
 }

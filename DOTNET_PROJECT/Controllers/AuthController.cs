@@ -6,18 +6,18 @@ using DOTNET_PROJECT.Viewmodels;
 
 namespace DOTNET_PROJECT.Controllers;
 
-
-[Route("Auth")]
-public class AuthController : Controller
+[ApiController]
+[Route("api/auth")]
+public class AuthController : ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(IUserService userService)
+    public AuthController(IUserService userService, ILogger<AuthController> logger)
     {
         _userService = userService;
+        _logger = logger;
     }
-
-    /*
     
     /// <summary>
     /// This controller method will contact the service layer about registering a user with given information.
@@ -28,28 +28,32 @@ public class AuthController : Controller
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterUserDto registerUserDto)
+    public async Task<ActionResult<UserDto>> Register([FromBody] RegisterUserDto request)
     {
         // Attempt to contact service layer about the account registration
         try
         {
             //Await the answer given by the service layer. 
-            var userDto = await _userService.RegisterAccount(registerUserDto);
+            var userDto = await _userService.RegisterAccount(request);
             //If the service layer was unable to create the account inform the user. 
             if (userDto == null)
             {
                 // TODO : Inform user about the error
-                return View(registerUserDto);
+                return BadRequest("Failed to create account. Username may already exist.");
                 
             }
+
             //If account registration succesfull the user will be informed and redirected to the login page. 
             // TODO : Inform user about account registration
-            return RedirectToAction("Login", "Auth");
+            return Ok(userDto);
+
         //If unable to contact service layer error will be given
         } catch(Exception e)
         {
-            // TODO : Log error
-            return View(registerUserDto);
+            // log the error
+            _logger.LogError(e, "[AuthController] Failed to create account. Username may already exist.");
+            // return the error
+            return BadRequest("Failed to create account. Username may already exist.");
         }
     }
 
@@ -63,47 +67,66 @@ public class AuthController : Controller
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     [HttpPost("login")]
-    public async Task<IActionResult> Login( LogInViewModel vm)
+    public async Task<ActionResult<UserDto>> Login([FromBody] LoginUserDto request)
     {
-        if (!ModelState.IsValid)
-                return View(vm);
+        if (!ModelState.IsValid) return BadRequest(ModelState);
         // Try to use user service for login
         try
         {
-            var dto = new LoginUserDto { Username = vm.Username, Password = vm.Password };
-
-            var userDto = await _userService.Login(dto);
+            var userDto = await _userService.Login(request);
 
             //Checks if the user service found a user with given username and password
             if (userDto == null)
             {
-                // TODO: Legge til korrekt feilmelding}
-                //Error
-                return View(vm);
+                // return the error
+                return Unauthorized("Invalid username or password.");
             }
 
             // If the service returns a valid userDTO the webpage will navigate to the Home page. 
-            return RedirectToAction("index", "home");
+            return Ok(userDto);
         }
             //If unable to use the service the user will be given an error message. 
             catch (Exception e)
             {
-                // TODO : Legge til korrekt feilmelding
-                return View(vm);
+                // log the error
+                _logger.LogError(e, "[AuthController] Failed to login. Invalid username or password.");
+                // return the error
+                return BadRequest("Failed to login. Invalid username or password.");
             }
         }
     
 
 
     /// <summary>
-        /// Get method for logout. 
+        /// Post method for logout. 
         /// </summary>
-        /// <returns>The view of the loginpage</returns>
+        /// <returns>Success message</returns>
+    [HttpPost("logout")]
     public IActionResult Logout()
     {
-        return RedirectToAction("Login");
+        // return the success message since we dont use JWT tokens yet
+        return Ok(new { message = "Logged out successfully" });
+
     }
     
+    /// <summary>
+    /// Get method for getting current user info
+    /// </summary>
+    /// <returns>Current user information</returns>
+    [HttpGet("user")]
+    public async Task<ActionResult<UserDto>> GetCurrentUser()
+    {
+        // For now, return the admin user since we're using admin credentials
+        // In JWT implementation, this would extract user from token
+        return Ok(new UserDto 
+        { 
+            Id = 1, 
+            Username = "admin", 
+        });
+    }
+
+    // COMMENTED OUT FOR REACT FRONTEND - These were MVC view methods
+    /*
     /// <summary>
     /// Get method for displaying the login page
     /// </summary>
@@ -122,7 +145,6 @@ public class AuthController : Controller
     {
         return View();
     }
-    
     */
 
     

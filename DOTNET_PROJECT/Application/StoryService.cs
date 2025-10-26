@@ -23,9 +23,9 @@ public class StoryService : IStoryService
     // get story node by id
     public async Task<StoryNodeDto> GetStoryNodeById(int id) 
     {
-        return await _genService.Execute(async () =>
+        try
         {
-            // get story node by id
+            // get story node by id - no transaction here, called from within Execute
             var storyNode = await _genService.ValidateEntityExists<StoryNode>(id);
             
             // get the dialogues & choices that belongs to the storyNode
@@ -34,7 +34,12 @@ public class StoryService : IStoryService
 
             // use GenService mapping
             return _genService.MapStoryNode(storyNode, dialogues, choices);
-        });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to get story node by id: {Id}", id);
+            throw;
+        }
     }
 
     // get all story nodes
