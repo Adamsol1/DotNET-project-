@@ -86,15 +86,8 @@ export function Game({ onNavigate }) {
       <div className="relative z-10 min-h-screen flex flex-col">
         {/* Header */}
         <header className="p-6 flex justify-between items-center">
-          <motion.h1
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl font-bold text-white tracking-wider"
-            style={{ textShadow: '3px 3px 0px rgba(0, 0, 0, 0.8)' }}
-          >
-            AFTER THE JUMP
-          </motion.h1>
+          {/* empty space */}
+          <div className="w-10 h-10"></div>
           
           <motion.button
             whileHover={{ scale: 1.05 }}
