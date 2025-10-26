@@ -1,4 +1,3 @@
-// frontend/src/components/Game/GamePlay.jsx
 import React, { useEffect, useState } from 'react';
 import { useGame } from '../../context/GameContext';
 import { SceneLayout } from '../scene/SceneLayout';
