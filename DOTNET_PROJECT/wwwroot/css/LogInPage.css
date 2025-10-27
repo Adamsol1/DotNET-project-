@@ -31,14 +31,12 @@ body {
     background-color: #0f111d;
     padding: 10px;
     margin: 3px;
-    border-Radius: 5px;
     color: white;
 
 }
 
 .button-login {
     padding: 10px;
-    border-Radius: 5px;
     background-color : #ff8055;
     width: 75px;
 }
@@ -49,7 +47,6 @@ body {
 .login-box {
     background-Color: #1a1d2e;
     padding: 20px;
-    border-Radius: 10px;
     text-align: center;
 
 
@@ -72,7 +69,6 @@ body {
     background-color: #89d4e4;
     padding: 10px;
     margin: 3px;
-    border-Radius: 5px;
     color: #f3f5ff;
 
 }

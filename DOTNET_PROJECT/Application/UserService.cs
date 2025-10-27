@@ -1,5 +1,6 @@
 using DOTNET_PROJECT.Application.Dtos;
-using DOTNET_PROJECT.Application.Interfaces;
+using DOTNET_PROJECT.Application.Interfaces.Repositories;
+using DOTNET_PROJECT.Application.Interfaces.Services;
 using DOTNET_PROJECT.Domain.Models;
 using DOTNET_PROJECT.Infrastructure.Repositories;
 using Serilog;

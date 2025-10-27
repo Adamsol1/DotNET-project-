@@ -1,11 +1,31 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using DOTNET_PROJECT.Application.Interfaces;
+using DOTNET_PROJECT.Application.Interfaces.Repositories;
 using DOTNET_PROJECT.Infrastructure.Data;
 
 namespace DOTNET_PROJECT.Infrastructure.Repositories;
+
+/* Notes to myself -Ah
+
+Initally I underestimated how many methods that would be dupes.
+so I will change up stuff. and move frequently used methods to be a generic.
+such as
+- GetByProperty -> which will get properties from entities 
+such as names or what you pass it.
+
+- GetAllByProperty -> which will get all properties from entities
+
+- GetPropertyValue
+
+- this way we can remove all the getCharacterNames, description etc, 
+ and keep the codebase clean and more chaotic.
+
+
+*/
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
@@ -85,6 +105,49 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         // return the entity
         return entity;
     }
+
+    // get by property gets the entitys property
+    // such as name, id or etc.
+
+    // help from GPT 5. In reducing the duplicates from the codebase. 
+    public async Task<T?> GetByProperty<TProperty>(Expression<Func<T, TProperty>> propertySelector, TProperty value)
+    {
+        //params
+        var param = Expression.Parameter(typeof(T), "entity");
+        //property
+        var prop = Expression.Property(
+            param, ((MemberExpression)propertySelector.Body).Member.Name
+        );
+        // constant
+        var constant = Expression.Constant(value);
+        
+        var equal = Expression.Equal(prop, constant);
+        //labda expression
+        var lambda = Expression.Lambda<Func<T, bool>>(equal, param);
+
+        // finally return the lambda expression
+        return await _dbSet.FirstOrDefaultAsync(lambda);
+    }
+
+    // get all by property gets all the entities properties
+    // such as name, id or etc.
+    public async Task<IEnumerable<T>> GetAllByProperty<TProperty>(Expression<Func<T, TProperty>> propertySelector, TProperty value)
+    {
+        var param = Expression.Parameter(typeof(T), "entity");
+
+        var prop = Expression.Property(param, ((MemberExpression)propertySelector.Body).Member.Name);
+        var constant = Expression.Constant(value);
+        var equal = Expression.Equal(prop, constant);
+        var lambda = Expression.Lambda<Func<T, bool>>(equal, param);
     
-    
+        return await _dbSet.Where(lambda).ToListAsync();
+    }
+
+    // get property value by the entity's Id
+    public async Task<TProperty?> GetPropertyValue<TProperty>(int id, Expression<Func<T, TProperty>> propertySelector)
+    {
+        return await _dbSet.Where(e => EF.Property<int>(e, "Id") == id)
+                        .Select(propertySelector)
+                        .FirstOrDefaultAsync();
+    }
 }

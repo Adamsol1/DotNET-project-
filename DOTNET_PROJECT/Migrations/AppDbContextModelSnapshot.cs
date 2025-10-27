@@ -106,7 +106,13 @@ namespace DOTNET_PROJECT.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("CurrentDialogueIndex")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("CurrentStoryNodeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("LastChoiceId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastUpdate")
@@ -121,6 +127,10 @@ namespace DOTNET_PROJECT.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("VisitedNodeIds")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -184,21 +194,11 @@ namespace DOTNET_PROJECT.Migrations
                     b.Property<int>("CurrentStoryNodeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("Health")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
-
-                    b.HasIndex("CurrentStoryNodeId");
-
-                    b.HasIndex("UserId");
 
                     b.HasDiscriminator().HasValue("PlayerCharacter");
                 });
@@ -264,25 +264,6 @@ namespace DOTNET_PROJECT.Migrations
                     b.Navigation("CurrentStoryNode");
 
                     b.Navigation("PlayerCharacter");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DOTNET_PROJECT.Domain.Models.PlayerCharacter", b =>
-                {
-                    b.HasOne("DOTNET_PROJECT.Domain.Models.StoryNode", "CurrentStoryNode")
-                        .WithMany()
-                        .HasForeignKey("CurrentStoryNodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DOTNET_PROJECT.Domain.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CurrentStoryNode");
 
                     b.Navigation("User");
                 });

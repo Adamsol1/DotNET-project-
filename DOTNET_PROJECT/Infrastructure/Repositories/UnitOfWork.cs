@@ -1,4 +1,4 @@
-using DOTNET_PROJECT.Application.Interfaces;
+using DOTNET_PROJECT.Application.Interfaces.Repositories;
 using DOTNET_PROJECT.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
@@ -34,17 +34,25 @@ public class UnitOfWork : IUnitOfWork {
     public IChoiceRepository ChoiceRepository { get; }
     public IDialogueRepository DialogueRepository { get; }
     public IPlayerCharacterRepository PlayerCharacterRepository { get; }
+    public IGameRepository GameRepository { get; }
 
     public UnitOfWork(AppDbContext context) {
         _context = context;
 
-        // add the repositories in construtor and assign them new instaces.
+        // entity repositories
         UserRepository = new UserRepository(_context);
         StoryNodeRepository = new StoryNodeRepository(_context);
         CharacterRepository = new CharacterRepository(_context);
         ChoiceRepository = new ChoiceRepository(_context);
         DialogueRepository = new DialogueRepository(_context);
         PlayerCharacterRepository = new PlayerCharacterRepository(_context);
+        GameRepository = new GameRepository(_context);
+    }
+
+    // method to get the repository we are looking for.
+    public IGenericRepository<T> GetRepository<T>() where T : class
+    {
+        return new GenericRepository<T>(_context);
     }
 
     // save changes;

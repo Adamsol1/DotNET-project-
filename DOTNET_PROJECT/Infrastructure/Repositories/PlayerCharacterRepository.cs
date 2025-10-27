@@ -1,5 +1,5 @@
 using DOTNET_PROJECT.Domain.Models;
-using DOTNET_PROJECT.Application.Interfaces;
+using DOTNET_PROJECT.Application.Interfaces.Repositories;
 using DOTNET_PROJECT.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 namespace DOTNET_PROJECT.Infrastructure.Repositories;
@@ -26,5 +26,15 @@ public class PlayerCharacterRepository : GenericRepository<PlayerCharacter>, IPl
                     .SingleOrDefaultAsync();
 
         return await health;
+    }
+
+    public async Task<IEnumerable<PlayerCharacter>> GetAllByUserId(int userId)
+    {
+        return await GetAllByProperty(pc => pc.UserId, userId);
+    }
+
+    public async Task<PlayerCharacter?> GetByUserId(int userId)
+    {
+        return await GetByProperty(pc => pc.UserId, userId);
     }
 }

@@ -1,5 +1,5 @@
 using DOTNET_PROJECT.Domain.Models;
-using DOTNET_PROJECT.Application.Interfaces;
+using DOTNET_PROJECT.Application.Interfaces.Repositories;
 using DOTNET_PROJECT.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -94,6 +94,13 @@ public class ChoiceRepository : GenericRepository<Choice>, IChoiceRepository
                     .SingleOrDefaultAsync();
 
         return await choiceText;
+    }
+
+    public async Task<IEnumerable<Choice>> GetAllByStoryNodeId(int storyNodeId)
+    {
+        return await _db.Choices
+            .Where(c => c.StoryNodeId == storyNodeId)
+            .ToListAsync();
     }
 
 }
