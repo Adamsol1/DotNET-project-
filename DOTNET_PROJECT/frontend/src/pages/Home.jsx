@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
-import { useGame } from '../context/GameContext';
 import { motion } from 'framer-motion';
+
+// component imports . gameContext has api calls and game state management.
+import { useGame } from '../context/GameContext';
+// planet, spacehsip, stars components. are for the background animation.
+import Planet from '../components/Home/Planet';
+import Spaceship from '../components/Home/Spaceship';
+import Stars from '../components/Home/Stars';
+
 
 export function Home({ onNavigate }) {
   const { authenticated, user, logout, login, register } = useGame();
@@ -49,11 +56,11 @@ export function Home({ onNavigate }) {
   // we are also using tailwind for styling the home page.
   return (
     <div 
-      className="min-h-screen text-white font-mono relative overflow-hidden bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: `url('/assets/bg/homePage.png')`,
-      }}
+      className="relative min-h-screen"
     >
+      <Stars />
+      <Planet />
+      <Spaceship />
       {/* Main Content */}
       <div className="relative z-10 min-h-screen flex flex-col">
         {/* Header */}
