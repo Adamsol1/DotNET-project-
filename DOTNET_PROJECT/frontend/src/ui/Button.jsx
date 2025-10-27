@@ -12,7 +12,6 @@ export function Button ({ children, style, ...rest }) {
                 background: tokens.color.primary,
                 color: '#071318',
                 border: '1px solid ' + tokens.color.primary,
-                borderRadius: tokens.radius.pill,
                 fontWeight: 700,
                 cursor: 'pointer',
                 transition: 'background 120ms ease, transform 120ms ease',

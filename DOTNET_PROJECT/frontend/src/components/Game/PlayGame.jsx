@@ -59,7 +59,7 @@ export function PlayGame({ saveId, onBackToMenu }) {
     try {
       const dialogue = await getNextDialogue(saveId);
       if (dialogue) {
-        setDialogueIndex(prev => prev + 1);
+        setDialogueIndex((prev) => prev + 1);
       } else {
         setShowChoices(true);
       }
@@ -90,13 +90,15 @@ export function PlayGame({ saveId, onBackToMenu }) {
 
   if (loading && !currentNode) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        background: tokens.color.bg,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
+      <div
+        style={{
+          minHeight: '100vh',
+          background: tokens.color.bg,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
         <Text size={18} style={{ color: tokens.color.textMuted }}>
           Loading game...
         </Text>
@@ -106,26 +108,34 @@ export function PlayGame({ saveId, onBackToMenu }) {
 
   if (error) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        background: tokens.color.bg,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: tokens.space.lg
-      }}>
-        <Card style={{
-          padding: tokens.space.xl,
-          background: tokens.color.surface,
-          border: `1px solid ${tokens.color.danger}`,
-          borderRadius: tokens.radius.lg
-        }}>
-          <Text size={16} style={{ color: tokens.color.danger, marginBottom: tokens.space.lg }}>
+      <div
+        style={{
+          minHeight: '100vh',
+          background: tokens.color.bg,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: tokens.space.lg
+        }}
+      >
+        <Card
+          style={{
+            padding: tokens.space.xl,
+            background: tokens.color.surface,
+            border: `1px solid ${tokens.color.danger}`,
+            borderRadius: tokens.radius.lg
+          }}
+        >
+          <Text
+            size={16}
+            style={{
+              color: tokens.color.danger,
+              marginBottom: tokens.space.lg
+            }}
+          >
             Error loading game: {error}
           </Text>
-          <Button onClick={loadGameData}>
-            Retry
-          </Button>
+          <Button onClick={loadGameData}>Retry</Button>
         </Card>
       </div>
     );
@@ -133,13 +143,15 @@ export function PlayGame({ saveId, onBackToMenu }) {
 
   if (!currentNode) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        background: tokens.color.bg,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
+      <div
+        style={{
+          minHeight: '100vh',
+          background: tokens.color.bg,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
         <Text size={18} style={{ color: tokens.color.textMuted }}>
           No game data available
         </Text>
@@ -148,136 +160,202 @@ export function PlayGame({ saveId, onBackToMenu }) {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: tokens.color.bg, paddingTop: '48px' }}>
+    <div
+      style={{
+        minHeight: '100vh',
+        background: tokens.color.bg,
+        paddingTop: '48px'
+      }}
+    >
       {/* HUD */}
-      <HUD 
+      <HUD
         playerState={playerState}
         currentNode={currentNode}
         onBackToMenu={onBackToMenu}
       />
 
       {/* Main Game Content */}
-      <div style={{
-        width: '100%',
-        height: 'calc(100vh - 48px)',
-        position: 'relative',
-        border: '2px solid #00A2FF',
-        borderRadius: '12px',
-        overflow: 'hidden',
-        margin: '16px',
-        boxSizing: 'border-box'
-      }}>
-        {/* Scene/Background */}
-        <div style={{
+      <div
+        style={{
           width: '100%',
-          height: '100%',
-          backgroundImage: `url(${currentNode.backgroundUrl || "/assets/bg/space-tunnel.png"})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }} />
-
-        {/* Dialogue Panel - Fixed at Bottom */}
-        <div style={{
-          position: 'absolute',
-          bottom: '20px',
-          left: '20px',
-          right: '20px',
-          background: 'rgba(0, 0, 0, 0.9)',
+          height: 'calc(100vh - 48px)',
+          position: 'relative',
           border: '2px solid #00A2FF',
           borderRadius: '12px',
-          padding: '20px',
-          display: 'flex',
-          gap: '16px'
-        }}>
+          overflow: 'hidden',
+          margin: '16px',
+          boxSizing: 'border-box'
+        }}
+      >
+        {/* Scene/Background */}
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            backgroundImage: `url(${
+              currentNode.backgroundUrl || '/assets/bg/space-tunnel.png'
+            })`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        />
+
+        {/* Dialogue Panel - Fixed at Bottom */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '16px',
+            left: '16px',
+            right: '16px',
+            backgroundColor: '#0a0f1a', // deep blue/teal, not rgba blur
+            border: '2px solid #3ae6ff', // neon-ish cyan border
+            padding: '12px 16px',
+            display: 'flex',
+            gap: '12px',
+            imageRendering: 'pixelated',
+            color: '#d8faff',
+            boxShadow: '0 0 8px #003644, 0 0 2px #3ae6ff inset',
+            alignItems: 'flex-start' // top-align portrait + text + button
+          }}
+        >
           {/* Avatar */}
-          <div style={{
-            flex: '0 0 80px',
-            height: '80px',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            border: '2px solid #00A2FF'
-          }}>
-            <img 
-              src={currentDialogue?.character?.imageUrl || "/assets/char/hero.png"}
+          <div
+            style={{
+              flex: '0 0 96px',
+              height: '96px',
+              border: '2px solid #3ae6ff',
+              backgroundColor: '#000',
+              overflow: 'hidden',
+              imageRendering: 'pixelated'
+            }}
+          >
+            <img
+              src={
+                currentDialogue?.character?.imageUrl ||
+                '/assets/char/hero.png'
+              }
               alt="Character"
               style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover'
+                objectFit: 'cover',
+                imageRendering: 'pixelated'
               }}
             />
           </div>
 
-          {/* Text and Choices */}
-          <div style={{ flex: 1 }}>
-            <p style={{
-              color: '#FFFFFF',
-              fontSize: '14px',
-              lineHeight: '1.5',
-              margin: 0,
-              marginBottom: showChoices ? '12px' : '0'
-            }}>
-              {currentDialogue?.text || currentNode.description || "Welcome to the adventure!"}
-            </p>
-
-            {/* Choices */}
-            {showChoices && availableChoices?.length > 0 && (
-              <div style={{
-                marginTop: '12px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px'
-              }}>
-                {availableChoices.map((choice, index) => (
-                  <button
-                    key={choice.id}
-                    onClick={() => handleChoice(choice)}
-                    disabled={loading}
-                    style={{
-                      padding: '8px 12px',
-                      background: 'rgba(0, 162, 255, 0.2)',
-                      border: '1px solid #00A2FF',
-                      borderRadius: '8px',
-                      color: '#FFFFFF',
-                      fontSize: '14px',
-                      cursor: loading ? 'not-allowed' : 'pointer',
-                      textAlign: 'left',
-                      transition: 'all 0.2s'
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!loading) {
-                        e.target.style.background = 'rgba(0, 162, 255, 0.4)';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.background = 'rgba(0, 162, 255, 0.2)';
-                    }}
-                  >
-                    {choice.text}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* Next Button */}
-            {!showChoices && (
-              <button
-                onClick={handleNextDialogue}
-                disabled={loading}
+          {/* Text + Choices + Button wrapper as row: text grows, button stays to the right */}
+          <div
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'flex-start'
+            }}
+          >
+            {/* Text + Choices column */}
+            <div style={{ flex: 1, paddingRight: '12px' }}>
+              <p
                 style={{
-                  marginTop: '12px',
-                  padding: '10px 20px',
-                  background: '#00A2FF',
-                  border: 'none',
-                  borderRadius: '8px',
                   color: '#FFFFFF',
-                  fontSize: '14px',
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  float: 'right'
+                  lineHeight: '1.4',
+                  margin: 0,
+                  marginBottom: showChoices ? '12px' : '0',
+                  fontFamily: '"visitor1", monospace',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
                 }}
               >
-                {loading ? 'Loading...' : 'Next'}
-              </button>
+                {currentDialogue?.text ||
+                  currentNode.description ||
+                  'Welcome to the adventure!'}
+              </p>
+
+              {/* Choices */}
+              {showChoices && availableChoices?.length > 0 && (
+                <div
+                  style={{
+                    marginTop: '12px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px'
+                  }}
+                >
+                  {availableChoices.map((choice, index) => (
+                    <button
+                      key={choice.id}
+                      onClick={() => handleChoice(choice)}
+                      disabled={loading}
+                      style={{
+                        padding: '8px 12px',
+                        background: '#0a0f1a',
+                        border: '2px solid #3ae6ff',
+                        borderRadius: '0px',
+                        color: '#d8faff',
+                        fontSize: '20px',
+                        lineHeight: '1.4',
+                        fontFamily: '"visitor1", monospace',
+                        cursor: loading ? 'not-allowed' : 'pointer',
+                        textAlign: 'left',
+                        boxShadow:
+                          '0 0 6px #003644, 0 0 2px #3ae6ff inset',
+                        imageRendering: 'pixelated'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!loading) {
+                          e.target.style.background = '#112032';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.background = '#0a0f1a';
+                      }}
+                    >
+                      {choice.text}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Next button column */}
+            {!showChoices && (
+              <div
+                style={{
+                  flex: '0 0 auto',
+                  display: 'flex'
+                }}
+              >
+                <button
+                  onClick={handleNextDialogue}
+                  disabled={loading}
+                  style={{
+                    padding: '8px 12px',
+                    background: '#0a0f1a',
+                    border: '2px solid #3ae6ff',
+                    borderRadius: '0px',
+                    color: '#d8faff',
+                    fontSize: '20px',
+                    lineHeight: '1.4',
+                    fontWeight: 'bold',
+                    fontFamily: '"visitor1", monospace',
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    boxShadow:
+                      '0 0 6px #003644, 0 0 2px #3ae6ff inset',
+                    imageRendering: 'pixelated',
+                    whiteSpace: 'nowrap'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!loading) {
+                      e.target.style.background = '#112032';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = '#0a0f1a';
+                  }}
+                >
+                  {loading ? '...' : 'NEXT'}
+                </button>
+              </div>
             )}
           </div>
         </div>

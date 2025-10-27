@@ -63,7 +63,6 @@ export function HUD({ playerState, currentNode, onBackToMenu }) {
             background: 'rgba(0, 162, 255, 0.2)',
             border: `1px solid #00A2FF`,
             color: '#FFFFFF',
-            borderRadius: '8px'
           }}
         >
           Back
@@ -75,7 +74,6 @@ export function HUD({ playerState, currentNode, onBackToMenu }) {
             background: 'rgba(0, 162, 255, 0.2)',
             border: `1px solid #00A2FF`,
             color: '#FFFFFF',
-            borderRadius: '8px'
           }}
         >
           Forward
