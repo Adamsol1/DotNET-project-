@@ -13,7 +13,6 @@ export function DialoguePanel({ avatarUrl, text, choices  = [], onSelect }){
             <div style={{
                 width:96,
                 height:96, 
-                borderRadius:18, 
                 overflow:'hidden', 
                 border: '1px solid ' + tokens.color.surfaceBorder,
                 background: '#1a2a33',
@@ -29,7 +28,6 @@ export function DialoguePanel({ avatarUrl, text, choices  = [], onSelect }){
           <div style={{
             background:'#070b0d',
             border:'1px solid ' + tokens.color.surfaceBorder,
-            borderRadius: 24,
             padding: '18px 20px',
             maxWidth: '100%',
             boxShadow: tokens.shadow.md

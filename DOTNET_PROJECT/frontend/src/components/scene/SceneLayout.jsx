@@ -11,7 +11,6 @@ export function SceneLayout ({ backgroundUrl, children }) {
             height:'78vh', //scene height
             maxWidth:1200, 
             margin: '0 auto',
-            borderRadius: tokens.radius.lg,
             overflow: 'hidden',
             border: '1px solid ' + tokens.color.surfaceBorder,
             background: tokens.color.bg,

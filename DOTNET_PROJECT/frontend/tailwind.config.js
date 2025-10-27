@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'pixel': ['Courier New', 'monospace'],
+        'pixel': ['visitor1', 'monospace'],
       },
       animation: {
         'float': 'float 6s ease-in-out infinite',

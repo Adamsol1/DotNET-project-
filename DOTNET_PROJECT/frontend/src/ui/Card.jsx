@@ -7,7 +7,6 @@ export function Card ({ style, children }) {
         <div style={{
             background: tokens.color.surface,
             border: '1px solid ' + tokens.color.surfaceBorder,
-            borderRadius: tokens.radius.xl,
             backdropFilter: 'blur(6px)', //blur effect for glass look 
             boxShadow: tokens.shadow.md,
             ...style
