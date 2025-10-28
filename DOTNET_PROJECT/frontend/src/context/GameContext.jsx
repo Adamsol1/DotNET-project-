@@ -145,8 +145,12 @@ function gameReducer(state, action) {
 
         // if the choice starts successfully, we set the current choice state.
         case ActionTypes.CHOICE_SUCCESS:
-            return { ...state, loading: false, error: null,
-                currentNode: action.payload
+            return { 
+                ...state, 
+                loading: false, 
+                error: null,
+                currentNode: action.payload,
+                availableChoices: action.payload.choices || []
             };
 
         // if the choice starts fails, we set the error state.

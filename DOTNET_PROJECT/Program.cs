@@ -56,6 +56,7 @@ loggerConfiguration.Filter.ByExcluding(e => e.Properties.TryGetValue("SourceCont
 
 var logger = loggerConfiguration.CreateLogger();
 builder.Logging.AddSerilog(logger);
+builder.Logging.AddFilter("Microsoft.EntityFrameworkCore", LogLevel.None);
 
 
 var app = builder.Build();

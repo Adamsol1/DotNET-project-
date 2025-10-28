@@ -48,9 +48,11 @@ export function PlayGame({ saveId, onBackToMenu }) {
   const handleChoice = async (choice) => {
     try {
       await makeChoice(saveId, choice.id);
+      console.log(choice);
       setShowChoices(false);
       setDialogueIndex(0);
     } catch (error) {
+        console.error('choices is: ', choice)
       console.error('Failed to make choice:', error);
     }
   };

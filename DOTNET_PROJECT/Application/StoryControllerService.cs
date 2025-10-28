@@ -39,11 +39,16 @@ public class StoryControllerService : IStoryControllerService
             return await _storyService.GetStoryNodeById(gameSave.CurrentStoryNodeId);
         });
     }
-
     public async Task<StoryNodeDto?> NavigateToNode(int saveId, int targetNodeId)
     {
         return await _genService.Execute(async () =>
         {
+            return await NavigateToNodeCore(saveId, targetNodeId);
+        });
+    }
+
+    private async Task<StoryNodeDto?> NavigateToNodeCore(int saveId, int targetNodeId)
+    {
             // check if the entity exists.
             var gameSave = await _genService.ValidateEntityExists<GameSave>(saveId);
             
@@ -75,7 +80,7 @@ public class StoryControllerService : IStoryControllerService
             
             await _uow.GameRepository.Update(gameSave);
             return await _storyService.GetStoryNodeById(targetNodeId);
-        });
+        
     }
 
     // to find the previous Node we have to keep track of the nodes the player has visited.
@@ -154,33 +159,63 @@ public class StoryControllerService : IStoryControllerService
 
     #region Choice Handling Methods
 
-    public async Task<StoryNodeDto> MakeChoice(int saveId, int choiceId)
+    
+    public async Task<StoryNodeDto?> MakeChoice(int saveId, int choiceId)
     {
         return await _genService.Execute(async () =>
         {
             var gameSave = await _genService.ValidateEntityExists<GameSave>(saveId);
-            
-            // Validate choice belongs to current node
-            Console.WriteLine("StoryControllerService.MakeChoic nodeId: " + gameSave.CurrentStoryNodeId);
-            
-            // if (!await _genService.CheckChoiceInNode(choiceId, gameSave.CurrentStoryNodeId))
-            //     throw new InvalidOperationException("Choice does not belong to current node");
+            var choice   = await _genService.ValidateEntityExists<Choice>(choiceId);
 
-            // ✅ Valider at valget hører til aktiv node
-            var ok = await _genService.CheckChoiceInNode(choiceId, gameSave.CurrentStoryNodeId);
-            if (!ok)
-                throw new InvalidOperationException($"Choice {choiceId} does not belong to current node {gameSave.CurrentStoryNodeId}");
+         
+            
+            // Valider at choice tilhører current node (din eksisterende logikk)
+            if (choice.StoryNodeId != gameSave.CurrentStoryNodeId)
+                throw new InvalidOperationException(
+                    $"Choice {choiceId} does not belong to node {gameSave.CurrentStoryNodeId}");
 
-            
-            var choice = await _genService.ValidateEntityExists<Choice>(choiceId);
-            
-            // Store the choice ID in history so we can go back
+            // Oppdater historikk på save før hopp
             gameSave.LastChoiceId = choiceId;
-            
-            // Navigate to next node
-            return await NavigateToNode(saveId, choice.NextStoryNodeId);
+            await _uow.GameRepository.Update(gameSave);
+
+            // VIKTIG: kall core (ingen ny transaksjon her)
+            var next = await NavigateToNodeCore(saveId, choice.NextStoryNodeId);
+            return next;
         });
     }
+
+    /*
+    public async Task<StoryNodeDto> MakeChoice(int saveId, int choiceId)
+    {
+        return await _genService.Execute(async () =>
+            {
+                Console.WriteLine("Staring MakeChoice in StoryControllerService");
+                var gameSave = await _genService.ValidateEntityExists<GameSave>(saveId);
+                var choice = await _genService.ValidateEntityExists<Choice>(choiceId);
+
+                try
+                {
+                    Console.WriteLine("If-statement in MakeChoice in StoryControllerService");
+                    if (choice.StoryNodeId == gameSave.CurrentStoryNodeId)
+                    {
+                        Console.WriteLine("Ending MakeChoice in StoryControllerService");
+                        return await NavigateToNode(saveId, choice.NextStoryNodeId);
+                    }
+                }
+                catch (InvalidOperationException e)
+                {
+                    Console.WriteLine(
+                        $"Choice {choiceId} does not belong to current node {gameSave.CurrentStoryNodeId}: " + e);
+
+                    throw;
+                }
+
+                return null;
+            }
+       );
+
+    }
+    */
 
     public async Task<IEnumerable<ChoiceDto>> GetAvailableChoices(int saveId)
     {
@@ -191,15 +226,7 @@ public class StoryControllerService : IStoryControllerService
         });
     }
 
-    public async Task<int?> ApplyChoiceAsync(int currentNodeId, int choiceId)
-    {
-        // Validate that choice belongs to currentNodeId
-        if (!await _genService.CheckChoiceInNode(choiceId, currentNodeId))
-            return null;
 
-        var choice = await _genService.ValidateEntityExists<Choice>(choiceId);
-        return choice.NextStoryNodeId;
-    }
 
     #endregion
 

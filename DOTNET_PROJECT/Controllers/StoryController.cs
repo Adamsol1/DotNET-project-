@@ -110,7 +110,7 @@ public class StoryController : ControllerBase
             // make the choice.
             Console.WriteLine("StroyController saveId check: " + request.SaveId);
             var choice = await _storyControllerService.MakeChoice(request.SaveId, request.ChoiceId);
-
+            Console.WriteLine("Stroycontroller - check choice obj. choice is: " + choice);
             // error handling for validation is done in the service.
             // return the choice.
             return Ok(choice);
@@ -122,8 +122,10 @@ public class StoryController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
+            
+            Console.WriteLine("Stroycontroller - " + ex.Message);
             _logger.LogWarning("Choice {ChoiceId} does not belong to current node for save {SaveId}", request.ChoiceId, request.SaveId);
-            return BadRequest("Choice does not belong to current node");
+            return BadRequest("Choice does not belong to current node ");
         }
         catch (Exception ex) 
         {

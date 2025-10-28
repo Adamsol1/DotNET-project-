@@ -157,39 +157,32 @@ public class GenService : IGenService
     {
         // the getRepository method fetches the repository we are looking for.
         var entity = await _uow.GetRepository<T>().GetById(id);
-
-        if (entity == null) {
+        if (entity != null)
+        {
+            return entity;
+        }
+        else
+        {
             var entityName = typeof(T).Name;
             _logger.LogWarning("GenService: {EntityName} with id {Id} not found");
             throw new KeyNotFoundException($"{entityName} with id {id} not found");
         }
-
-        return entity;
+       
     }
 
     // function that checks if a choice belongs to a node.
     public async Task<bool> CheckChoiceInNode(int choiceId, int nodeId)
     {
         // get the choice from the repository.
-        var choice = await _uow.ChoiceRepository.GetById(choiceId);
+        var choice = await ValidateEntityExists<Choice>(choiceId);
+        
         Console.WriteLine("Genservice node used is: " + nodeId );
         Console.WriteLine("GenService: Choise id: " + choiceId);
         Console.WriteLine("GenService: Choise Stroy node: " + choice.StoryNodeId);
 
-        if (choice == null) {
-            _logger.LogWarning("GenService: Choice with id {ChoiceId} not found");
-            // we dont really need to throw exception here, since we are just checking if it exists.
-            return false;
-        }
-    /*
-        if (choice.StoryNodeId != nodeId) {
-            _logger.LogWarning("GenService: Choice with id {ChoiceId} does not belong to node with id {NodeId}");
-            return false;
-        }
-*/
 
-        // if the checks pass, return true.
-        return true;
+        return choice.StoryNodeId == nodeId;
+
     }
 
     public async Task<bool> CheckStoryNodeExists(int nodeId)

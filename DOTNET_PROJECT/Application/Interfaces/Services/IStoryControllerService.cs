@@ -16,7 +16,6 @@ public interface IStoryControllerService
     #region Choice Handling Methods
     Task<StoryNodeDto> MakeChoice(int saveId, int choiceId);
     Task<IEnumerable<ChoiceDto>> GetAvailableChoices(int saveId);
-    Task<int?> ApplyChoiceAsync(int currentNodeId, int choiceId);
     #endregion
 
     #region Dialogue Management Methods
