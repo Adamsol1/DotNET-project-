@@ -68,7 +68,10 @@ public class UnitOfWork : IUnitOfWork {
     // start a transaction
     public async Task BeginAsync() {
          Console.WriteLine("Starting transaction");
-        _transaction = await _context.Database.BeginTransactionAsync();
+         if (_context.Database.CurrentTransaction == null)
+         {
+             _transaction = await _context.Database.BeginTransactionAsync();
+         }
 
     }
 

@@ -108,13 +108,14 @@ public class StoryController : ControllerBase
     {
         try {
             // make the choice.
+            Console.WriteLine("StroyController saveId check: " + request.SaveId);
             var choice = await _storyControllerService.MakeChoice(request.SaveId, request.ChoiceId);
 
             // error handling for validation is done in the service.
             // return the choice.
             return Ok(choice);
         } 
-         catch (KeyNotFoundException ex)
+        catch (KeyNotFoundException ex)
         {
             _logger.LogWarning("Game save {SaveId} not found", request.SaveId);
             return NotFound($"Game save {request.SaveId} not found");
@@ -158,10 +159,6 @@ public class StoryController : ControllerBase
             // get the next dialogue for the current story node, the player is on.
             var dialogue = await _storyControllerService.GetNextDialogue(saveId);
 
-            if (dialogue == null)
-            {
-                return NotFound("No more dialogues available");
-            }
 
             // return the dialogue.
             return Ok(dialogue);

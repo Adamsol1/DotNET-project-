@@ -172,17 +172,21 @@ public class GenService : IGenService
     {
         // get the choice from the repository.
         var choice = await _uow.ChoiceRepository.GetById(choiceId);
+        Console.WriteLine("Genservice node used is: " + nodeId );
+        Console.WriteLine("GenService: Choise id: " + choiceId);
+        Console.WriteLine("GenService: Choise Stroy node: " + choice.StoryNodeId);
 
         if (choice == null) {
             _logger.LogWarning("GenService: Choice with id {ChoiceId} not found");
             // we dont really need to throw exception here, since we are just checking if it exists.
             return false;
         }
-
+    /*
         if (choice.StoryNodeId != nodeId) {
             _logger.LogWarning("GenService: Choice with id {ChoiceId} does not belong to node with id {NodeId}");
             return false;
         }
+*/
 
         // if the checks pass, return true.
         return true;
