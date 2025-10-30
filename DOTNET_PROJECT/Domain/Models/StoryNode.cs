@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace DOTNET_PROJECT.Domain.Models;
 /// <summary>
 /// Represents a node in the story, containing dialogues and choices.
@@ -21,6 +23,18 @@ public class StoryNode
     /// URL to a background image for the story node.
     /// </summary>
     public string? BackgroundUrl { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// URL to background music for this story node.
+    /// </summary>
+    [StringLength(500)]
+    public string? BackgroundMusicUrl { get; set; }
+    
+    /// <summary>
+    /// URL to ambient/effect sound for this story node (e.g., alarm, wind, rain).
+    /// </summary>
+    [StringLength(500)]
+    public string? AmbientSoundUrl { get; set; }
 
     /// <summary>
     /// Dialogues associated with the story node.

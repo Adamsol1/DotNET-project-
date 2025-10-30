@@ -1,5 +1,7 @@
 
 
+using System.ComponentModel.DataAnnotations;
+
 namespace DOTNET_PROJECT.Domain.Models;
 
 /// <summary>
@@ -32,4 +34,19 @@ public class Choice
     /// The text displayed for this choice.
     /// </summary>
     public string Text { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// The health effect when this choice is selected.
+    /// Positive values add health, negative values deal damage.
+    /// Null if this choice has no health effect.
+    /// </summary>
+    public int? HealthEffect { get; set; }
+
+    /// <summary>
+    /// The URL to an audio file to play when this choice is selected.
+    /// Null or empty if no audio should be played.
+    /// </summary>
+    [StringLength(500)]
+    public string? AudioUrl { get; set; }
+
 }
