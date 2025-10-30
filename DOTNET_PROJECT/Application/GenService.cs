@@ -83,6 +83,8 @@ public class GenService : IGenService
             Title = storyNode.Title,
             Description = storyNode.Description,
             BackgroundUrl = storyNode.BackgroundUrl ?? string.Empty,
+            BackgroundMusicUrl = storyNode.BackgroundMusicUrl,
+            AmbientSoundUrl = storyNode.AmbientSoundUrl,
 
             // dialogues and choices where we loop through and map those into their counterpart dtos.
             Dialogues = dialogues.OrderBy(d => d.Order)
@@ -102,7 +104,8 @@ public class GenService : IGenService
             Id = choice.Id,
             Text = choice.Text,
             StoryNodeId = choice.StoryNodeId,
-            NextStoryNodeId = choice.NextStoryNodeId
+            NextStoryNodeId = choice.NextStoryNodeId,
+            AudioUrl = choice.AudioUrl
         };
     }
 

@@ -259,7 +259,7 @@ export function PlayGame({ saveId, onBackToMenu }) {
                         <img
                             src={
                                 currentDialogue?.character?.imageUrl ||
-                                '/assets/char/hero.png'
+                                '/assets/characters/hero.png'
                             }
                             alt="Character"
                             style={{

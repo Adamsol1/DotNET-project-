@@ -68,7 +68,8 @@ public class GameService : IGameService
                 Id = c.Id,
                 Text = c.Text,
                 StoryNodeId = c.StoryNodeId,
-                NextStoryNodeId = c.NextStoryNodeId
+                NextStoryNodeId = c.NextStoryNodeId,
+ 				AudioUrl = c.AudioUrl
             }).ToList();
 
         }
@@ -309,6 +310,9 @@ public class GameService : IGameService
             Title = storyNode.Title,
             Description = storyNode.Description,
             BackgroundUrl = storyNode.BackgroundUrl,
+			BackgroundMusicUrl = storyNode.BackgroundMusicUrl,
+        	AmbientSoundUrl = storyNode.AmbientSoundUrl, 
+
             Dialogues = dialogues
                 .OrderBy(d => d.Order)
                 .Select(d => new DialogueDto
@@ -324,7 +328,8 @@ public class GameService : IGameService
                     Id = c.Id,
                     Text = c.Text,
                     StoryNodeId = c.StoryNodeId,
-                    NextStoryNodeId = c.NextStoryNodeId
+                    NextStoryNodeId = c.NextStoryNodeId,
+					AudioUrl = c.AudioUrl
                 }).ToList()
         };
     }
