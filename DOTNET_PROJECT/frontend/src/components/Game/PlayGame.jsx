@@ -29,7 +29,6 @@ export function PlayGame({ saveId, onBackToMenu }) {
     const {
         playBackgroundMusic,
         playAmbientSound,
-        playDialogueAudio,
         playChoiceAudio
     } = useAudio();
 
@@ -56,13 +55,6 @@ export function PlayGame({ saveId, onBackToMenu }) {
             }
         }
     }, [currentNode?.id, currentNode?.backgroundMusicUrl, currentNode?.ambientSoundUrl]);
-
-    // Play dialogue audio when dialogue changes
-    useEffect(() => {
-        if (currentDialogue?.audioUrl) {
-            playDialogueAudio(currentDialogue.audioUrl);
-        }
-    }, [currentDialogue?.id]);
 
     const loadGameData = async () => {
         try {

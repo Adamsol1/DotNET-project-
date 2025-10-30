@@ -53,6 +53,13 @@ namespace DOTNET_PROJECT.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("AudioUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("HealthEffect")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("NextStoryNodeId")
                         .HasColumnType("INTEGER");
 
@@ -148,6 +155,14 @@ namespace DOTNET_PROJECT.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("AmbientSoundUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("BackgroundMusicUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("BackgroundUrl")
                         .HasColumnType("TEXT");

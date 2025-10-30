@@ -5,7 +5,6 @@ const AudioContext = createContext();
 export function AudioProvider({ children }) {
     const backgroundMusicRef = useRef(null);
     const ambientSoundRef = useRef(null);
-    const dialogueAudioRef = useRef(null);
     const choiceAudioRef = useRef(null);
 
     const [currentBackgroundUrl, setCurrentBackgroundUrl] = useState(null);
@@ -25,7 +24,7 @@ export function AudioProvider({ children }) {
         // Play new background music
         backgroundMusicRef.current = new Audio(url);
         backgroundMusicRef.current.loop = true;
-        backgroundMusicRef.current.volume = isMuted ? 0 : 0.3; // Lower volume for background
+        backgroundMusicRef.current.volume = isMuted ? 0 : 0.3;
         backgroundMusicRef.current.play().catch(err => {
             console.error('Error playing background music:', err);
         });
@@ -61,23 +60,6 @@ export function AudioProvider({ children }) {
         setCurrentAmbientUrl(url);
     };
 
-    const playDialogueAudio = (url) => {
-        if (!url) return;
-
-        // Stop existing dialogue audio
-        if (dialogueAudioRef.current) {
-            dialogueAudioRef.current.pause();
-            dialogueAudioRef.current = null;
-        }
-
-        // Play dialogue audio (doesn't loop)
-        dialogueAudioRef.current = new Audio(url);
-        dialogueAudioRef.current.volume = isMuted ? 0 : 1.0;
-        dialogueAudioRef.current.play().catch(err => {
-            console.error('Error playing dialogue audio:', err);
-        });
-    };
-
     const playChoiceAudio = (url) => {
         if (!url) return;
 
@@ -100,10 +82,6 @@ export function AudioProvider({ children }) {
             ambientSoundRef.current.pause();
             ambientSoundRef.current = null;
         }
-        if (dialogueAudioRef.current) {
-            dialogueAudioRef.current.pause();
-            dialogueAudioRef.current = null;
-        }
         if (choiceAudioRef.current) {
             choiceAudioRef.current.pause();
             choiceAudioRef.current = null;
@@ -124,9 +102,6 @@ export function AudioProvider({ children }) {
         if (ambientSoundRef.current) {
             ambientSoundRef.current.volume = newMutedState ? 0 : 0.7;
         }
-        if (dialogueAudioRef.current) {
-            dialogueAudioRef.current.volume = newMutedState ? 0 : 1.0;
-        }
     };
 
     const setBackgroundVolume = (volume) => {
@@ -144,7 +119,6 @@ export function AudioProvider({ children }) {
     const values = {
         playBackgroundMusic,
         playAmbientSound,
-        playDialogueAudio,
         playChoiceAudio,
         stopAllAudio,
         toggleMute,

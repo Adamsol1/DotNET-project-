@@ -3,7 +3,7 @@
 
   {"StoryNodeId":2,"NextStoryNodeId":3,"Text":"Force the hatch open"},
   {"StoryNodeId":2,"NextStoryNodeId":3,"Text":"Use emergency release"},
-  {"StoryNodeId":2,"NextStoryNodeId":3,"Text":"Scream"},
+  {"StoryNodeId":2,"NextStoryNodeId":3,"Text":"Scream", "AudioUrl":  "/assets/audio/sfx/scream.mp3"},
 
   {"StoryNodeId":3,"NextStoryNodeId":4,"Text":"Check nearby pods"},
   {"StoryNodeId":3,"NextStoryNodeId":6,"Text":"Exit Cryobay"},

@@ -25,6 +25,7 @@ _ReSharper*/
 *.ldf
 *.db-shm
 *.db-wal
+DOTNET_PROJECT/Migrations
 
 # Additional .NET build artifacts
 *.so
