@@ -2,9 +2,6 @@ using DOTNET_PROJECT.Application.Interfaces.Repositories;
 using DOTNET_PROJECT.Domain.Models;
 using DOTNET_PROJECT.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DOTNET_PROJECT.Infrastructure.Repositories;
 

@@ -1,5 +1,7 @@
 
 
+using System.ComponentModel.DataAnnotations;
+
 namespace DOTNET_PROJECT.Domain.Models;
 
 /// <summary>
@@ -31,5 +33,6 @@ public class Choice
     /// <summary>
     /// The text displayed for this choice.
     /// </summary>
+    [StringLength(50)]
     public string Text { get; set; } = string.Empty;
 }

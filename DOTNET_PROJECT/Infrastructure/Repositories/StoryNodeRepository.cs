@@ -20,10 +20,9 @@ public class StoryNodeRepository : GenericRepository<StoryNode>, IStoryNodeRepos
 
     public async Task<String> GetStoryNodeTitleById(int id)
     {
-        /// Query to get title of story node with given ID
         var title = _db.StoryNodes
-                    .Where(StoryNodes => StoryNodes.Id == id)
-                    .Select(StoryNodes => StoryNodes.Title)
+                    .Where(storyNodes => storyNodes.Id == id)
+                    .Select(storyNodes => storyNodes.Title)
                     .SingleOrDefaultAsync();
 
         return await title;
@@ -35,9 +34,8 @@ public class StoryNodeRepository : GenericRepository<StoryNode>, IStoryNodeRepos
 
     public async Task<StoryNode?> GetStoryNodeByTitle(string title)
     {
-        /// Query to get story node with given title
         var storyNode = _db.StoryNodes
-                    .Where(StoryNodes => StoryNodes.Title == title)
+                    .Where(storyNodes => storyNodes.Title == title)
                     .FirstOrDefaultAsync();
 
         return await storyNode;
@@ -48,10 +46,9 @@ public class StoryNodeRepository : GenericRepository<StoryNode>, IStoryNodeRepos
     /// </summary>
     public async Task<String> GetStoryNodeDescription(int id)
     {
-        /// Query to get description of story node with given ID
         var description = _db.StoryNodes
-                    .Where(StoryNodes => StoryNodes.Id == id)
-                    .Select(StoryNodes => StoryNodes.Description)
+                    .Where(storyNodes => storyNodes.Id == id)
+                    .Select(storyNodes => storyNodes.Description)
                     .SingleOrDefaultAsync();
 
         return await description;
@@ -63,10 +60,9 @@ public class StoryNodeRepository : GenericRepository<StoryNode>, IStoryNodeRepos
 
     public async Task<String> GetStoryNodeBackgroundUrl(int id)
     {
-        /// Query to get URL of StoryNode background given by ID
         var background = _db.StoryNodes
-                    .Where(StoryNodes => StoryNodes.Id == id)
-                    .Select(StoryNodes => StoryNodes.BackgroundUrl)
+                    .Where(storyNodes => storyNodes.Id == id)
+                    .Select(storyNodes => storyNodes.BackgroundUrl)
                     .SingleOrDefaultAsync();
 
         return await background;
@@ -78,9 +74,8 @@ public class StoryNodeRepository : GenericRepository<StoryNode>, IStoryNodeRepos
 
     public async Task<IEnumerable<Dialogue>> GetAllDialoguesOfStoryNode(int id)
     {
-        /// Query to get all dialogues associated with a story node given by ID in list
         var dialogues = _db.Dialogues
-                    .Where(Dialogues => Dialogues.StoryNodeId == id)
+                    .Where(dialogues => dialogues.StoryNodeId == id)
                     .ToListAsync();
 
         return await dialogues;
@@ -92,13 +87,14 @@ public class StoryNodeRepository : GenericRepository<StoryNode>, IStoryNodeRepos
     
     public async Task<IEnumerable<Choice>> GetAllChoicesOfStoryNode(int id)
     {
-        /// Query to get all choices associated with a story node given by ID in list
         var choices = _db.Choices
-                    .Where(Choices => Choices.StoryNodeId == id)
+                    .Where(choices => choices.StoryNodeId == id)
                     .ToListAsync();
 
         return await choices;
     }
+    
+    
 
     // Ahmed, 11.10 Added GetAllCharactersOfStoryNode method
     public async Task<IEnumerable<Character>> GetAllCharactersOfStoryNode(int id)
@@ -109,7 +105,7 @@ public class StoryNodeRepository : GenericRepository<StoryNode>, IStoryNodeRepos
         // so we dont need to go through the dialogues to get the characters
         // but for now, I will just do it like this to avoid changing alot and touch AppContext
         var characters = _db.Dialogues
-                    .Where(d => d.StoryNodeId == id && d.CharacterId != null)
+                    .Where(d => d.StoryNodeId == id)
                     .Select(d => d.Character)
                     .Where(c => c != null)
                     .Distinct()

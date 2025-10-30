@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using DOTNET_PROJECT.Application.Interfaces.Repositories;
 using DOTNET_PROJECT.Application.Interfaces.Services;
 using DOTNET_PROJECT.Application.Dtos;
 
@@ -11,12 +10,12 @@ namespace DOTNET_PROJECT.Controllers;
 public class GameController : ControllerBase
 {
     private readonly IGameService _gameService;
-    private readonly IPlayerService _playerService;
+    private readonly ILogger<StoryController> _logger;
 
-    public GameController(IGameService gameService, IPlayerService playerService)
+    public GameController(IGameService gameService, ILogger<StoryController> logger)
     {
         _gameService = gameService;
-        _playerService = playerService;
+        _logger = logger;
     }
 
     // start a new game from scratch.
@@ -34,8 +33,10 @@ public class GameController : ControllerBase
 
             // return the game save.
             return Ok(gameSave);
-        } catch (Exception ex) {
-            return BadRequest($"Failed to start game");
+        } catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error starting new game for user {UserId} with save name {SaveName}", request.UserId, request.SaveName);
+            return BadRequest("Failed to start game");
         }
     }
 
@@ -48,7 +49,8 @@ public class GameController : ControllerBase
             var gameSave = await _gameService.GetGameSave(saveId);
             return Ok(gameSave);
         } catch (Exception ex) {
-            return BadRequest($"Failed to load game");
+            _logger.LogError(ex, "Error loading game save with ID {SaveId}", saveId);
+            return BadRequest("Failed to load game");
         }
     }
 
@@ -62,6 +64,7 @@ public class GameController : ControllerBase
             
             return Ok(gameSave);
         } catch (Exception ex) {
+            _logger.LogError("Make choice error with saveId: {saveId} and choiceId: {choiceId} error message: " + ex, request.SaveId, request.ChoiceId);
             return BadRequest($"Failed to make choice");
         }
     }
@@ -75,7 +78,8 @@ public class GameController : ControllerBase
             var gameSaves = await _gameService.GetUserGameSaves(userId);
             return Ok(gameSaves);
         } catch (Exception ex) {
-            return BadRequest($"Failed to get user's saved games: {ex.Message}");
+            _logger.LogError(ex, "Error retrieving saves for user {UserId}", userId);
+            return BadRequest("Failed to get user's saved games");
         }
     }
 
@@ -87,14 +91,16 @@ public class GameController : ControllerBase
             // delete the game save.
             var result = await _gameService.DeleteGameSave(saveId);
 
-            if(!result) {
-                return NotFound("Failed to delete game save");
+            if(result) {
+                return Ok(new { message = "Save deleted successfully" });
             }
 
-            return Ok(new { message = "Save deleted successfully" });
-
+            _logger.LogWarning("Failed to delete game save with ID {SaveId}", saveId);
+            return NotFound("Failed to delete game save");
+            
         } catch (Exception ex) {
-            return BadRequest($"Failed to delete game save");
+            _logger.LogError(ex, "Error deleting game save with ID {SaveId}", saveId);
+            return BadRequest("Failed to delete game save");
         }
     }
 
@@ -106,8 +112,10 @@ public class GameController : ControllerBase
             // update the game save.
             var gameSave = await _gameService.UpdateGameSave(saveId, request.CurrentStoryNodeId);
             return Ok(gameSave);
-        } catch (Exception ex) {
-            return BadRequest($"Failed to update game save");
+        }
+        catch (Exception ex) {
+            _logger.LogError(ex, "Error updating game save {SaveId} to story node {StoryNodeId}", saveId, request.CurrentStoryNodeId);
+            return BadRequest("Failed to update game save");
         }
     }
 

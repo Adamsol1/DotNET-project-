@@ -22,10 +22,9 @@ public class DialogueRepository : GenericRepository<Dialogue>, IDialogueReposito
 
     public async Task<int> GetStoryNodeId(int id)
     {
-        /// Query to get StoryNode id this dialogue belongs to
         var storyNodeId = _db.Dialogues
-                    .Where(Dialogues => Dialogues.Id == id)
-                    .Select(Dialogues => Dialogues.StoryNodeId)
+                    .Where(dialogues => dialogues.Id == id)
+                    .Select(dialogues => dialogues.StoryNodeId)
                     .SingleOrDefaultAsync();
 
         return await storyNodeId;
@@ -38,10 +37,9 @@ public class DialogueRepository : GenericRepository<Dialogue>, IDialogueReposito
 
         public async Task<StoryNode?> GetStoryNode(int id)
         {
-            /// Query to get StoryNode this choice belongs to
             var storyNode = _db.Dialogues
-                        .Where(Dialogues => Dialogues.Id == id)
-                        .Select(Dialogues => Dialogues.StoryNode)
+                        .Where(dialogues => dialogues.Id == id)
+                        .Select(dialogues => dialogues.StoryNode)
                         .SingleOrDefaultAsync();
 
             return await storyNode;
@@ -54,10 +52,9 @@ public class DialogueRepository : GenericRepository<Dialogue>, IDialogueReposito
 
     public async Task<int> GetDialogueOrder(int id)
     {
-        /// Query to get the order the dialogue is shown in current story node
         var dialogueOrder = _db.Dialogues
-                    .Where(Dialogues => Dialogues.Id == id)
-                    .Select(Dialogues => Dialogues.Order)
+                    .Where(dialogues => dialogues.Id == id)
+                    .Select(dialogues => dialogues.Order)
                     .SingleOrDefaultAsync();
 
         return await dialogueOrder;
@@ -70,10 +67,9 @@ public class DialogueRepository : GenericRepository<Dialogue>, IDialogueReposito
 
     public async Task<int> GetCharacterId(int id)
     {
-        /// Query to get the character id of the character speaking the dialogue
         var characterId = _db.Dialogues
-                    .Where(Dialogues => Dialogues.Id == id)
-                    .Select(Dialogues => Dialogues.CharacterId)
+                    .Where(dialogues => dialogues.Id == id)
+                    .Select(dialogues => dialogues.CharacterId)
                     .SingleOrDefaultAsync();
 
         return await characterId;
@@ -86,10 +82,9 @@ public class DialogueRepository : GenericRepository<Dialogue>, IDialogueReposito
 
     public async Task<Character?> GetCharacter(int id)
     {
-        /// Query to get the character speaking the dialogue
         var character = _db.Dialogues
-                    .Where(Dialogues => Dialogues.Id == id)
-                    .Select(Dialogues => Dialogues.Character)
+                    .Where(dialogues => dialogues.Id == id)
+                    .Select(dialogues => dialogues.Character)
                     .SingleOrDefaultAsync();
 
         return await character;
@@ -103,10 +98,9 @@ public class DialogueRepository : GenericRepository<Dialogue>, IDialogueReposito
     
     public async Task<string> GetDialogueText(int id)
     {
-        /// Query to get the dialogues text
         var dialogueText = _db.Dialogues
-                    .Where(Dialogues => Dialogues.Id == id)
-                    .Select(Dialogues => Dialogues.Text)
+                    .Where(dialogues => dialogues.Id == id)
+                    .Select(dialogues => dialogues.Text)
                     .SingleOrDefaultAsync();
 
         return await dialogueText;

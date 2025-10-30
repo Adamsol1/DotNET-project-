@@ -2,7 +2,7 @@ using DOTNET_PROJECT.Application.Interfaces.Repositories;
 using DOTNET_PROJECT.Application.Interfaces.Services;
 using DOTNET_PROJECT.Application.Dtos;
 using DOTNET_PROJECT.Domain.Models;
-using System.Text.Json;
+
 
 namespace DOTNET_PROJECT.Application;
 
@@ -46,8 +46,8 @@ public class GameService : IGameService
         } 
         catch (Exception ex)
         {
-            // if the try fails, we rollback the transaction.
-            _logger.LogError(ex, "gameservice l42: StoryNode exists, but could not get it", id);
+            // if the try fails, we roll back the transaction.
+            _logger.LogError(ex, "gameservice l42: StoryNode exists, but could not get it");
             throw new Exception("gameservice l42: StoryNode exists, but could not get it: " + ex.Message);
         }
     }
@@ -114,7 +114,7 @@ public class GameService : IGameService
         }
         catch (Exception ex)
         {
-            // if the try fails, we rollback the transaction.
+            // if the try fails, we roll back the transaction.
             await _uow.RollBackAsync();
 
             // and give the user an error message.
@@ -262,7 +262,7 @@ public class GameService : IGameService
         }
         catch (Exception ex)
         {
-            // if the try fails, we rollback the transaction.
+            // if the try fails, we roll back the transaction.
             await _uow.RollBackAsync();
 
             // and give the user an error message.

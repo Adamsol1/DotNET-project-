@@ -16,13 +16,11 @@ public class PlayerCharacterRepository : GenericRepository<PlayerCharacter>, IPl
     /// <summary>
     /// Get health of a player character by its ID.
     /// </summary>
-    
     public async Task<int> GetHealthByIdAsync(int id)
     {
-        /// Query to get health of a player character by its ID.
         var health = _db.Characters.OfType<PlayerCharacter>()
-                    .Where(PlayerCharacter => PlayerCharacter.Id == id)
-                    .Select(PlayerCharacter => PlayerCharacter.Health)
+                    .Where(playerCharacter => playerCharacter.Id == id)
+                    .Select(playerCharacter => playerCharacter.Health)
                     .SingleOrDefaultAsync();
 
         return await health;

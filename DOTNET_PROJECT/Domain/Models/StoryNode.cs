@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace DOTNET_PROJECT.Domain.Models;
 /// <summary>
 /// Represents a node in the story, containing dialogues and choices.
@@ -12,14 +14,18 @@ public class StoryNode
     /// <summary>
     /// The title of the story node.
     /// </summary>
+    
+    [StringLength(50)]
     public string Title { get; set; } = string.Empty;
     /// <summary>
     /// A brief description of the story node.
     /// </summary>
+    [StringLength(50)]
     public string Description { get; set; } = string.Empty;
     /// <summary>
     /// URL to a background image for the story node.
     /// </summary>
+    [StringLength(50)]
     public string? BackgroundUrl { get; set; } = string.Empty;
 
     /// <summary>

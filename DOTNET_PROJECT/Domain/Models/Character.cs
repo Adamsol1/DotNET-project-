@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace DOTNET_PROJECT.Domain.Models;
 
 /// <summary>
@@ -13,14 +15,17 @@ public class Character
     /// <summary>
     /// The name of the character.
     /// </summary>
+    [StringLength(50)]
     public string Name { get; set; } = string.Empty;
     /// <summary>
     /// A brief description of the character.
     /// </summary>
+    [StringLength(200)]
     public string? Description { get; set; } = string.Empty;
     /// <summary>
     /// URL to an image representing the character.
     /// </summary>
+    [StringLength(50)]
     public string? ImageUrl { get; set; } = string.Empty;
     /// <summary>
     /// Dialogues associated with the character.

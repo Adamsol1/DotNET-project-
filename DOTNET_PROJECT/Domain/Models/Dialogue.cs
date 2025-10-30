@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace DOTNET_PROJECT.Domain.Models;
 
 /// <summary>
@@ -38,5 +40,6 @@ public class Dialogue
     /// <summary>
     /// The text of the dialogue.
     /// </summary>
+    [StringLength(500)]
     public string Text { get; set; } = string.Empty;
 }

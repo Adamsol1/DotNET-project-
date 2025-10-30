@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace DOTNET_PROJECT.Domain.Models;
 /// <summary>
 /// Represents a user in the system.
@@ -12,17 +14,19 @@ public class User
     /// <summary>
     /// The username of the user.
     /// </summary>
+    [StringLength(50)]
     public string Username { get; set; } = string.Empty;
 
     /// <summary>
     /// The hashed password of the user.
     /// </summary>
+    [StringLength(50)]
     public string Password { get; set; } = string.Empty;
 
     /// <summary>
     /// The role of the user (e.g., Admin, Player).
     /// </summary>
-    public UserRole Role { get; set; } = UserRole.player;
+    public UserRole Role { get; set; } = UserRole.Player;
     
     //TODO: Uncomment this when GameSave (save progresstions) are to be implemented
     
@@ -31,6 +35,6 @@ public class User
 }
 
 public enum UserRole{
-    admin,
-    player
+    Admin,
+    Player
 }

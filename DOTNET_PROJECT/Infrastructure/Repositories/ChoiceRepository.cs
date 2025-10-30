@@ -23,10 +23,9 @@ public class ChoiceRepository : GenericRepository<Choice>, IChoiceRepository
 
     public async Task<int> GetStoryNodeId(int id)
     {
-        /// Query to get StoryNode id this choice belongs to
         var storyNodeId = _db.Choices
-                    .Where(Choices => Choices.Id == id)
-                    .Select(Choices => Choices.StoryNodeId)
+                    .Where(choices => choices.Id == id)
+                    .Select(choices => choices.StoryNodeId)
                     .SingleOrDefaultAsync();
 
         return await storyNodeId;
@@ -39,10 +38,9 @@ public class ChoiceRepository : GenericRepository<Choice>, IChoiceRepository
 
     public async Task<StoryNode?> GetStoryNode(int id)
     {
-        /// Query to get StoryNode this choice belongs to
         var storyNode = _db.Choices
-                    .Where(Choices => Choices.Id == id)
-                    .Select(Choices => Choices.StoryNode)
+                    .Where(choices => choices.Id == id)
+                    .Select(choices => choices.StoryNode)
                     .SingleOrDefaultAsync();
 
         return await storyNode;
@@ -55,10 +53,9 @@ public class ChoiceRepository : GenericRepository<Choice>, IChoiceRepository
 
     public async Task<StoryNode?> GetNextStoryNode(int id)
     {
-        /// Query to get id of story node this choice leads to
         var nextStoryNodeId = _db.Choices
-                    .Where(Choices => Choices.Id == id)
-                    .Select(Choices => Choices.NextStoryNode)
+                    .Where(choices => choices.Id == id)
+                    .Select(choices => choices.NextStoryNode)
                     .SingleOrDefaultAsync();
 
         return await nextStoryNodeId;
@@ -71,10 +68,9 @@ public class ChoiceRepository : GenericRepository<Choice>, IChoiceRepository
 
     public async Task<int> GetNextStoryNodeId(int id)
     {
-        /// Query to get id of story node this choice leads to
         var nextStoryNodeId = _db.Choices
-                    .Where(Choices => Choices.Id == id)
-                    .Select(Choices => Choices.NextStoryNodeId)
+                    .Where(choices => choices.Id == id)
+                    .Select(choices => choices.NextStoryNodeId)
                     .SingleOrDefaultAsync();
 
         return await nextStoryNodeId;
@@ -83,14 +79,11 @@ public class ChoiceRepository : GenericRepository<Choice>, IChoiceRepository
     /// <summary>
     /// Get the text given in this choice'
     /// </summary>
-
-
     public async Task<string> GetChoiceText(int id)
     {
-        /// Query to get text given in this choice
         var choiceText = _db.Choices
-                    .Where(Choices => Choices.Id == id)
-                    .Select(Choices => Choices.Text)
+                    .Where(choices => choices.Id == id)
+                    .Select(choices => choices.Text)
                     .SingleOrDefaultAsync();
 
         return await choiceText;

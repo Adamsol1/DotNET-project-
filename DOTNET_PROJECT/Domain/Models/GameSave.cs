@@ -1,4 +1,6 @@
-﻿namespace DOTNET_PROJECT.Domain.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DOTNET_PROJECT.Domain.Models;
 
 public class GameSave
 {
@@ -18,11 +20,14 @@ public class GameSave
     
     //History tracking for navigation
     // had to add this to more easily track the history of the game.
+    [StringLength(50)]
     public string VisitedNodeIds { get; set; } = "[]"; // JSON array of visited node IDs
     public int? LastChoiceId { get; set; } // The last choice the player made
-    public int CurrentDialogueIndex { get; set; } = 0; // Track which dialogue is currently showing
+    public int CurrentDialogueIndex { get; set; } // Track which dialogue is currently showing
     
     //Save info
-    public String SaveName { get; set; }
+    [Required]
+    [StringLength(50)]
+    public required String SaveName { get; set; }
     public DateTime LastUpdate { get; set; }
 }
