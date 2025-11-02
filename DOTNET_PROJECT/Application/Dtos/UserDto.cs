@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace DOTNET_PROJECT.Application.Dtos;
 
 public sealed class UserDto
@@ -9,12 +11,15 @@ public sealed class UserDto
 
 public sealed class RegisterUserDto
 {
+    [Required]
     public string Username { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
+    // TODO : Should maybe implement a email that is required?
 }
 
 public sealed class LoginUserDto
 {
+    [Required]
     public string Username { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
 }

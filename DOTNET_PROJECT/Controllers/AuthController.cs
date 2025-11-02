@@ -1,8 +1,15 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using DOTNET_PROJECT.Application.Interfaces.Repositories;
 using DOTNET_PROJECT.Application.Interfaces.Services;
 using DOTNET_PROJECT.Application.Dtos;
+using DOTNET_PROJECT.Domain.Models;
 using DOTNET_PROJECT.Viewmodels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace DOTNET_PROJECT.Controllers;
 
@@ -12,11 +19,17 @@ public class AuthController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly ILogger<AuthController> _logger;
+    private readonly UserManager<AuthUser> _userManager;
+    private readonly SignInManager<AuthUser> _signInManager;
+    private readonly IConfiguration _configuration;
 
     public AuthController(IUserService userService, ILogger<AuthController> logger)
     {
         _userService = userService;
         _logger = logger;
+        _configuration = configuration;
+        _userManager = userManager;
+        _configuration = configuration;
     }
     
     /// <summary>
@@ -67,23 +80,27 @@ public class AuthController : ControllerBase
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     [HttpPost("login")]
-    public async Task<ActionResult<UserDto>> Login([FromBody] LoginUserDto request)
+    public async Task<ActionResult<LoginUserDto>> Login([FromBody] LoginUserDto request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         // Try to use user service for login
         try
         {
-            var userDto = await _userService.Login(request);
+            
+            var userDto = await _userManager.FindByNameAsync(request.Username);
 
             //Checks if the user service found a user with given username and password
             if (userDto == null)
             {
                 // return the error
+                _logger.LogWarning($"User {request.Username} user not authorized for username {request.Username}.");
                 return Unauthorized("Invalid username or password.");
             }
 
             // If the service returns a valid userDTO the webpage will navigate to the Home page. 
-            return Ok(userDto);
+            _logger.LogInformation("[AuthController] Authorized login for user {@LoginUserDto}", request);
+            var token = GenerateJwtToken(userDto);
+            return Ok(new{Token = token});
         }
             //If unable to use the service the user will be given an error message. 
             catch (Exception e)
@@ -102,9 +119,11 @@ public class AuthController : ControllerBase
         /// </summary>
         /// <returns>Success message</returns>
     [HttpPost("logout")]
-    public IActionResult Logout()
+    public async Task<IActionResult> Logout()
     {
         // return the success message since we dont use JWT tokens yet
+        await _signInManager.SignOutAsync();
+        _logger.LogInformation("[AuthController] Logged out.");
         return Ok(new { message = "Logged out successfully" });
 
     }
@@ -123,6 +142,36 @@ public class AuthController : ControllerBase
             Id = 1, 
             Username = "admin", 
         });
+    }
+
+
+    private string GenerateJwtToken(AuthUser user)
+    {
+        var JWTKey = _configuration["Jwt:Key"];
+        if (string.IsNullOrEmpty(JWTKey))
+        {
+            _logger.LogWarning($"JWT Key not set. Key: {JWTKey}");
+            throw new InvalidOperationException("JWT Key not set. Key: {JWTKey}");
+        }
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWTKey));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, user.UserName!),
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
+        };
+        var token = new JwtSecurityToken(
+            issuer: _configuration["Jwt:Issuer"],
+            audience: _configuration["Jwt:Audience"],
+            claims: claims,
+            expires: DateTime.Now.AddMinutes(60),
+            signingCredentials: credentials
+        );
+        _logger.LogInformation("[AuthController] Generated JWT token for user @{UserName}.", user.UserName);
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
     // COMMENTED OUT FOR REACT FRONTEND - These were MVC view methods

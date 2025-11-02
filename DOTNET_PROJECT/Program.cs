@@ -21,10 +21,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 ///JSON web token
-builder.Services.AddDbContext<AuthenticationDatabaseContextConnection>(options =>
+builder.Services.AddDbContext<AuthDbContext>(options =>
 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddIdentity<AuthenticationUser, IdentityRole>()
-    .AddEntityFrameWorkStores<AuthenticationDatabaseContextConnection>()
+builder.Services.AddIdentity<AuthUser, IdentityRole>()
+    .AddEntityFrameworkStores<AuthDbContext>()
     .AddDefaultTokenProviders();
 
 //Hentet fra pensum : https://github.com/Baifan-Zhou/ITPE3200-25H/blob/main/6-React-Intro/Demo-react-9-authentication-backend/api/Program.cs
