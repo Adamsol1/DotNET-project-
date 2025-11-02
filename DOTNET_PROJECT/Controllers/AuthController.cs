@@ -7,6 +7,7 @@ using DOTNET_PROJECT.Application.Interfaces.Services;
 using DOTNET_PROJECT.Application.Dtos;
 using DOTNET_PROJECT.Domain.Models;
 using DOTNET_PROJECT.Viewmodels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -23,7 +24,12 @@ public class AuthController : ControllerBase
     private readonly SignInManager<AuthUser> _signInManager;
     private readonly IConfiguration _configuration;
 
-    public AuthController(IUserService userService, ILogger<AuthController> logger)
+    public AuthController(
+        IUserService userService, 
+        ILogger<AuthController> logger,
+        UserManager<AuthUser> userManager,
+        SignInManager<AuthUser> signInManager,
+        IConfiguration configuration)
     {
         _userService = userService;
         _logger = logger;
@@ -119,6 +125,7 @@ public class AuthController : ControllerBase
         /// </summary>
         /// <returns>Success message</returns>
     [HttpPost("logout")]
+    [Authorize]
     public async Task<IActionResult> Logout()
     {
         // return the success message since we dont use JWT tokens yet
@@ -133,6 +140,7 @@ public class AuthController : ControllerBase
     /// </summary>
     /// <returns>Current user information</returns>
     [HttpGet("user")]
+    [Authorize]
     public async Task<ActionResult<UserDto>> GetCurrentUser()
     {
         // For now, return the admin user since we're using admin credentials

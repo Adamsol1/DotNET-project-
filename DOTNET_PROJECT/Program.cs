@@ -56,10 +56,10 @@ builder.Services.AddAuthentication(options =>
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = builder.Configuration["JwtIssuer"],
-                ValidAudience = builder.Configuration["JwtAudience"],
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                    builder.Configuration["JwtKey"] ?? throw new InvalidOperationException("JWT key not configured")
+                    builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT key not configured")
                 ))
             };
             // NOTE  : the following code is for debuging given by Baifan. Remove on finished program
@@ -229,11 +229,12 @@ app.UseCors(cors => cors.WithOrigins("http://localhost:3000")
     .AllowAnyMethod()
     );
 */
-
+/*
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Auth}/{action=Login}/{id?}"
 );
+*/
 
 app.MapControllers();
 
