@@ -58,9 +58,9 @@ public class GameController : ControllerBase
     {
         try {
             // make the choice.
-            var gameSave = await _gameService.MakeChoice(request.SaveId, request.ChoiceId);
+            var result = await _gameService.MakeChoice(request.SaveId, request.ChoiceId);
             
-            return Ok(gameSave);
+            return Ok(result);
         } catch (Exception ex) {
             return BadRequest($"Failed to make choice");
         }

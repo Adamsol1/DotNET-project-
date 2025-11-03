@@ -60,6 +60,9 @@ export function PlayGame({ saveId, onBackToMenu }) {
         try {
             clearError();
             await getCurrentNode(saveId);
+            // TODO: find a way to get player id from gamesave
+            const playerId = currentNode?.playerCharacterId
+            const state = await getPlayerState(playerId);
         } catch (error) {
             console.error('Failed to load game data:', error);
         }
