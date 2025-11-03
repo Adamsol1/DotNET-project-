@@ -104,7 +104,7 @@ public class StoryController : ControllerBase
 
     // make a choice should be here instead of in the game controller.
     [HttpPost("choice")]
-    public async Task<ActionResult<StoryNodeDto>> MakeChoice([FromBody] MakeChoiceRequestDto request)
+    public async Task<ActionResult<ChoiceResultDto>> MakeChoice([FromBody] MakeChoiceRequestDto request)
     {
         try {
             // make the choice.
