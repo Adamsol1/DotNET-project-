@@ -396,36 +396,23 @@ export function GameProvider({ children }) {
         }
     };
 
-    // In game context.js (inside GameProvider component)
-
-// make a choice and return the result.
-    // In game context.js (inside GameProvider component)
-
+    // make a choice and return the result.
     const makeChoice = async (saveId, choiceId) => {
         try {
             dispatch({ type: ActionTypes.CHOICE_START });
 
-            // 1. Execute the choice API call (updates health on server, returns ChoiceResultDto).
-            const choiceResult = await story.makeChoice(saveId, choiceId);
+            // get the choice from the API.
+            const choice = await story.makeChoice(saveId, choiceId);
 
+            // send the make choice success action to the reducer.
+            dispatch({ type: ActionTypes.CHOICE_SUCCESS, payload: choice });
 
-            //    We use 'choiceResult.playerCharacter' which is confirmed to be the JSON key.
-            if (choiceResult && choiceResult.playerCharacter) {
-                dispatch({
-                    type: ActionTypes.SET_PLAYER_STATE,
-                    payload: choiceResult.playerCharacter // This payload contains the new HP
-                });
-            }
-
-            // 2. Fetch the new story node based on the save's new position.
-            const nextNode = await story.getCurrentNode(saveId);
-
-            // 3. Dispatch the new node/choices. (Updates the story content)
-            dispatch({ type: ActionTypes.CHOICE_SUCCESS, payload: nextNode });
-
-            return choiceResult;
+            // return the choice.
+            return choice;
         } catch (error) {
-            dispatch({ type: ActionTypes.CHOICE_ERROR, payload: error.message });
+            const errorMessage = error.response?.data || 'Failed to make choice';
+            dispatch({ type: ActionTypes.CHOICE_ERROR, payload: errorMessage });
+            // return the error.
             throw error;
         }
     };

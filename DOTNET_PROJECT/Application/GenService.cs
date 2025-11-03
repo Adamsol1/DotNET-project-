@@ -6,6 +6,7 @@ using DOTNET_PROJECT.Domain.Models;
 using System.Threading.Tasks;
 using System;
 
+
 namespace DOTNET_PROJECT.Application;
 
 public class GenService : IGenService
