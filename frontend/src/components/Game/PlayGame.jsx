@@ -166,7 +166,7 @@ export function PlayGame({ saveId, onBackToMenu }) {
       style={{
         minHeight: '100vh',
         background: tokens.color.bg,
-        paddingTop: '48px'
+        paddingTop: '1px',
       }}
     >
       {/* HUD */}
@@ -179,13 +179,11 @@ export function PlayGame({ saveId, onBackToMenu }) {
       {/* Main Game Content */}
       <div
         style={{
-          width: '100%',
           height: 'calc(100vh - 48px)',
           position: 'relative',
           border: '2px solid #00A2FF',
-          borderRadius: '12px',
           overflow: 'hidden',
-          margin: '16px',
+          margin: '40px',
           boxSizing: 'border-box'
         }}
       >

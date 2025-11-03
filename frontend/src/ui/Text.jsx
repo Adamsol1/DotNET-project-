@@ -7,7 +7,6 @@ export function Text({as: Tag = 'p', muted=false, size=16, weight= 500, style, c
         <Tag style={{
             margin: 0,
             color: muted ? tokens.color.textMuted : tokens.color.text,
-            fontFamily: 'Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif',
             fontSize: size,
             fontWeight: weight,
             lineHeight: 1.5,

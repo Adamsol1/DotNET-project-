@@ -15,12 +15,19 @@
       font-size: 20px;
 
   }
+  /* No page scrollbars */
+  html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  }
 
   /* 2. Apply it to the whole app */
   body {
     font-family: "visitor1", monospace;
     margin: 0;
     padding: 0;
+    background: #0b1b2a;
   }
 }
 .font-bold {
