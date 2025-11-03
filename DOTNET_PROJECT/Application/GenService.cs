@@ -106,7 +106,6 @@ public class GenService : IGenService
             StoryNodeId = choice.StoryNodeId,
             NextStoryNodeId = choice.NextStoryNodeId,
             AudioUrl = choice.AudioUrl
-            HealthEffect = choice.HealthEffect
         };
     }
 

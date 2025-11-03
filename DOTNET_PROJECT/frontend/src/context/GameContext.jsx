@@ -66,8 +66,6 @@ const ActionTypes = {
     CHOICE_START: 'CHOICE_START',
     CHOICE_SUCCESS: 'CHOICE_SUCCESS',
     CHOICE_ERROR: 'CHOICE_ERROR',
-    SET_PLAYER_STATE: 'SET_PLAYER_STATE',
-
 
     // navigation actions.
     NAVIGATE_START: 'NAVIGATE_START',
@@ -189,9 +187,6 @@ function gameReducer(state, action) {
         // if the error is cleared, we clear the error state.
         case ActionTypes.CLEAR_ERROR:
             return { ...state, error: null };
-
-        case ActionTypes.SET_PLAYER_STATE:
-            return { ...state, playerState: action.payload };
         
         // return a state as default.
         default:
@@ -365,9 +360,7 @@ export function GameProvider({ children }) {
             dispatch({ type: ActionTypes.SET_LOADING, payload: true });
             const playerState = await story.getPlayerState(playerCharacterId);
             dispatch({ type: ActionTypes.SET_LOADING, payload: false });
-            dispatch({ type: ActionTypes.SET_PLAYER_STATE, payload: playerState });
             return playerState;
-            
         } catch (error) {
             const errorMessage = error.response?.data || 'Failed to get player state';
             dispatch({ type: ActionTypes.SET_ERROR, payload: errorMessage });

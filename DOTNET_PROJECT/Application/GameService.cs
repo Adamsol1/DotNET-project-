@@ -101,26 +101,6 @@ public class GameService : IGameService
             var nextStoryNode = await _uow.StoryNodeRepository.GetById(choice.NextStoryNodeId);
             if (nextStoryNode == null) throw new Exception("gameservice: next story node not found");
 
-            var player = await _uow.PlayerCharacterRepository.GetById(gameSave.PlayerCharacterId);
-            if (player == null) throw new Exception("gameservice: player not found");
-            
-            bool isDead = false;
-            if (choice.HealthEffect.HasValue)
-            {
-                player.Health += choice.HealthEffect.Value;
-                // clamp
-                if (player.Health <= 0)
-                {
-                    player.Health = 0;
-                    isDead = true;
-                }
-                else if (player.Health > 100)
-                {
-                    player.Health = 100;
-                }
-                await _uow.PlayerCharacterRepository.Update(player);
-            }
-            
             // update the game save with the new story node
             gameSave.CurrentStoryNodeId = choice.NextStoryNodeId;
             gameSave.LastUpdate = DateTime.UtcNow;
@@ -130,23 +110,8 @@ public class GameService : IGameService
             await _uow.SaveAsync();
             await _uow.CommitAsync();
 
-            
-            return new ChoiceResultDto
-            {
-                SaveId = gameSave.Id,
-                ChoiceId = choice.Id,
-                NextStoryNodeId = choice.NextStoryNodeId,
-                PlayerCharacter = new PlayerCharacterDto
-                {
-                    Id = player.Id,
-                    Name = player.Name,
-                    Health = player.Health,
-                    UserId = player.UserId,
-                    CurrentStoryNodeId = gameSave.CurrentStoryNodeId
-                },
-                IsDead = isDead,
-                AudioUrl = choice.AudioUrl
-            };
+            // finally return the next story node.
+            return gameSave;
         }
         catch (Exception ex)
         {
