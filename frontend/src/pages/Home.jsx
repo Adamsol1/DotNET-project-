@@ -172,7 +172,6 @@ export function Home({ onNavigate }) {
                       style={{ 
                         textTransform: 'none', 
                         textCase: 'none',
-                        fontFamily: 'Arial, sans-serif'
                       }}
                       className="w-full px-4 py-3 bg-gray-200 text-black text-center font-bold border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -192,7 +191,6 @@ export function Home({ onNavigate }) {
                       style={{ 
                         textTransform: 'none', 
                         textCase: 'none',
-                        fontFamily: 'Arial, sans-serif'
                       }}
                       className="w-full px-4 py-3 bg-gray-200 text-black text-center font-bold border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
