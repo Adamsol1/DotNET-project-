@@ -81,6 +81,7 @@ public class GameSaveDto
     public string SaveName { get; set; }
     public int CurrentStoryNodeId { get; set; }
     public DateTime LastUpdate { get; set; }
+    public int Health { get; set; } = 100;
 }
 
 // game state object to track and return the current game state.

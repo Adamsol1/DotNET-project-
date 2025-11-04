@@ -97,6 +97,7 @@ public class GameService : IGameService
             // get the choice from the repository.
             var choice = await _uow.ChoiceRepository.GetById(choiceId);
             if (choice == null) throw new Exception("gameservice: choice not found");
+            
 
             // get the next story node by the choice's next story node id.
             var nextStoryNode = await _uow.StoryNodeRepository.GetById(choice.NextStoryNodeId);
@@ -107,19 +108,30 @@ public class GameService : IGameService
 
             if (choice.HealthEffect.HasValue)
             {
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("Choice is: " + choice.HealthEffect.Value);
+                Console.WriteLine();
+                Console.WriteLine("Playchar health before: " + playerCharacter.Health);
                 playerCharacter.Health += choice.HealthEffect.Value;
+                Console.WriteLine("Playchar health after: " + playerCharacter.Health);
+                Console.WriteLine();
+                Console.WriteLine();
                 
                 if (playerCharacter.Health > 100) playerCharacter.Health = 100;
                 if (playerCharacter.Health < 0) playerCharacter.Health = 0;
                 
                 await _uow.PlayerCharacterRepository.Update(playerCharacter);
             }
-
             
-           
+            Console.WriteLine("Playchar health after update: " + playerCharacter.Health);
+            
+
+
             
             // update the game save with the new story node
             gameSave.CurrentStoryNodeId = choice.NextStoryNodeId;
+            gameSave.Health = playerCharacter.Health;
             gameSave.LastUpdate = DateTime.UtcNow;
             await _uow.GameRepository.Update(gameSave);
 
@@ -138,7 +150,6 @@ public class GameService : IGameService
                 Id = playerCharacter.Id,
                 Name = playerCharacter.Name,
                 Health = playerCharacter.Health,
-                UserId = playerCharacter.UserId,
             };
             
             var gameState = new GameStateDto
@@ -177,36 +188,46 @@ public class GameService : IGameService
             // we have a fixed story player character, named Ryan
             // i asume that player exists in the database, but as a precaution
             // I will also create that player if it doesn't exist.
-            var existingPlayer = await _uow.PlayerCharacterRepository.GetByUserId(userId);
-            PlayerCharacter player;
+            // var playerCharacter = await _uow.PlayerCharacterRepository.GetByUserId(userId);
+            // PlayerCharacter playerCharacter;
+            //
+            // if (existingPlayer == null) {
+            //     // we create the player character.
+            //     playerCharacter = new PlayerCharacter {
+            //         Name = "Ryan",
+            //         UserId = userId,
+            //         CurrentStoryNodeId = 1,
+            //         Health = 100
+            //     };
+            //     await _uow.PlayerCharacterRepository.Create(playerCharacter);
+            //     await _uow.SaveAsync();
+            // }
+            // else
+            // {
+            //     playerCharacter = playerCharacter;
+            // }
+
+            var playerCharacter = await _uow.PlayerCharacterRepository.GetById(1);
             
-            if (existingPlayer == null) {
-                // we create the player character.
-                player = new PlayerCharacter {
-                    Name = "Ryan",
-                    UserId = userId,
-                    CurrentStoryNodeId = 1,
-                    Health = 100
-                };
-                await _uow.PlayerCharacterRepository.Create(player);
-                await _uow.SaveAsync();
-            }
-            else
-            {
-                player = existingPlayer;
-            }
-        
             // create the game save object.
             var gameSave = new GameSave {
                 UserId = userId,
                 SaveName = saveName,
-                PlayerCharacterId = player.Id,                
+                PlayerCharacterId = playerCharacter.Id,                
                 CurrentStoryNodeId = 1,
-                LastUpdate = DateTime.UtcNow
+                LastUpdate = DateTime.UtcNow,
+                Health = 100,
             };
+            
+            playerCharacter.Health = gameSave.Health;
+            await _uow.PlayerCharacterRepository.Update(playerCharacter);
+            var playerCharacter2 = await _uow.PlayerCharacterRepository.GetById(1);
+            
+            Console.WriteLine("PlayerCharacter - game save created - health: " + playerCharacter2.Health);
 
             // create the game save in the repository.
             await _uow.GameRepository.Create(gameSave);
+
 
             // save and commit
             await _uow.SaveAsync();

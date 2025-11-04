@@ -7,6 +7,7 @@ public sealed class DialogueDto
     public int Order { get; set; }
     public int CharacterId { get; set; }
     public string Text { get; set; } = string.Empty;
+    public int HealthEffect { get; set; } 
 }
 
 public sealed class CreateDialogueDto
@@ -15,6 +16,7 @@ public sealed class CreateDialogueDto
     public int Order { get; set; }
     public int CharacterId { get; set; }
     public string Text { get; set; } = string.Empty;
+    public int HealthEffect { get; set; } 
 }
 
 public sealed class UpdateDialogueDto
@@ -24,5 +26,6 @@ public sealed class UpdateDialogueDto
     public int Order { get; set; }
     public int CharacterId { get; set; }
     public string Text { get; set; } = string.Empty;
+    public int HealthEffect { get; set; } 
 }
 

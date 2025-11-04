@@ -323,7 +323,6 @@ public class StoryControllerService : IStoryControllerService
                 Id = player.Id,
                 Name = player.Name,
                 Health = player.Health,
-                UserId = player.UserId,
                 CurrentStoryNodeId = player.CurrentStoryNodeId
             };
         });

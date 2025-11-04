@@ -59,6 +59,7 @@ public class GameController : ControllerBase
         try
         {
             var gameState = await _gameService.MakeChoiceAsync(request.SaveId, request.ChoiceId);
+            Console.WriteLine("Gamestate - gamestate: " + gameState);
             return Ok(gameState);
         }
         catch (InvalidOperationException invEx)
@@ -118,3 +119,5 @@ public class GameController : ControllerBase
     }
 
 }
+
+

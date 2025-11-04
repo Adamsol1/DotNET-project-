@@ -115,9 +115,9 @@ function gameReducer(state, action) {
                 ...state,
                 loading: false,
                 error: null,
-                currentNode: action.payload,
-                availableChoices: action.payload.choices || [],
-                playerState: action.payload.playerState || state.playerState,
+                currentNode: action.payload.CurrentStoryNode || state.currentNode,
+                availableChoices: action.payload.AvailableChoices || [],
+                playerState: action.payload.PlayerCharacter || state.playerState,
             };
         case ActionTypes.CHOICE_ERROR:
             return { ...state, loading: false, error: action.payload };
@@ -219,20 +219,35 @@ export function GameProvider({ children }) {
     const makeChoice = async (saveId, choiceId) => {
         try {
             dispatch({ type: ActionTypes.CHOICE_START });
-            const node = await story.makeChoice(saveId, choiceId);
-            dispatch({ type: ActionTypes.CHOICE_SUCCESS, payload: node });
+            const gameState = await story.makeChoice(saveId, choiceId);
+            console.log("this gamestate is:", gameState);
 
-            // Optional: check if health <= 0
-            if (node.playerState?.health <= 0) {
+            dispatch({
+                type: ActionTypes.CHOICE_SUCCESS,
+                payload: {
+                    CurrentStoryNode: gameState.CurrentStoryNode,
+                    AvailableChoices: gameState.AvailableChoices,
+                    PlayerCharacter: gameState.PlayerCharacter
+                        ? {
+                            ...gameState.PlayerCharacter,
+                            health: gameState.PlayerCharacter.Health
+                        }
+                        : null
+                }
+            });
+
+            if (gameState.IsGameOver) {
                 dispatch({ type: ActionTypes.SET_GAME_OVER, payload: true });
             }
 
-            return node;
+            console.log("Player Health After Choice:", gameState.PlayerCharacter?.Health);
+            return gameState;
         } catch (error) {
             dispatch({ type: ActionTypes.CHOICE_ERROR, payload: error.message || 'Failed to make choice' });
             throw error;
         }
     };
+
 
     const getCurrentNode = async (saveId) => {
         try {
