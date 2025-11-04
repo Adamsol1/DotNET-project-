@@ -1,5 +1,5 @@
 // GameContext.jsx
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer } from 'react';
 import { auth, game, story } from '../endpoints/api';
 
 const startState = {
@@ -14,6 +14,7 @@ const startState = {
     error: null,
     dialogueIndex: 0,
     gameOver: false,
+    allSaves: [], // store all previous saves
 };
 
 const ActionTypes = {
@@ -75,7 +76,7 @@ function gameReducer(state, action) {
         case ActionTypes.REGISTER_START:
             return { ...state, loading: true, error: null };
         case ActionTypes.REGISTER_SUCCESS:
-            return { ...state, loading: false, user: action.payload, authenticated: true, error: null };
+            return { ...state, loading: false, authenticated: true, user: action.payload, error: null };
         case ActionTypes.REGISTER_ERROR:
             return { ...state, loading: false, error: action.payload };
         case ActionTypes.LOGOUT:
@@ -89,15 +90,18 @@ function gameReducer(state, action) {
         case ActionTypes.GAME_ERROR:
             return { ...state, loading: false, error: action.payload };
         case ActionTypes.GET_ALL_SAVES:
-            return state;
+            return { ...state, allSaves: action.payload || [] };
         case ActionTypes.DELETE_SAVE_START:
             return { ...state, loading: true, error: null };
         case ActionTypes.DELETE_SAVE_SUCCESS:
-            return { ...state, loading: false, error: null };
+            return { ...state, loading: false, allSaves: state.allSaves.filter(s => s.id !== action.payload) };
         case ActionTypes.DELETE_SAVE_ERROR:
             return { ...state, loading: false, error: action.payload };
         case ActionTypes.UPDATE_SAVE:
-            return { ...state, loading: true, error: null };
+            return {
+                ...state,
+                allSaves: state.allSaves.map(s => s.id === action.payload.id ? action.payload : s)
+            };
 
         // Node
         case ActionTypes.NODE_START:
@@ -195,24 +199,88 @@ export function GameProvider({ children }) {
     const startGame = async (gameData) => {
         try {
             dispatch({ type: ActionTypes.START_GAME });
+
             const save = await game.startGame(gameData);
+
             dispatch({ type: ActionTypes.GAME_SUCCESS, payload: save });
+
+            // return the save.
             return save;
         } catch (error) {
-            dispatch({ type: ActionTypes.GAME_ERROR, payload: error.message || 'Failed to start game' });
+            const errorMessage = error.response?.data || 'Failed to start game';
+
+            dispatch({ type: ActionTypes.GAME_ERROR, payload: errorMessage });
+
+            //return the error.
             throw error;
         }
     };
 
     const loadGame = async (saveId) => {
         try {
+            // send the load game start action to the reducer.
             dispatch({ type: ActionTypes.START_GAME });
+
+            // get the save from the API.
             const save = await game.loadGame(saveId);
+
+            // send the load game success action to the reducer.
+
             dispatch({ type: ActionTypes.GAME_SUCCESS, payload: save });
+            // return the save.
             return save;
         } catch (error) {
-            dispatch({ type: ActionTypes.GAME_ERROR, payload: error.message || 'Failed to load game' });
+            const errorMessage = error.response?.data || 'Failed to load game';
+            dispatch({ type: ActionTypes.GAME_ERROR, payload: errorMessage });
+            // return the error.
             throw error;
+        }
+    };
+
+    // get all saves and return the result.
+    const getAllSaves = async (userId) => {
+        try {
+            dispatch({ type: ActionTypes.GET_ALL_SAVES });
+            const saves = await game.getAllSaves(userId);
+            dispatch({ type: ActionTypes.GAME_SUCCESS, payload: saves });
+            // return the saves.
+            return saves;
+        }
+        catch (error) {
+            const errorMessage = error.response?.data || 'Failed to get all saves';
+            dispatch({ type: ActionTypes.GAME_ERROR, payload: errorMessage });
+            // return the error.
+            throw error;
+        }
+    };
+
+    const getSaveById = async (saveId) => {
+        try {
+            const save = state.allSaves.find(s => s.id === saveId);
+            if (!save) throw new Error('Save not found');
+            return save;
+        } catch (error) {
+            dispatch({ type: ActionTypes.SET_ERROR, payload: error.message || 'Failed to get save' });
+            return null;
+        }
+    };
+
+    const deleteSave = async (saveId) => {
+        try {
+            dispatch({ type: ActionTypes.DELETE_SAVE_START });
+            await game.deleteSave(saveId); // API call
+            dispatch({ type: ActionTypes.DELETE_SAVE_SUCCESS, payload: saveId });
+        } catch (error) {
+            dispatch({ type: ActionTypes.DELETE_SAVE_ERROR, payload: error.message || 'Failed to delete save' });
+        }
+    };
+
+    const updateSave = async (saveData) => {
+        try {
+            await game.updateSave(saveData); // API call
+            dispatch({ type: ActionTypes.UPDATE_SAVE, payload: saveData });
+        } catch (error) {
+            dispatch({ type: ActionTypes.SET_ERROR, payload: error.message || 'Failed to update save' });
         }
     };
 
@@ -220,34 +288,31 @@ export function GameProvider({ children }) {
         try {
             dispatch({ type: ActionTypes.CHOICE_START });
             const gameState = await story.makeChoice(saveId, choiceId);
-            console.log("this gamestate is:", gameState);
+            console.log(gameState);
+            console.log("GameContext - MakeChoise - gamestate - playerchar", gameState.playerCharacter);
+            console.log("GameContext - MakeChoise - gamestate - availableChoices", gameState.availableChoices);
+            console.log("GameContext - MakeChoise - gamestate - currentStoryNode", gameState.currentStoryNode);
 
             dispatch({
                 type: ActionTypes.CHOICE_SUCCESS,
                 payload: {
-                    CurrentStoryNode: gameState.CurrentStoryNode,
-                    AvailableChoices: gameState.AvailableChoices,
-                    PlayerCharacter: gameState.PlayerCharacter
-                        ? {
-                            ...gameState.PlayerCharacter,
-                            health: gameState.PlayerCharacter.Health
-                        }
-                        : null
+                    CurrentStoryNode: gameState.currentStoryNode,
+                    AvailableChoices: gameState.availableChoices,
+                    PlayerCharacter: gameState.playerCharacter
+                        ? { ...gameState.playerCharacter, health: gameState.playerCharacter.health }
+                        : null,
                 }
             });
-
+            
             if (gameState.IsGameOver) {
                 dispatch({ type: ActionTypes.SET_GAME_OVER, payload: true });
             }
-
-            console.log("Player Health After Choice:", gameState.PlayerCharacter?.Health);
             return gameState;
         } catch (error) {
             dispatch({ type: ActionTypes.CHOICE_ERROR, payload: error.message || 'Failed to make choice' });
             throw error;
         }
     };
-
 
     const getCurrentNode = async (saveId) => {
         try {
@@ -312,6 +377,10 @@ export function GameProvider({ children }) {
         logout,
         startGame,
         loadGame,
+        getAllSaves,
+        getSaveById,  // old function added
+        deleteSave,
+        updateSave,   // old function added
         makeChoice,
         getCurrentNode,
         getNextDialogue,

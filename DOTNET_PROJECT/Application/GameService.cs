@@ -16,12 +16,14 @@ public class GameService : IGameService
 {
     private readonly IUnitOfWork _uow;
     private readonly ILogger<GameService> _logger;
+    private readonly IGenService _genService;
 
     // constructor
-    public GameService(IUnitOfWork uow, ILogger<GameService> logger)
+    public GameService(IUnitOfWork uow, ILogger<GameService> logger, IGenService genService)
     {
         _uow = uow;
         _logger = logger;
+        _genService = genService;
     }
     
     // Get storyNode by id
@@ -79,9 +81,7 @@ public class GameService : IGameService
             throw new Exception("gameservice l79: failed to get choice: " + ex.Message);
         }
     }
-
-    // let the user make a choice? 
-    // should this be moved t story service?
+    
     public async Task<GameStateDto> MakeChoiceAsync(int saveId, int choiceId) 
     {
         try
@@ -126,24 +126,36 @@ public class GameService : IGameService
             
             Console.WriteLine("Playchar health after update: " + playerCharacter.Health);
             
+            var visitedNodes = JsonSerializer.Deserialize<List<int>>(gameSave.VisitedNodeIds) 
+                               ?? new List<int>();
+            
+            // if the visited nodes list is empty or the last node is not the current node, 
+            // add the current node to the list.
+            if (visitedNodes.Count == 0 || visitedNodes.Last() != gameSave.CurrentStoryNodeId)
+            {
+                visitedNodes.Add(gameSave.CurrentStoryNodeId);
+            }
 
+            var choices = await _uow.StoryNodeRepository.GetAllChoicesOfStoryNode(gameSave.CurrentStoryNodeId);
 
+            // map domain Choice -> ChoiceDto using GenService
+            var availableChoices = choices.Select(c => _genService.MapChoice(c)).ToList();
+
+            
             
             // update the game save with the new story node
             gameSave.CurrentStoryNodeId = choice.NextStoryNodeId;
             gameSave.Health = playerCharacter.Health;
+            gameSave.VisitedNodeIds = JsonSerializer.Serialize(visitedNodes);
             gameSave.LastUpdate = DateTime.UtcNow;
+            gameSave.CurrentDialogueIndex = 0;
             await _uow.GameRepository.Update(gameSave);
 
             
             var nextNodeDto = await GetNodeAsync(gameSave.CurrentStoryNodeId);
-            var availableChoices = nextNodeDto?.Choices ?? new List<ChoiceDto>();
+            
             
             var isGameOver = playerCharacter.Health <= 0;
-            if (isGameOver)
-            {
-                availableChoices = new List<ChoiceDto>();
-            }
             
             var playerDto = new PlayerCharacterDto
             {

@@ -242,7 +242,6 @@ export function PlayGame({ saveId, onBackToMenu }) {
 
     // compute whether the player is dead / game over (be defensive)
     const hp = playerState?.health ?? playerState?.hp ?? 100;
-    console.log("Playerstate.health: ", playerState?.health)
     const isGameOver = (typeof gameOver === 'boolean') ? gameOver : hp <= 0;
 
     return (
@@ -255,8 +254,11 @@ export function PlayGame({ saveId, onBackToMenu }) {
         >
             {/* HUD uses playerState and currentNode like original code */}
             <HUD
-                playerState={playerState}
-                currentNode={currentNode}
+                gameState={{
+                    playerCharacter: playerState,
+                    currentStoryNode: currentNode,
+                    isGameOver: gameOver ?? (playerState?.health <= 0),
+                }}
                 onBackToMenu={onBackToMenu}
             />
 

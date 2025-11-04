@@ -14,6 +14,7 @@ function PixelHPBar({ health = 0, maxHealth = 100 }) {
 
     const fillColor =
         pct > 60 ? '#36FF7C' : pct > 30 ? '#FFD23F' : '#FF4D4D';
+    console.log("Health passed in pixel method: ", health)
 
     return (
         <div
@@ -74,16 +75,18 @@ function PixelHPBar({ health = 0, maxHealth = 100 }) {
 }
 
 export function HUD({ gameState, onBackToMenu }) {
-    // NEW: accept the new GameStateDto directly for cleaner data flow
     const health = gameState?.playerCharacter?.health ?? 100;
     const currentNodeTitle = gameState?.currentStoryNode?.title ?? '';
-    const isGameOver = gameState?.isGameOver ?? false;
+    const isGameOver = gameState?.isGameOver ?? health <= 0;
 
+    
     return (
         <div
             style={{
                 position: 'fixed',
-                top: 0, left: 0, right: 0,
+                top: 0,
+                left: 0,
+                right: 0,
                 zIndex: tokens.z.hud,
                 display: 'flex',
                 alignItems: 'center',
