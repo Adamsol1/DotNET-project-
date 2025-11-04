@@ -82,9 +82,10 @@ public class GameService : IGameService
 
     // let the user make a choice? 
     // should this be moved t story service?
-    public async Task<GameSave> MakeChoice(int saveId, int choiceId) 
+    public async Task<GameStateDto> MakeChoiceAsync(int saveId, int choiceId) 
     {
-        try {
+        try
+        {
             // start a transaction as the user does
             // write interaction with the db.
             await _uow.BeginAsync();
@@ -100,18 +101,62 @@ public class GameService : IGameService
             // get the next story node by the choice's next story node id.
             var nextStoryNode = await _uow.StoryNodeRepository.GetById(choice.NextStoryNodeId);
             if (nextStoryNode == null) throw new Exception("gameservice: next story node not found");
+            
+            var playerCharacter = await _uow.PlayerCharacterRepository.GetById(gameSave.PlayerCharacterId);
+            if (playerCharacter == null) throw new Exception("playerCharacter: next story node not found");
 
+            if (choice.HealthEffect.HasValue)
+            {
+                playerCharacter.Health += choice.HealthEffect.Value;
+                
+                if (playerCharacter.Health > 100) playerCharacter.Health = 100;
+                if (playerCharacter.Health < 0) playerCharacter.Health = 0;
+                
+                await _uow.PlayerCharacterRepository.Update(playerCharacter);
+            }
+
+            
+           
+            
             // update the game save with the new story node
             gameSave.CurrentStoryNodeId = choice.NextStoryNodeId;
             gameSave.LastUpdate = DateTime.UtcNow;
             await _uow.GameRepository.Update(gameSave);
 
+            
+            var nextNodeDto = await GetNodeAsync(gameSave.CurrentStoryNodeId);
+            var availableChoices = nextNodeDto?.Choices ?? new List<ChoiceDto>();
+            
+            var isGameOver = playerCharacter.Health <= 0;
+            if (isGameOver)
+            {
+                availableChoices = new List<ChoiceDto>();
+            }
+            
+            var playerDto = new PlayerCharacterDto
+            {
+                Id = playerCharacter.Id,
+                Name = playerCharacter.Name,
+                Health = playerCharacter.Health,
+                UserId = playerCharacter.UserId,
+            };
+            
+            var gameState = new GameStateDto
+            {
+                SaveId = gameSave.Id,
+                PlayerCharacter = playerDto,
+                CurrentStoryNode = nextNodeDto,
+                AvailableChoices = availableChoices,
+                IsGameOver = isGameOver
+            };
+            
+            
             // save the changes, and commit
             await _uow.SaveAsync();
             await _uow.CommitAsync();
 
             // finally return the next story node.
-            return gameSave;
+            return gameState;
         }
         catch (Exception ex)
         {

@@ -50,6 +50,7 @@ public class GameStateDto
     public PlayerCharacterDto PlayerCharacter { get; set; }
     public StoryNodeDto CurrentStoryNode { get; set; }
     public IEnumerable<ChoiceDto> AvailableChoices { get; set; }
+    public bool IsGameOver { get; set; }
 }
 
 // start game request dto.
