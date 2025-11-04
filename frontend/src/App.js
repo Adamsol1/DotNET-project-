@@ -3,7 +3,7 @@ import './App.css';
 import { GameProvider } from './context/GameContext';
 import { Home } from './pages/Home';
 import { Game } from './pages/Game';
-//import { AccountManagement } from './pages/AccountManagement';
+import { AccountManagement } from './pages/AccountManagement';
 import { tokens } from './design/tokens';
 
 //set the appContent routes
@@ -33,9 +33,8 @@ function AppContent() {
         return <Home onNavigate={navigate} />;
       case 'game':
         return <Game onNavigate={navigate} />;
-
-      //case 'account':
-        //return <Account onNavigate={navigate} />;
+      case 'account':
+        return <AccountManagement onNavigate={navigate} />;
       default:
         return <Home onNavigate={navigate} />;
     }

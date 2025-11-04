@@ -1,7 +1,7 @@
 // react imports
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 // api imports
-import { auth, game, story } from '../endpoints/api';
+import { auth, game, story, account } from '../endpoints/api';
 
 /**
  * This context file is used to manage the game state and actions that can be taken.
@@ -160,6 +160,19 @@ const ActionTypes = {
     SET_LOADING: 'SET_LOADING',
     SET_ERROR: 'SET_ERROR',
     CLEAR_ERROR: 'CLEAR_ERROR',
+
+    // account actions
+    UPDATE_USERNAME_START: 'UPDATE_USERNAME_START',
+    UPDATE_USERNAME_SUCCESS: 'UPDATE_USERNAME_SUCCESS',
+    UPDATE_USERNAME_ERROR: 'UPDATE_USERNAME_ERROR',
+
+    UPDATE_PASSWORD_START: 'UPDATE_PASSWORD_START',
+    UPDATE_PASSWORD_SUCCESS: 'UPDATE_PASSWORD_SUCCESS',
+    UPDATE_PASSWORD_ERROR: 'UPDATE_PASSWORD_ERROR',
+
+    DELETE_ACCOUNT_START: 'DELETE_ACCOUNT_START',
+    DELETE_ACCOUNT_SUCCESS: 'DELETE_ACCOUNT_SUCCESS',
+    DELETE_ACCOUNT_ERROR: 'DELETE_ACCOUNT_ERROR',
 };
 
 /**
@@ -266,7 +279,34 @@ function gameReducer(state, action) {
         // if the error is cleared, we clear the error state.
         case ActionTypes.CLEAR_ERROR:
             return { ...state, error: null };
-        
+
+        case ActionTypes.UPDATE_USERNAME_START:
+            return { ...state, loading: true, error: null };
+
+        case ActionTypes.UPDATE_USERNAME_SUCCESS:
+            return { ...state, loading: false, user: action.payload, error: null };
+
+        case ActionTypes.UPDATE_USERNAME_ERROR:
+            return { ...state, loading: false, error: action.payload };
+
+        case ActionTypes.UPDATE_PASSWORD_START:
+            return { ...state, loading: true, error: null };
+
+        case ActionTypes.UPDATE_PASSWORD_SUCCESS:
+            return { ...state, loading: false, error: null };
+
+        case ActionTypes.UPDATE_PASSWORD_ERROR:
+            return { ...state, loading: false, error: action.payload };
+
+        case ActionTypes.DELETE_ACCOUNT_START:
+            return { ...state, loading: true, error: null };
+
+        case ActionTypes.DELETE_ACCOUNT_SUCCESS:
+            return { ...startState, loading: false };
+
+        case ActionTypes.DELETE_ACCOUNT_ERROR:
+            return { ...state, loading: false, error: action.payload };
+
         // return a state as default.
         default:
             return state;
@@ -337,6 +377,50 @@ export function GameProvider({ children }) {
         }
         return true;
     };
+
+    // update username
+    const updateUsername = async (usernameData) => {
+    try {
+        dispatch({ type: ActionTypes.UPDATE_USERNAME_START });
+        const updatedUsername = await account.updateUsername(usernameData);
+        dispatch({ type: ActionTypes.UPDATE_USERNAME_SUCCESS, payload: updatedUsername });
+        return updatedUsername;
+    } catch (error) {
+        const errorMessage = error.response?.data || 'Failed to update username';
+        dispatch({ type: ActionTypes.UPDATE_USERNAME_ERROR, payload: errorMessage });
+        throw error;
+    }
+    };
+
+    // update password
+    const updatePassword = async (passwordData) => {
+    try {
+        dispatch({ type: ActionTypes.UPDATE_PASSWORD_START });
+        await account.updatePassword(passwordData);
+        dispatch({ type: ActionTypes.UPDATE_PASSWORD_SUCCESS });
+        return true;
+    } catch (error) {
+        const errorMessage = error.response?.data || 'Failed to update password';
+        dispatch({ type: ActionTypes.UPDATE_PASSWORD_ERROR, payload: errorMessage });
+        throw error;
+    }
+    };
+
+    // delete account
+    const deleteAccount = async (userId) => {
+    try {
+        dispatch({ type: ActionTypes.DELETE_ACCOUNT_START });
+        await account.deleteAccount(userId);
+        dispatch({ type: ActionTypes.DELETE_ACCOUNT_SUCCESS });
+        clearGameStateFromStorage();
+        return true;
+    } catch (error) {
+        const errorMessage = error.response?.data || 'Failed to delete account';
+        dispatch({ type: ActionTypes.DELETE_ACCOUNT_ERROR, payload: errorMessage });
+        throw error;
+    }
+    };
+
 
     // start the game and return the result.
     const startGame = async (gameData) => {
@@ -619,6 +703,11 @@ export function GameProvider({ children }) {
         setLoading,
         setError,
         clearError,
+
+        // account management
+        updateUsername,
+        updatePassword,
+        deleteAccount,
     };
 
     // finally packagge the context and return it.

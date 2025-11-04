@@ -71,6 +71,27 @@ export const auth = {
     },
 };
 
+// account management API endpoints
+export const account = {
+    // update username
+    updateUsername: async (data) => {
+        const response = await api.put('/account/profile', data);
+        return response.data;
+    },
+
+    // change password
+    updatePassword: async (data) => {
+        const response = await api.put('/account/password', data);
+        return response.data;
+    },
+
+    // delete account
+    deleteAccount: async (userId) => {
+        const response = await api.delete(`/account/${userId}`);
+        return response.data;
+    },
+};
+
 // game API endpoints.
 
 export const game = {

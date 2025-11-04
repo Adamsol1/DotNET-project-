@@ -1,251 +1,143 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import Stars from '../components/Home/Stars';
+import Planet from '../components/Home/Planet';
+import Spaceship from '../components/Home/Spaceship';
+import { useGame } from '../context/GameContext';
 
-export default function AccountManagement() {
-  // Username State
-  const [username, setUsername] = useState("");
-  const [usernameMsg, setUsernameMsg] = useState(null);
-  const [usernameLoading, setUsernameLoading] = useState(false);
+export function AccountManagement({ onNavigate }) {
+  const { updateUsername, updatePassword, deleteAccount } = useGame();
+  const [username, setUsername] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  // Password State
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordMsg, setPasswordMsg] = useState(null);
-  const [passwordLoading, setPasswordLoading] = useState(false);
-
-  // Delete Account State 
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [deleteMsg, setDeleteMsg] = useState(null);
-
-  // Update Username 
-  async function handleUpdateUsername(e) {
+  const handleUpdateUsername = async (e) => {
     e.preventDefault();
-    setUsernameMsg(null);
+    if (!username) return;
 
-    if (!username || username.trim().length < 3) {
-      setUsernameMsg({
-        type: "error",
-        text: "Username must be at least 3 characters.",
-      });
-      return;
-    }
-
-    setUsernameLoading(true);
     try {
-      // Adjust this endpoint as needed
-      const response = await fetch("", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: username.trim() }),
-      });
-
-      if (!response.ok) {
-        // eslint-disable-next-line no-undef
-        const error = await response.json().catch(() => ({
-          message: "Failed to update username",
-        }));
-        throw new Error(error.message || "Failed to update username");
-      }
-
-      setUsernameMsg({ type: "success", text: "Username updated successfully." });
+      await updateUsername({ username });
+      setUsername('');
     } catch (error) {
-      setUsernameMsg({ type: "error", text: error.message });
-    } finally {
-      setUsernameLoading(false);
+      console.error('Update failed:', error);
     }
-  }
+  };
 
-  // Update Password
-  async function handleUpdatePassword(e) {
+  const handleUpdatePassword = async (e) => {
     e.preventDefault();
-    setPasswordMsg(null);
+    if (!newPassword || newPassword !== confirmPassword) return;
 
-    if (!newPassword || newPassword.length < 8) {
-      setPasswordMsg({
-        type: "error",
-        text: "New password must be at least 8 characters.",
-      });
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setPasswordMsg({
-        type: "error",
-        text: "New password and confirmation do not match.",
-      });
-      return;
-    }
-
-    setPasswordLoading(true);
     try {
-      // Adjust this endpoint as needed
-      const response = await fetch("", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ newPassword }),
-      });
-
-      if (!response.ok) {
-        // eslint-disable-next-line no-undef
-        const error = await response.json().catch(() => ({
-          message: "Failed to update password",
-        }));
-        throw new Error(error.message || "Failed to update password");
-      }
-
-      setPasswordMsg({ type: "success", text: "Password updated successfully." });
-      setNewPassword("");
-      setConfirmPassword("");
+      await updatePassword({ newPassword, confirmPassword });
+      setNewPassword('');
+      setConfirmPassword('');
     } catch (error) {
-      setPasswordMsg({ type: "error", text: error.message });
-    } finally {
-      setPasswordLoading(false);
+      console.error('Password update failed:', error);
     }
-  }
+  };
 
-  // Delete Account
-  async function handleDeleteAccount() {
-    setDeleteMsg(null);
-    setDeleteLoading(true);
+  const handleDeleteAccount = async () => {
     try {
-      // Adjust this endpoint as needed
-      const response = await fetch("", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) {
-        // eslint-disable-next-line no-undef
-        const error = await response.json().catch(() => ({
-          message: "Failed to delete account",
-        }));
-        throw new Error(error.message || "Failed to delete account");
-      }
-
-      setDeleteMsg({
-        type: "success",
-        text: "Account deleted. Redirecting...",
-      });
-      setTimeout(() => {
-        // Adjust redirection as needed
-        window.location.href = "/";
-      }, 1200);
+      await deleteAccount();
+      onNavigate('home');
     } catch (error) {
-      setDeleteMsg({ type: "error", text: error.message });
-    } finally {
-      setDeleteLoading(false);
+      console.error('Account deletion failed:', error);
     }
-  }
+  };
 
-  // UI
   return (
-    <div style={{ maxWidth: 720, margin: "24px auto", padding: 16 }}>
-      <h2>Account Management</h2>
+    <div className="relative min-h-screen overflow-auto">
+      <Stars />
+      <Planet />
+      <Spaceship />
 
-      {/* Update Username */}
-      <section style={{ border: "1px solid #ddd", padding: 16, marginBottom: 16 }}>
-        <h3>Update Username</h3>
-        <form onSubmit={handleUpdateUsername}>
-          <div style={{ marginBottom: 8 }}>
-            <label>
-              New username
+      <div className="relative z-10 flex flex-col items-center justify-start min-h-screen px-6 py-24">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-6xl font-bold text-white tracking-wider text-center mb-12 pixel-text"
+          style={{ textShadow: '3px 3px 0px rgba(0,0,0,0.8)' }}
+        >
+          ACCOUNT MANAGEMENT
+        </motion.h1>
+
+        <motion.button
+          whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(255, 255, 255, 0.5)' }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => onNavigate('home')}
+          className="mb-8 px-6 py-3 bg-gray-200 text-black font-bold border-2 border-black"
+        >
+          BACK TO HOME
+        </motion.button>
+
+        <div className="w-full max-w-md space-y-8">
+          {/* Update Username */}
+          <section>
+            <h2 className="font-bold text-white mb-2">Update Username</h2>
+            <form onSubmit={handleUpdateUsername} className="space-y-3">
               <input
                 type="text"
+                placeholder="New username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                style={{ display: "block", width: "100%", padding: 8, marginTop: 4 }}
-                placeholder="Enter new username"
+                className="w-full px-4 py-3 bg-gray-200 text-black text-center font-bold border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-            </label>
-          </div>
-          <button type="submit" disabled={usernameLoading}>
-            {usernameLoading ? "Saving..." : "Save username"}
-          </button>
-        </form>
-        {usernameMsg && (
-          <div
-            style={{
-              marginTop: 8,
-              color: usernameMsg.type === "error" ? "red" : "green",
-            }}
-          >
-            {usernameMsg.text}
-          </div>
-        )}
-      </section> 
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                type="submit"
+                className="w-full px-4 py-3 bg-gray-200 text-black font-bold border-2 border-black"
+              >
+                SAVE USERNAME
+              </motion.button>
+            </form>
+          </section>
 
-      {/* Update Password */}
-      <section style={{ border: "1px solid #ddd", padding: 16, marginBottom: 16 }}>
-        <h3>Update Password</h3>
-        <form onSubmit={handleUpdatePassword}>
-          <div style={{ marginBottom: 8 }}>
-            <label>
-              New password
+          {/* Update Password */}
+          <section>
+            <h2 className="font-bold text-white mb-2">Update Password</h2>
+            <form onSubmit={handleUpdatePassword} className="space-y-3">
               <input
                 type="password"
+                placeholder="New password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                style={{ display: "block", width: "100%", padding: 8, marginTop: 4 }}
-                placeholder="New password (min 8 chars)"
+                className="w-full px-4 py-3 bg-gray-200 text-black text-center font-bold border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-            </label>
-          </div>
-
-          <div style={{ marginBottom: 8 }}>
-            <label>
-              Confirm new password
               <input
                 type="password"
+                placeholder="Confirm new password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                style={{ display: "block", width: "100%", padding: 8, marginTop: 4 }}
-                placeholder="Confirm new password"
+                className="w-full px-4 py-3 bg-gray-200 text-black text-center font-bold border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-            </label>
-          </div>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                type="submit"
+                className="w-full px-4 py-3 bg-gray-200 text-black font-bold border-2 border-black"
+              >
+                SAVE PASSWORD
+              </motion.button>
+            </form>
+          </section>
 
-          <button type="submit" disabled={passwordLoading}>
-            {passwordLoading ? "Saving..." : "Save password"}
-          </button>
-        </form>
-        {passwordMsg && (
-          <div
-            style={{
-              marginTop: 8,
-              color: passwordMsg.type === "error" ? "red" : "green",
-            }}
-          >
-            {passwordMsg.text}
-          </div>
-        )}
-      </section>
-
-      {/* Delete Account */}
-      <section style={{ border: "1px solid #f5c6cb", padding: 16, background: "#fff5f5" }}>
-        <h3 style={{ color: "#a71d2a" }}>Delete Account</h3>
-        <p>This action is permanent. All your data will be removed.</p>
-        <button
-          onClick={handleDeleteAccount}
-          disabled={deleteLoading}
-          style={{
-            background: "#a71d2a",
-            color: "#fff",
-            padding: "8px 12px",
-            border: "none",
-          }}
-        >
-          {deleteLoading ? "Deleting..." : "Delete account"}
-        </button>
-        {deleteMsg && (
-          <div
-            style={{
-              marginTop: 8,
-              color: deleteMsg.type === "error" ? "red" : "green",
-            }}
-          >
-            {deleteMsg.text}
-          </div>
-        )}
-      </section>
+          {/* Delete Account */}
+          <section>
+            <h2 className="font-bold text-red-500 mb-2">Delete Account</h2>
+            <p className="text-white mb-2">This action is permanent and cannot be undone.</p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleDeleteAccount}
+              className="w-full px-4 py-3 bg-red-600 text-white font-bold border-2 border-red-800"
+            >
+              DELETE ACCOUNT
+            </motion.button>
+          </section>
+        </div>
+      </div>
     </div>
   );
 }
