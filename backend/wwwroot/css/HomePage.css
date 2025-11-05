@@ -29,7 +29,7 @@ body {
 
 
 .Background-Home {
-    background-image: url(/images/backgrounds/HomePageImage.png);
+    background: radial-gradient(circle at 20% 20%, #1b2735, #090a0f);
     height: 100vh;
     width: 100vw;
     background-Size: cover;

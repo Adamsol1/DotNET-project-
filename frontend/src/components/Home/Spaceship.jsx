@@ -20,7 +20,7 @@ const Spaceship = () => {
       }}
     >
       <img
-        src="/assets/bg/spaceship.png"
+        src="/assets/backgrounds/spaceship.png"
         alt="Spaceship"
         className="w-full h-full object-contain"
         style={{

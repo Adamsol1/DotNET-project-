@@ -41,8 +41,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\bg\space-tunnel.png" />
-  </ItemGroup>
-
 </Project>

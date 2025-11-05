@@ -7,6 +7,81 @@ import { Button } from '../../ui/Button';
 import { Card } from '../../ui/Card';
 import { Text } from '../../ui/Text';
 import { tokens } from '../../design/tokens';
+const backgroundImages = {
+  'images/backgrounds/airlock.png': '/assets/backgrounds/airlock.png',
+  '/images/backgrounds/airlock.png': '/assets/backgrounds/airlock.png',
+  'images/backgrounds/awakening.png': '/assets/backgrounds/awakening.png',
+  '/images/backgrounds/awakening.png': '/assets/backgrounds/awakening.png',
+  'images/backgrounds/corridor.png': '/assets/backgrounds/corridor.png',
+  '/images/backgrounds/corridor.png': '/assets/backgrounds/corridor.png',
+  'images/backgrounds/encounter.png': '/assets/backgrounds/encounter.png',
+  '/images/backgrounds/encounter.png': '/assets/backgrounds/encounter.png',
+  'images/backgrounds/exposedWires.png': '/assets/backgrounds/exposedWires.png',
+  '/images/backgrounds/exposedWires.png': '/assets/backgrounds/exposedWires.png',
+  'images/backgrounds/hallway.png': '/assets/backgrounds/hallway.png',
+  '/images/backgrounds/hallway.png': '/assets/backgrounds/hallway.png',
+  'images/backgrounds/medkit.png': '/assets/backgrounds/medkit.png',
+  '/images/backgrounds/medkit.png': '/assets/backgrounds/medkit.png',
+  'images/backgrounds/outsideCryopod.png': '/assets/backgrounds/outsideCryopod.png',
+  '/images/backgrounds/outsideCryopod.png': '/assets/backgrounds/outsideCryopod.png',
+  'images/backgrounds/releaseHatch.png': '/assets/backgrounds/releaseHatch.png',
+  '/images/backgrounds/releaseHatch.png': '/assets/backgrounds/releaseHatch.png',
+  'images/backgrounds/ventilationShaft.png': '/assets/backgrounds/ventilationShaft.png',
+  '/images/backgrounds/ventilationShaft.png': '/assets/backgrounds/ventilationShaft.png',
+  'images/backgrounds/maintenenceCorridor.png': '/assets/backgrounds/corridor.png',
+  '/images/backgrounds/maintenenceCorridor.png': '/assets/backgrounds/corridor.png',
+  'assets/bg/space-tunnel.png': '/assets/backgrounds/space-tunnel.png',
+  '/assets/bg/space-tunnel.png': '/assets/backgrounds/space-tunnel.png',
+  'assets/backgrounds/space-tunnel.png': '/assets/backgrounds/space-tunnel.png',
+  '/assets/backgrounds/space-tunnel.png': '/assets/backgrounds/space-tunnel.png'
+};
+
+const characterImages = {
+  'images/characters/narrator.png': '/assets/characters/narrator.png',
+  '/images/characters/narrator.png': '/assets/characters/narrator.png',
+  'images/characters/systemAI.png': '/assets/characters/systemAI.png',
+  '/images/characters/systemAI.png': '/assets/characters/systemAI.png',
+  'images/characters/irene.png': '/assets/characters/irene.png',
+  '/images/characters/irene.png': '/assets/characters/irene.png',
+  'images/characters/darius.png': '/assets/characters/darius.png',
+  '/images/characters/darius.png': '/assets/characters/darius.png',
+  'images/characters/protagonist.png': '/assets/characters/protagonist.png',
+  '/images/characters/protagonist.png': '/assets/characters/protagonist.png',
+  'images/characters/hero.png': '/assets/characters/hero.png',
+  '/images/characters/hero.png': '/assets/characters/hero.png',
+  'assets/char/hero.png': '/assets/characters/hero.png',
+  '/assets/char/hero.png': '/assets/characters/hero.png',
+  'assets/characters/hero.png': '/assets/characters/hero.png',
+  '/assets/characters/hero.png': '/assets/characters/hero.png'
+};
+
+const normalizeKey = (path) => {
+  if (!path) {
+    return '';
+  }
+  return path.startsWith('/') ? path.slice(1) : path;
+};
+
+const DEFAULT_BACKGROUND = '/assets/backgrounds/space-tunnel.png';
+const DEFAULT_PORTRAIT = '/assets/characters/hero.png';
+
+const resolveBackgroundImage = (url) => {
+  if (!url) {
+    return DEFAULT_BACKGROUND;
+  }
+
+  const normalized = normalizeKey(url);
+  return backgroundImages[url] || backgroundImages[normalized] || DEFAULT_BACKGROUND;
+};
+
+const resolveCharacterImage = (url) => {
+  if (!url) {
+    return DEFAULT_PORTRAIT;
+  }
+
+  const normalized = normalizeKey(url);
+  return characterImages[url] || characterImages[normalized] || DEFAULT_PORTRAIT;
+};
 
 export function PlayGame({ saveId, onBackToMenu }) {
   const {
@@ -28,6 +103,10 @@ export function PlayGame({ saveId, onBackToMenu }) {
 
   const [dialogueIndex, setDialogueIndex] = useState(0);
   const [showChoices, setShowChoices] = useState(false);
+  const backgroundImage = resolveBackgroundImage(currentNode?.backgroundUrl);
+  const portraitImage = resolveCharacterImage(
+    currentDialogue?.character?.imageUrl
+  );
 
   useEffect(() => {
     if (saveId) {
@@ -195,9 +274,7 @@ export function PlayGame({ saveId, onBackToMenu }) {
           style={{
             width: '100%',
             height: '100%',
-            backgroundImage: `url(${
-              currentNode.backgroundUrl || '/assets/bg/space-tunnel.png'
-            })`,
+            backgroundImage: `url(${backgroundImage})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}
@@ -233,10 +310,7 @@ export function PlayGame({ saveId, onBackToMenu }) {
             }}
           >
             <img
-              src={
-                currentDialogue?.character?.imageUrl ||
-                '/assets/char/hero.png'
-              }
+              src={portraitImage}
               alt="Character"
               style={{
                 width: '100%',

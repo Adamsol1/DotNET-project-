@@ -7,7 +7,6 @@ import { motion } from 'framer-motion';
  * File is meant to start a new game and create a new game save.
  */
 
-
 export function StartGame({ onGameStart, onBack }) {
   const [formData, setFormData] = useState({
     saveName: ''
@@ -62,7 +61,7 @@ export function StartGame({ onGameStart, onBack }) {
     <div 
       className="min-h-screen text-white font-mono relative overflow-hidden bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: `url('/assets/bg/afterLogin.png')`,
+        backgroundImage: `url('/assets/backgrounds/afterLogin.png')`,
       }}
     >
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-6">
@@ -79,7 +78,7 @@ export function StartGame({ onGameStart, onBack }) {
               onClick={onBack}
               className="px-4 py-2 bg-transparent text-white font-bold border-2 border-white hover:bg-white hover:text-black transition-colors"
             >
-              ← BACK
+              {'<< BACK'}
             </motion.button>
             <div className="text-center flex-1">
               <h2 className="text-3xl font-bold text-white tracking-wider" style={{ textShadow: '3px 3px 0px rgba(0, 0, 0, 0.8)' }}>

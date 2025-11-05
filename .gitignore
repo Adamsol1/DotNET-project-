@@ -58,6 +58,7 @@ yarn-error.log*
 # =========================
 dist/
 build/
+frontend/build/
 .next/
 .nuxt/
 
