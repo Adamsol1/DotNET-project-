@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import { GameProvider } from './context/GameContext';
 import { AudioProvider } from './context/AudioContext';
 import { Home } from './pages/Home';
 import { Game } from './pages/Game';
 import { tokens } from './design/tokens';
+import {AccountManagement} from "./pages/AccountManagement";
 
 //set the appContent routes
 function AppContent() {
