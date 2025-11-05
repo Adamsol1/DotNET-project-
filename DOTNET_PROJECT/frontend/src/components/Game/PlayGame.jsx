@@ -54,6 +54,8 @@ export function PlayGame({ saveId, onBackToMenu }) {
             }
             if (currentNode.ambientSoundUrl) {
                 playAmbientSound(currentNode.ambientSoundUrl, true);
+            } else {
+                playAmbientSound(null);
             }
 
             // reset local dialogue state for new node
@@ -146,27 +148,6 @@ export function PlayGame({ saveId, onBackToMenu }) {
         }
     };
 
-    const handleGoBack = async () => {
-        try {
-            await goBack(saveId);
-            setDialogueIndex(0);
-            setShowChoices(false);
-            await loadGameData();
-        } catch (err) {
-            console.error('Failed to go back:', err);
-        }
-    };
-
-    const handleGoForward = async () => {
-        try {
-            await nextNode(saveId);
-            setDialogueIndex(0);
-            setShowChoices(false);
-            await loadGameData();
-        } catch (err) {
-            console.error('Failed to go forward:', err);
-        }
-    };
 
     // Loading / error / empty safeguards (keeps original UX)
     if (loading && !currentNode) {

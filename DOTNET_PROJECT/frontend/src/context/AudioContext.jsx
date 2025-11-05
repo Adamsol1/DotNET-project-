@@ -6,6 +6,7 @@ export function AudioProvider({ children }) {
     const backgroundMusicRef = useRef(null);
     const ambientSoundRef = useRef(null);
     const choiceAudioRef = useRef(null);
+    const fadeIntervalRef = useRef(null);
 
     const [currentBackgroundUrl, setCurrentBackgroundUrl] = useState(null);
     const [currentAmbientUrl, setCurrentAmbientUrl] = useState(null);
@@ -32,9 +33,10 @@ export function AudioProvider({ children }) {
         setCurrentBackgroundUrl(url);
     };
 
-    const playAmbientSound = (url, loop = true) => {
-        // Stop existing ambient sound
+    const playAmbientSound = async (url, loop = true, fadeDuration = 800) => {
+        // Fade out existing ambient sound
         if (ambientSoundRef.current) {
+            await fadeAudio(ambientSoundRef.current, 0, fadeDuration);
             ambientSoundRef.current.pause();
             ambientSoundRef.current = null;
         }
@@ -44,34 +46,80 @@ export function AudioProvider({ children }) {
             return;
         }
 
-        // Don't replay if same URL and it's already playing
-        if (url === currentAmbientUrl && ambientSoundRef.current && !ambientSoundRef.current.paused) {
-            return;
-        }
-
-        // Play new ambient sound
+        // Play new ambient sound with fade in
         ambientSoundRef.current = new Audio(url);
         ambientSoundRef.current.loop = loop;
-        ambientSoundRef.current.volume = isMuted ? 0 : 0.7;
-        ambientSoundRef.current.play().catch(err => {
+        ambientSoundRef.current.volume = 0; // Start at 0
+
+        try {
+            await ambientSoundRef.current.play();
+            const targetVolume = isMuted ? 0 : 0.7;
+            await fadeAudio(ambientSoundRef.current, targetVolume, fadeDuration);
+        } catch (err) {
             console.error('Error playing ambient sound:', err);
-        });
+        }
 
         setCurrentAmbientUrl(url);
     };
 
-    const playChoiceAudio = (url) => {
+    const fadeAudio = (audioElement, targetVolume, duration = 1000) => {
+        if (!audioElement) return Promise.resolve();
+
+        return new Promise((resolve) => {
+            const startVolume = audioElement.volume;
+            const volumeChange = targetVolume - startVolume;
+            const startTime = Date.now();
+
+            if (fadeIntervalRef.current) {
+                clearInterval(fadeIntervalRef.current);
+            }
+
+            fadeIntervalRef.current = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Exponential easing for more natural sound fade
+                const easedProgress = progress < 0.5
+                    ? 2 * progress * progress
+                    : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+                audioElement.volume = startVolume + (volumeChange * easedProgress);
+
+                if (progress >= 1) {
+                    clearInterval(fadeIntervalRef.current);
+                    audioElement.volume = targetVolume;
+                    resolve();
+                }
+            }, 16); // ~60fps
+        });
+    };
+
+    const playChoiceAudio = async (url, fadeDuration = 400) => {
         if (!url) return;
 
         // Play choice audio (doesn't loop, can overlap)
         const audio = new Audio(url);
-        audio.volume = isMuted ? 0 : 0.8;
-        audio.play().catch(err => {
+        audio.volume = 0; // Start at 0
+
+        try {
+            await audio.play();
+            const targetVolume = isMuted ? 0 : 0.5;
+            await fadeAudio(audio, targetVolume, fadeDuration);
+        } catch (err) {
             console.error('Error playing choice audio:', err);
-        });
+        }
 
         choiceAudioRef.current = audio;
     };
+
+    const stopAmbientSound = () => {
+        if (ambientSoundRef.current) {
+            ambientSoundRef.current.pause();
+            ambientSoundRef.current = null;
+        }
+        setCurrentAmbientUrl(null);
+    };
+    
 
     const stopAllAudio = () => {
         if (backgroundMusicRef.current) {
