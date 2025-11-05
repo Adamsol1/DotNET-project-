@@ -16,6 +16,7 @@ export function PlayGame({ saveId, onBackToMenu }) {
     playerState,
     loading,
     error,
+    loadGame,
     getCurrentNode,
     getNextDialogue,
     makeChoice,
@@ -37,8 +38,10 @@ export function PlayGame({ saveId, onBackToMenu }) {
   const loadGameData = async () => {
     try {
       clearError();
-      // Only load the current node for now
-      // Player state will be loaded when needed
+      const save = await loadGame(saveId);
+      if (save?.playerCharacterId) {
+        await getPlayerState(save.playerCharacterId);
+      }
       await getCurrentNode(saveId);
     } catch (error) {
       console.error('Failed to load game data:', error);
