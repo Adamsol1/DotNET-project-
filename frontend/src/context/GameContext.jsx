@@ -156,6 +156,11 @@ const ActionTypes = {
     DIALOGUE_SUCCESS: 'DIALOGUE_SUCCESS',
     DIALOGUE_ERROR: 'DIALOGUE_ERROR',
 
+    // player state actions.
+    PLAYER_STATE_START: 'PLAYER_STATE_START',
+    PLAYER_STATE_SUCCESS: 'PLAYER_STATE_SUCCESS',
+    PLAYER_STATE_ERROR: 'PLAYER_STATE_ERROR',
+
     // UI actions.
     SET_LOADING: 'SET_LOADING',
     SET_ERROR: 'SET_ERROR',
@@ -249,6 +254,18 @@ function gameReducer(state, action) {
         
         // if the dialogue starts fails, we set the error state.
         case ActionTypes.DIALOGUE_ERROR:
+            return { ...state, loading: false, error: action.payload };
+
+        // when player state is loading, reset error state.
+        case ActionTypes.PLAYER_STATE_START:
+            return { ...state, loading: true, error: null };
+
+        // update the stored player state.
+        case ActionTypes.PLAYER_STATE_SUCCESS:
+            return { ...state, loading: false, error: null, playerState: action.payload };
+
+        // if fetching player state fails, surface the error.
+        case ActionTypes.PLAYER_STATE_ERROR:
             return { ...state, loading: false, error: action.payload };
         
         // if the navigation starts, we set the current navigation state.
@@ -436,13 +453,13 @@ export function GameProvider({ children }) {
     // get player state and return the result.
     const getPlayerState = async (playerCharacterId) => {
         try {
-            dispatch({ type: ActionTypes.SET_LOADING, payload: true });
+            dispatch({ type: ActionTypes.PLAYER_STATE_START });
             const playerState = await story.getPlayerState(playerCharacterId);
-            dispatch({ type: ActionTypes.SET_LOADING, payload: false });
+            dispatch({ type: ActionTypes.PLAYER_STATE_SUCCESS, payload: playerState });
             return playerState;
         } catch (error) {
             const errorMessage = error.response?.data || 'Failed to get player state';
-            dispatch({ type: ActionTypes.SET_ERROR, payload: errorMessage });
+            dispatch({ type: ActionTypes.PLAYER_STATE_ERROR, payload: errorMessage });
             throw error;
         }
     };

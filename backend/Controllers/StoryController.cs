@@ -198,6 +198,27 @@ public class StoryController : ControllerBase
         }
     }
 
+    // get the current state of a player character.
+    [HttpGet("player/{playerCharacterId}")]
+    public async Task<ActionResult<PlayerCharacterDto>> GetPlayerState(int playerCharacterId)
+    {
+        try
+        {
+            var playerState = await _storyControllerService.GetPlayerState(playerCharacterId);
+            return Ok(playerState);
+        }
+        catch (KeyNotFoundException)
+        {
+            _logger.LogWarning("Player character {PlayerCharacterId} not found", playerCharacterId);
+            return NotFound($"Player character {playerCharacterId} not found");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting player state for player {PlayerCharacterId}", playerCharacterId);
+            return StatusCode(500, "Failed to get player state");
+        }
+    }
+
     // get the nodes the player has visited.
     [HttpGet("history/{saveId}")]
     public async Task<ActionResult<List<int>>> GetVisitedNodes(int saveId)
