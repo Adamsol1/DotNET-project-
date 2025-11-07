@@ -292,31 +292,23 @@ function gameReducer(state, action) {
         case ActionTypes.SET_GAME_OVER:
             return { ...state, gameOver: action.payload };
 
-
+        // AccountManagement
         case ActionTypes.UPDATE_USERNAME_START:
             return { ...state, loading: true, error: null };
-
         case ActionTypes.UPDATE_USERNAME_SUCCESS:
             return { ...state, loading: false, user: action.payload, error: null };
-
         case ActionTypes.UPDATE_USERNAME_ERROR:
             return { ...state, loading: false, error: action.payload };
-
         case ActionTypes.UPDATE_PASSWORD_START:
             return { ...state, loading: true, error: null };
-
         case ActionTypes.UPDATE_PASSWORD_SUCCESS:
             return { ...state, loading: false, error: null };
-
         case ActionTypes.UPDATE_PASSWORD_ERROR:
             return { ...state, loading: false, error: action.payload };
-
         case ActionTypes.DELETE_ACCOUNT_START:
             return { ...state, loading: true, error: null };
-
         case ActionTypes.DELETE_ACCOUNT_SUCCESS:
             return { ...startState, loading: false };
-
         case ActionTypes.DELETE_ACCOUNT_ERROR:
             return { ...state, loading: false, error: action.payload };
 

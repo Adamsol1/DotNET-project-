@@ -5,30 +5,37 @@ import Planet from '../components/Home/Planet';
 import Spaceship from '../components/Home/Spaceship';
 import { useGame } from '../context/GameContext';
 
+// The AccountManagement component handles user account operations such as
+// updating username/password and deleting the account.
+
 export function AccountManagement({ onNavigate }) {
   const { updateUsername, updatePassword, deleteAccount } = useGame();
   const [username, setUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  // Handles username update form submission
   const handleUpdateUsername = async (e) => {
     e.preventDefault();
-    if (!username) return;
+    if (!username) return; // Prevent submission if field is empty
 
     try {
       await updateUsername({ username });
-      setUsername('');
+      setUsername(''); // Clear input after successful update
     } catch (error) {
       console.error('Update failed:', error);
     }
   };
 
+  // Handles password update form submission
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
+    // Checks if both fields are filled and match
     if (!newPassword || newPassword !== confirmPassword) return;
 
     try {
       await updatePassword({ newPassword, confirmPassword });
+      // Clear inputs after successful update
       setNewPassword('');
       setConfirmPassword('');
     } catch (error) {
@@ -36,10 +43,11 @@ export function AccountManagement({ onNavigate }) {
     }
   };
 
+  // Handles account deletion
   const handleDeleteAccount = async () => {
     try {
       await deleteAccount();
-      onNavigate('home');
+      onNavigate('home'); // Redirect to home screen after deletion
     } catch (error) {
       console.error('Account deletion failed:', error);
     }
@@ -47,11 +55,14 @@ export function AccountManagement({ onNavigate }) {
 
   return (
     <div className="relative min-h-screen overflow-auto">
+      {/* Background decorative components */}
       <Stars />
       <Planet />
       <Spaceship />
 
+      {/* Foreground container for account management UI */}
       <div className="relative z-10 flex flex-col items-center justify-start min-h-screen px-6 py-24">
+        {/* Animated heading */}
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -62,6 +73,7 @@ export function AccountManagement({ onNavigate }) {
           ACCOUNT MANAGEMENT
         </motion.h1>
 
+        {/* Navigation button back to home */}
         <motion.button
           whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(255, 255, 255, 0.5)' }}
           whileTap={{ scale: 0.95 }}
@@ -71,8 +83,10 @@ export function AccountManagement({ onNavigate }) {
           BACK TO HOME
         </motion.button>
 
+        {/* Wrapper for all account management sections */}
         <div className="w-full max-w-md space-y-8">
-          {/* Update Username */}
+
+          {/* Update Username Section */}
           <section>
             <h2 className="font-bold text-white mb-2">Update Username</h2>
             <form onSubmit={handleUpdateUsername} className="space-y-3">
@@ -94,7 +108,7 @@ export function AccountManagement({ onNavigate }) {
             </form>
           </section>
 
-          {/* Update Password */}
+          {/* Update Password Section */}
           <section>
             <h2 className="font-bold text-white mb-2">Update Password</h2>
             <form onSubmit={handleUpdatePassword} className="space-y-3">
@@ -123,10 +137,12 @@ export function AccountManagement({ onNavigate }) {
             </form>
           </section>
 
-          {/* Delete Account */}
+          {/* Delete Account Section */}
           <section>
             <h2 className="font-bold text-red-500 mb-2">Delete Account</h2>
-            <p className="text-white mb-2">This action is permanent and cannot be undone.</p>
+            <p className="text-white mb-2">
+              This action is permanent and cannot be undone.
+            </p>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

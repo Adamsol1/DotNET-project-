@@ -79,7 +79,7 @@ export const account = {
         return response.data;
     },
 
-    // change password
+    // update password
     updatePassword: async (data) => {
         const response = await api.put('/account/password', data);
         return response.data;
