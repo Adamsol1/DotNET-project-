@@ -33,7 +33,7 @@ export function AudioProvider({ children }) {
         setCurrentBackgroundUrl(url);
     };
 
-    const playAmbientSound = async (url, loop = true, fadeDuration = 800) => {
+    const playAmbientSound = async (url, loop = false, fadeDuration = 800) => {
         // Fade out existing ambient sound
         if (ambientSoundRef.current) {
             await fadeAudio(ambientSoundRef.current, 0, fadeDuration);
@@ -53,7 +53,7 @@ export function AudioProvider({ children }) {
 
         try {
             await ambientSoundRef.current.play();
-            const targetVolume = isMuted ? 0 : 0.7;
+            const targetVolume = isMuted ? 0 : 0.5;
             await fadeAudio(ambientSoundRef.current, targetVolume, fadeDuration);
         } catch (err) {
             console.error('Error playing ambient sound:', err);

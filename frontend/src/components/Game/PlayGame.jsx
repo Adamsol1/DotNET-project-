@@ -10,25 +10,22 @@ import { tokens } from '../../design/tokens';
 import {useAudio} from "../../context/AudioContext";
 
 export function PlayGame({ saveId, onBackToMenu }) {
-    // NOTE: keep the names your app used originally (playerState etc.)
-const {
-    currentNode,
-    // currentDialogue is not sent from node directly; we'll compute from currentNode.dialogues and dialogueIndex
-    availableChoices,
-    playerState,
-    loading,
-    error,
-    loadGame,
-    getCurrentNode,
-    // getNextDialogue is not used because node includes Dialogues[]; we keep it if other code uses it
-    getNextDialogue,
-    makeChoice,
-    goBack,
-    nextNode,
-    getPlayerState,
-    clearError,
-    gameOver, // optional flag from GameContext
-} = useGame();
+    const {
+        currentNode,
+        availableChoices,
+        playerState,
+        loading,
+        error,
+        loadGame,
+        getCurrentNode,
+        getNextDialogue,
+        makeChoice,
+        goBack,
+        nextNode,
+        getPlayerState,
+        clearError,
+        gameOver,
+    } = useGame();
 
     const {
         playBackgroundMusic,
@@ -54,7 +51,7 @@ const {
                 playBackgroundMusic(currentNode.backgroundMusicUrl);
             }
             if (currentNode.ambientSoundUrl) {
-                playAmbientSound(currentNode.ambientSoundUrl, true);
+                playAmbientSound(currentNode.ambientSoundUrl, false);
             } else {
                 playAmbientSound(null);
             }
@@ -84,7 +81,6 @@ const {
     const currentDialogue = dialogues.length > 0 ? dialogues[dialogueIndex] : null;
 
     // Try to resolve character image:
-    // backend may include characters in node (charactersInScene / characters), or the dialogue might include expanded character object.
     const resolveCharacterImage = () => {
         // 1) If dialogue contains character object (legacy)
         if (currentDialogue && currentDialogue.character && currentDialogue.character.imageUrl) {
@@ -117,14 +113,12 @@ const {
             // Play choice audio if present on the choice
             if (choice.audioUrl) playChoiceAudio(choice.audioUrl);
 
-            // Call makeChoice - be tolerant of different response shapes.
-            // Some backends return the next node directly; others may return a wrapper.
+            // Call makeChoice
             const res = await makeChoice(saveId, choice.id);
 
-            // After making a choice, we want to refresh the current node and playerState
-            // to ensure health and available choices are in sync.
+            // After making a choice, refresh the current node and playerState
             await loadGameData();
-            
+
             // Reset dialogue index
             setDialogueIndex(0);
             setShowChoices(false);
@@ -149,8 +143,7 @@ const {
         }
     };
 
-
-    // Loading / error / empty safeguards (keeps original UX)
+    // Loading / error / empty safeguards
     if (loading && !currentNode) {
         return (
             <div
@@ -222,7 +215,7 @@ const {
         );
     }
 
-    // compute whether the player is dead / game over (be defensive)
+    // compute whether the player is dead / game over
     const hp = playerState?.health ?? playerState?.hp ?? 100;
     const isGameOver = (typeof gameOver === 'boolean') ? gameOver : hp <= 0;
 
@@ -234,13 +227,10 @@ const {
                 paddingTop: '1px'
             }}
         >
-            {/* HUD uses playerState and currentNode like original code */}
+            {/* HUD now receives playerState and currentNode directly */}
             <HUD
-                gameState={{
-                    playerCharacter: playerState,
-                    currentStoryNode: currentNode,
-                    isGameOver: gameOver ?? (playerState?.health <= 0),
-                }}
+                playerState={playerState}
+                currentNode={currentNode}
                 onBackToMenu={onBackToMenu}
             />
 
@@ -374,7 +364,7 @@ const {
                                             >
                                                 {choice.text}
                                             </button>
-                                            
+
                                         ))}
                                     </div>
                                 )}
