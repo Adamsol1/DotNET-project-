@@ -83,6 +83,8 @@ public class GenService : IGenService
             Title = storyNode.Title,
             Description = storyNode.Description,
             BackgroundUrl = storyNode.BackgroundUrl ?? string.Empty,
+            BackgroundMusicUrl = storyNode.BackgroundMusicUrl,
+            AmbientSoundUrl = storyNode.AmbientSoundUrl,
 
             // dialogues and choices where we loop through and map those into their counterpart dtos.
             Dialogues = dialogues.OrderBy(d => d.Order)
@@ -102,7 +104,9 @@ public class GenService : IGenService
             Id = choice.Id,
             Text = choice.Text,
             StoryNodeId = choice.StoryNodeId,
-            NextStoryNodeId = choice.NextStoryNodeId
+            NextStoryNodeId = choice.NextStoryNodeId,
+            AudioUrl = choice.AudioUrl,
+            HealthEffect = choice.HealthEffect
         };
     }
 
@@ -142,7 +146,8 @@ public class GenService : IGenService
             SaveName = gameSave.SaveName,
             PlayerCharacterId = gameSave.PlayerCharacterId,
             CurrentStoryNodeId = gameSave.CurrentStoryNodeId,
-            LastUpdate = gameSave.LastUpdate
+            LastUpdate = gameSave.LastUpdate,
+            Health = gameSave.Health
         };
     }
 
@@ -176,11 +181,6 @@ public class GenService : IGenService
         // get the choice from the repository.
         var choice = await ValidateEntityExists<Choice>(choiceId);
         
-        Console.WriteLine("Genservice node used is: " + nodeId );
-        Console.WriteLine("GenService: Choise id: " + choiceId);
-        Console.WriteLine("GenService: Choise Stroy node: " + choice.StoryNodeId);
-
-
         return choice.StoryNodeId == nodeId;
 
     }

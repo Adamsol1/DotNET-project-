@@ -75,29 +75,29 @@ export function Game({ onNavigate }) {
     );
   }
 
-  // Main menu view.
-  return (
-    <div 
-      className="min-h-screen text-white font-mono relative overflow-hidden bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: `url('/assets/bg/afterLogin.png')`,
-      }}
-    >
-      <div className="relative z-10 min-h-screen flex flex-col">
-        {/* Header */}
-        <header className="p-6 flex justify-between items-center">
-          {/* empty space */}
-          <div className="w-10 h-10"></div>
-          
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={exitGame}
-            className="px-4 py-2 bg-transparent text-white font-bold border-2 border-white hover:bg-white hover:text-black transition-colors"
-          >
-            HOME
-          </motion.button>
-        </header>
+    // Main menu view.
+    return (
+        <div
+            className="min-h-screen text-white font-mono relative overflow-hidden bg-cover bg-center bg-no-repeat"
+            style={{
+                backgroundImage: `url('/assets/bg/afterLogin.png')`,
+            }}
+        >
+            <div className="relative z-10 min-h-screen flex flex-col">
+                {/* Header */}
+                <header className="p-6 flex justify-between items-center">
+                    {/* empty space */}
+                    <div className="w-10 h-10"></div>
+
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={exitGame}
+                        className="px-4 py-2 bg-transparent text-white font-bold border-2 border-white hover:bg-white hover:text-black transition-colors"
+                    >
+                        HOME
+                    </motion.button>
+                </header>
 
         {/* Main Content */}
         <main className="flex-1 flex items-center justify-center px-6">

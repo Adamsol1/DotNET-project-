@@ -25,7 +25,7 @@ const Planet = () => {
     >
       {/* Planet image */}
       <img
-        src="/assets/bg/planet.png"
+        src="/assets/backgrounds/planet.png"
         alt="Planet"
         className="w-full h-full object-contain"
       />

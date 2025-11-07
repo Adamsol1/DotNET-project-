@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import { GameProvider } from './context/GameContext';
+import { AudioProvider } from './context/AudioContext';
 import { Home } from './pages/Home';
 import { Game } from './pages/Game';
-import { AccountManagement } from './pages/AccountManagement';
 import { tokens } from './design/tokens';
+import {AccountManagement} from "./pages/AccountManagement";
 
 //set the appContent routes
 function AppContent() {
@@ -51,11 +52,13 @@ function AppContent() {
   );
 }
 
-// setup the app with the GameProvider and AppContent
+// Setup of the app with the GameProvider, AudioProvider, and AppContent
 export default function App() {
-  return (
-    <GameProvider>
-      <AppContent />
-    </GameProvider>
-  );
+    return (
+        <GameProvider>
+            <AudioProvider>
+                <AppContent />
+            </AudioProvider>
+        </GameProvider>
+    );
 }
