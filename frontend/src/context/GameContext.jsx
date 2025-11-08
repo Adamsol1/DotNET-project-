@@ -566,15 +566,46 @@ export function GameProvider({ children }) {
         }
     };
 
+
     // make a choice and return the result.
     const makeChoice = async (saveId, choiceId) => {
         try {
             dispatch({ type: ActionTypes.CHOICE_START });
+
+            // Track the current node as visited BEFORE making the choice
+            if (state.currentNode?.id && state.currentSave) {
+                // Ensure visitedNodeIds is always an array
+                let visitedIds = state.currentSave.visitedNodeIds;
+
+                if (!visitedIds) {
+                    visitedIds = [];
+                } else if (!Array.isArray(visitedIds)) {
+                    visitedIds = [];
+                } else {
+                    visitedIds = [...visitedIds];
+                }
+
+                // Add current node if not already visited
+                if (!visitedIds.includes(state.currentNode.id)) {
+                    visitedIds.push(state.currentNode.id);
+
+                    // Update currentSave in state immediately
+                    dispatch({
+                        type: ActionTypes.GAME_SUCCESS,
+                        payload: {
+                            ...state.currentSave,
+                            visitedNodeIds: visitedIds
+                        }
+                    });
+
+                    // Fire and forget backend update (don't wait for it)
+                    updateSave(saveId, { visitedNodeIds: visitedIds }).catch(err => {
+                        console.error('Failed to sync visited nodes to backend:', err);
+                    });
+                }
+            }
+
             const gameState = await story.makeChoice(saveId, choiceId);
-            console.log(gameState);
-            console.log("GameContext - MakeChoise - gamestate - playerchar", gameState.playerCharacter);
-            console.log("GameContext - MakeChoise - gamestate - availableChoices", gameState.availableChoices);
-            console.log("GameContext - MakeChoise - gamestate - currentStoryNode", gameState.currentStoryNode);
 
             dispatch({
                 type: ActionTypes.CHOICE_SUCCESS,
