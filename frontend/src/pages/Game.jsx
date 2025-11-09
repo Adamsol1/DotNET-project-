@@ -3,12 +3,14 @@ import { useGame } from '../context/GameContext';
 import { StartGame } from '../components/Game/NewGame';
 import { PlayGame } from '../components/Game/PlayGame';
 import { motion } from 'framer-motion';
+import RockPaperScissors from '../components/miniGames/RockPaperScissors';
 
 export function Game({ onNavigate }) {
   const { authenticated, user, getAllSaves } = useGame();
   const [currentSave, setCurrentSave] = useState(null);
   const [saves, setSaves] = useState([]);
   const [showGameStart, setShowGameStart] = useState(false);
+  const [showMiniGame, setShowMiniGame] = useState(false);
 
   // Load saves when component mounts
   useEffect(() => {
@@ -53,6 +55,19 @@ export function Game({ onNavigate }) {
     onNavigate('home');
   };
 
+  const handleMiniGameWin = () => {
+    console.log('Player won the mini-game!');
+  };
+
+  const handleMiniGameLose = () => {
+    console.log('Player lost the mini-game!');
+  };
+
+  const handleMiniGameComplete = () => {
+    console.log('Mini-game complete!');
+    setShowMiniGame(false);
+  };
+
   // Redirect to login if not authenticated and return null.
   if (!authenticated) {
     onNavigate('home');
@@ -75,6 +90,7 @@ export function Game({ onNavigate }) {
     );
   }
 
+<<<<<<< Updated upstream
     // Main menu view.
     return (
         <div
@@ -98,6 +114,64 @@ export function Game({ onNavigate }) {
                         HOME
                     </motion.button>
                 </header>
+=======
+  // Main menu view.
+  return (
+    <div 
+      className="min-h-screen text-white font-mono relative overflow-hidden bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: `url('/assets/bg/afterLogin.png')`,
+      }}
+    >
+      {/* Mini-spill overlay */}
+      {showMiniGame && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 2000
+          }}
+          onClick={(e) => {
+            // Close if clicking the backdrop
+            if (e.target === e.currentTarget) {
+              setShowMiniGame(false);
+            }
+          }}
+        >
+          <RockPaperScissors
+            onComplete={() => {
+              console.log('Mini-game completed, closing...');
+              setShowMiniGame(false);
+            }}
+            onWin={handleMiniGameWin}
+            onLose={handleMiniGameLose}
+          />
+        </div>
+      )}
+
+      <div className="relative z-10 min-h-screen flex flex-col">
+        {/* Header */}
+        <header className="p-6 flex justify-between items-center">
+          {/* empty space */}
+          <div className="w-10 h-10"></div>
+          
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={exitGame}
+            className="px-4 py-2 bg-transparent text-white font-bold border-2 border-white hover:bg-white hover:text-black transition-colors"
+          >
+            HOME
+          </motion.button>
+        </header>
+>>>>>>> Stashed changes
 
         {/* Main Content */}
         <main className="flex-1 flex items-center justify-center px-6">
@@ -116,10 +190,10 @@ export function Game({ onNavigate }) {
                 className="text-4xl font-bold text-white mb-4 tracking-wider"
                 style={{ textShadow: '3px 3px 0px rgba(0, 0, 0, 0.8)' }}
               >
-                WELCOME BACK
+                WELCOME {user?.username}!
               </motion.h2>
               <p className="text-xl text-gray-300 mb-8">
-                {user?.username}
+                Ready to continue your adventure?
               </p>
             </div>
 
@@ -140,6 +214,29 @@ export function Game({ onNavigate }) {
                 NEW GAME
               </motion.button>
             </motion.div>
+
+            {/* Test Mini-Spill Button */}
+            {!showMiniGame && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 }}
+                className="mb-8"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    console.log('Opening mini-game...');
+                    setShowMiniGame(true);
+                  }}
+                  className="w-full px-8 py-6 bg-blue-600 text-white font-bold text-2xl border-4 border-blue-400 hover:bg-blue-500 transition-colors"
+                  style={{ boxShadow: '8px 8px 0px rgba(0, 0, 0, 0.8)' }}
+                >
+                   TEST ROCK PAPER SCISSORS
+                </motion.button>
+              </motion.div>
+            )}
 
             {/* Load Previous Saves - Below */}
             {saves.length > 0 && (
