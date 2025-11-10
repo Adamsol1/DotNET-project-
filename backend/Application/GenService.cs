@@ -88,8 +88,8 @@ public class GenService : IGenService
 
             // dialogues and choices where we loop through and map those into their counterpart dtos.
             Dialogues = dialogues.OrderBy(d => d.Order)
-            .Select(MapDialogue)
-            .ToList(),
+                .Select(d => MapDialogue(d))
+                .ToList(),
             
             Choices = choices.Select(MapChoice)
             .ToList()
@@ -134,7 +134,7 @@ public class GenService : IGenService
             Name = character.Name,
             Description = character.Description,
             ImageUrl = character.ImageUrl,
-            Dialogues = dialogues.Select(MapDialogue).ToList()
+            Dialogues = dialogues.Select(d => MapDialogue(d)).ToList()
         };
     }
 

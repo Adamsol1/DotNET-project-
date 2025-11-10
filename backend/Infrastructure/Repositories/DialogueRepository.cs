@@ -111,4 +111,15 @@ public class DialogueRepository : GenericRepository<Dialogue>, IDialogueReposito
 
         return await dialogueText;
     }
+    
+    /// <summary>
+    /// Get all dialogues for a story node including the Character navigation property
+    /// </summary>
+    public async Task<IEnumerable<Dialogue>> GetDialoguesWithCharactersByNodeIdAsync(int storyNodeId)
+    {
+        return await _db.Dialogues
+            .Where(d => d.StoryNodeId == storyNodeId)
+            .Include(d => d.Character) // Tracking enabled (your chosen option A)
+            .ToListAsync();
+    }
 }

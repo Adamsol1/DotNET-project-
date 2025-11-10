@@ -32,7 +32,7 @@ public interface IGenService
     // DTO mapping methods - eliminates mapping duplication
     StoryNodeDto MapStoryNode(StoryNode storyNode, IEnumerable<Dialogue> dialogues, IEnumerable<Choice> choices);
     ChoiceDto MapChoice(Choice choice);
-    DialogueDto MapDialogue(Dialogue dialogue);
+    DialogueDto MapDialogue(Dialogue dialogue, Character? character = null);
     CharacterDto MapCharacter(Character character, IEnumerable<Dialogue> dialogues);
     GameSaveDto MapGameSave(GameSave gameSave);
     

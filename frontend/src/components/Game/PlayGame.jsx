@@ -49,10 +49,10 @@ export function PlayGame({ saveId, onBackToMenu }) {
             loadGameData();
         }
     }, [saveId]);
-    
+
     //TODO: there might be a case were we use the backgroundsMusicUrl for ambient sounds for a node, so will see if there is
     // a need to change the nesting of the if statements under
-    
+
     // Play audio when node changes
     useEffect(() => {
         if (currentNode) {
@@ -104,7 +104,7 @@ export function PlayGame({ saveId, onBackToMenu }) {
     // Try to resolve character image:
     const resolveCharacterImage = () => {
         // Character info is now directly in the dialogue
-        console.log("Character image is: ", currentDialogue.characterImageUrl)
+        console.log("Character image is: ", currentDialogue?.characterImageUrl)
         if (currentDialogue?.characterImageUrl) {
             console.log("ResolveCharacterImage - passed")
             return currentDialogue.characterImageUrl;
@@ -124,9 +124,7 @@ export function PlayGame({ saveId, onBackToMenu }) {
 
             // Call makeChoice
             const res = await makeChoice(saveId, choice.id);
-
-            // After making a choice, refresh the current node and playerState
-            await loadGameData();
+            
 
             // Reset dialogue index
             setDialogueIndex(0);
@@ -147,34 +145,8 @@ export function PlayGame({ saveId, onBackToMenu }) {
                 // end of dialogues -> show choices
                 setShowChoices(true);
             }
-
-        } catch (error) {
-            console.error('Failed to get next dialogue:', error);
-        }
-    };
-
-    const handleGoBack = async () => {
-        try {
-            await goBack(saveId);
-            setDialogueIndex(0);
-            setShowChoices(false);
-        } catch (error) {
-            console.error('Failed to go back:', error);
-        }
-    };
-
-<<<<<<< HEAD:DOTNET_PROJECT/frontend/src/components/Game/PlayGame.jsx
-    const handleGoForward = async () => {
-        try {
-            await nextNode(saveId);
-            setDialogueIndex(0);
-            setShowChoices(false);
-        } catch (error) {
-            console.error('Failed to go forward:', error);
-=======
         } catch (err) {
             console.error('Failed to advance dialogue:', err);
->>>>>>> Dev
         }
     };
 
@@ -182,106 +154,6 @@ export function PlayGame({ saveId, onBackToMenu }) {
     if (loading && !currentNode) {
         return (
             <div
-<<<<<<< HEAD
-=======
-  return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: tokens.color.bg,
-        paddingTop: '1px',
-      }}
-    >
-      {/* HUD */}
-      <HUD
-        playerState={playerState}
-        currentNode={currentNode}
-        onBackToMenu={onBackToMenu}
-      />
-
-      {/* Main Game Content */}
-      <div
-        style={{
-          height: 'calc(100vh - 48px)',
-          position: 'relative',
-          border: '2px solid #00A2FF',
-          overflow: 'hidden',
-          margin: '40px',
-          boxSizing: 'border-box'
-        }}
-      >
-        {/* Scene/Background */}
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            backgroundImage: `url(${
-              currentNode.backgroundUrl || '/assets/bg/space-tunnel.png'
-            })`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
-        />
-
-        {/* Dialogue Panel - Fixed at Bottom */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '16px',
-            left: '16px',
-            right: '16px',
-            backgroundColor: '#0a0f1a', // deep blue/teal, not rgba blur
-            border: '2px solid #3ae6ff', // neon-ish cyan border
-            padding: '12px 16px',
-            display: 'flex',
-            gap: '12px',
-            imageRendering: 'pixelated',
-            color: '#d8faff',
-            boxShadow: '0 0 8px #003644, 0 0 2px #3ae6ff inset',
-            alignItems: 'flex-start' // top-align portrait + text + button
-          }}
-        >
-          {/* Avatar */}
-          <div
-            style={{
-              flex: '0 0 96px',
-              height: '96px',
-              border: '2px solid #3ae6ff',
-              backgroundColor: '#000',
-              overflow: 'hidden',
-              imageRendering: 'pixelated'
-            }}
-          >
-            <img
-              src={
-                currentDialogue?.character?.imageUrl ||
-                '/assets/char/hero.png'
-              }
-              alt="Character"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                imageRendering: 'pixelated'
-              }}
-            />
-          </div>
-
-          {/* Text + Choices + Button wrapper as row: text grows, button stays to the right */}
-          <div
-            style={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'flex-start'
-            }}
-          >
-            {/* Text + Choices column */}
-            <div style={{ flex: 1, paddingRight: '12px' }}>
-              <p
->>>>>>> Dev:frontend/src/components/Game/PlayGame.jsx
-=======
->>>>>>> Dev
                 style={{
                     minHeight: '100vh',
                     background: tokens.color.bg,
@@ -361,7 +233,7 @@ export function PlayGame({ saveId, onBackToMenu }) {
         currentNodeId: currentNode?.id,
         visitedNodeIds: currentSave?.visitedNodeIds
     });
-    
+
     return (
         <div
             style={{

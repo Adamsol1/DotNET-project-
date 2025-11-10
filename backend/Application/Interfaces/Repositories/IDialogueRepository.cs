@@ -35,4 +35,9 @@ public interface IDialogueRepository : IGenericRepository<Dialogue>
     /// Get the dialogues text
     /// </summary>
     Task<string> GetDialogueText(int dialogueId);
+    
+    /// <summary>
+    /// Get all dialogues for a StoryNode, including the Character navigation property
+    /// </summary>
+    Task<IEnumerable<Dialogue>> GetDialoguesWithCharactersByNodeIdAsync(int storyNodeId);
 }
