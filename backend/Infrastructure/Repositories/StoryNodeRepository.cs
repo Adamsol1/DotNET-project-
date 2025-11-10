@@ -116,5 +116,16 @@ public class StoryNodeRepository : GenericRepository<StoryNode>, IStoryNodeRepos
                     .ToListAsync();
         return await characters;
     }
+    /// <summary>
+    /// Get a story node by ID with all related data (dialogues with characters, and choices)
+    /// </summary>
+    public async Task<StoryNode?> GetByIdWithDetailsAsync(int id)
+    {
+        return await _db.StoryNodes
+            .Include(n => n.Dialogues)
+            .ThenInclude(d => d.Character)  // Include character data for each dialogue
+            .Include(n => n.Choices)
+            .FirstOrDefaultAsync(n => n.Id == id);
+    }
 
 }

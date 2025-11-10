@@ -111,15 +111,17 @@ public class GenService : IGenService
     }
 
     // map dialogue to a DialogueDto.
-    public DialogueDto MapDialogue(Dialogue dialogue)
+    public DialogueDto MapDialogue(Dialogue dialogue, Character? character = null)
     {
         return new DialogueDto
         {
             Id = dialogue.Id,
-            Text = dialogue.Text,
-            CharacterId = dialogue.CharacterId,
             StoryNodeId = dialogue.StoryNodeId,
-            Order = dialogue.Order
+            Order = dialogue.Order,
+            CharacterId = dialogue.CharacterId,
+            Text = dialogue.Text,
+            CharacterName = character?.Name ?? dialogue.Character?.Name,
+            CharacterImageUrl = character?.ImageUrl ?? dialogue.Character?.ImageUrl
         };
     }
 

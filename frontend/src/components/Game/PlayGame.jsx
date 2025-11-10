@@ -103,26 +103,14 @@ export function PlayGame({ saveId, onBackToMenu }) {
 
     // Try to resolve character image:
     const resolveCharacterImage = () => {
-        // 1) If dialogue contains character object (legacy)
-        if (currentDialogue && currentDialogue.character && currentDialogue.character.imageUrl) {
-            return currentDialogue.character.imageUrl;
+        // Character info is now directly in the dialogue
+        console.log("Character image is: ", currentDialogue.characterImageUrl)
+        if (currentDialogue?.characterImageUrl) {
+            console.log("ResolveCharacterImage - passed")
+            return currentDialogue.characterImageUrl;
         }
 
-        // 2) If currentNode has characters list (several DTO variants exist)
-        const chars = currentNode?.charactersInScene || currentNode?.characters || currentNode?.charactersInScene;
-        if (chars && currentDialogue) {
-            const found = chars.find((c) => c.id === currentDialogue.characterId);
-            if (found && (found.imageUrl || found.imageURL)) {
-                return found.imageUrl || found.imageURL;
-            }
-        }
-
-        // 3) Fallback: try a common field on dialogue (maybe backend serializes characterImageUrl)
-        if (currentDialogue && (currentDialogue.characterImageUrl || currentDialogue.characterimageurl)) {
-            return currentDialogue.characterImageUrl || currentDialogue.characterimageurl;
-        }
-
-        // 4) Default avatar
+        // Fallback to default avatar
         return '/assets/characters/hero.png';
     };
 
@@ -159,7 +147,7 @@ export function PlayGame({ saveId, onBackToMenu }) {
                 // end of dialogues -> show choices
                 setShowChoices(true);
             }
-<<<<<<< HEAD
+
         } catch (error) {
             console.error('Failed to get next dialogue:', error);
         }

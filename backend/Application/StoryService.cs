@@ -21,19 +21,40 @@ public class StoryService : IStoryService
     }
 
     // get story node by id
+    // get story node by id
     public async Task<StoryNodeDto> GetStoryNodeById(int id) 
     {
         try
         {
-            // get story node by id - no transaction here, called from within Execute
-            var storyNode = await _genService.ValidateEntityExists<StoryNode>(id);
-            
-            // get the dialogues & choices that belongs to the storyNode
-            var dialogues = await _uow.StoryNodeRepository.GetAllDialoguesOfStoryNode(id);
-            var choices = await _uow.StoryNodeRepository.GetAllChoicesOfStoryNode(id);
+            // Use the new method that includes characters
+            var storyNode = await _uow.StoryNodeRepository.GetByIdWithDetailsAsync(id);
+        
+            if (storyNode == null)
+            {
+                _logger.LogError("Story node with id {Id} not found", id);
+                throw new KeyNotFoundException($"Story node with id {id} not found");
+            }
 
-            // use GenService mapping
-            return _genService.MapStoryNode(storyNode, dialogues, choices);
+            // Map with character information already loaded
+            return new StoryNodeDto
+            {
+                Id = storyNode.Id,
+                Title = storyNode.Title,
+                Description = storyNode.Description,
+                BackgroundUrl = storyNode.BackgroundUrl,
+                BackgroundMusicUrl = storyNode.BackgroundMusicUrl,
+                AmbientSoundUrl = storyNode.AmbientSoundUrl,
+            
+                // Map dialogues with character info from navigation property
+                Dialogues = storyNode.Dialogues
+                    .OrderBy(d => d.Order)
+                    .Select(d => _genService.MapDialogue(d, d.Character))
+                    .ToList(),
+                
+                Choices = storyNode.Choices
+                    .Select(c => _genService.MapChoice(c))
+                    .ToList()
+            };
         }
         catch (Exception ex)
         {
@@ -238,17 +259,18 @@ public class StoryService : IStoryService
     }
 
     // get the dialogues in a story node
-     public async Task<IEnumerable<DialogueDto>> GetDialoguesInStoryNode(int storyNodeId)
+    public async Task<IEnumerable<DialogueDto>> GetDialoguesInStoryNode(int storyNodeId)
     {
         try {
-            // begin transaction
             await _uow.BeginAsync();
 
-            // get the dialogues from the repository
-            var dialogues = await _uow.StoryNodeRepository.GetAllDialoguesOfStoryNode(storyNodeId);
-            return dialogues.Select(_genService.MapDialogue);
+            // Get dialogues with character info using the repository
+            var dialogues = await _uow.DialogueRepository.GetDialoguesWithCharactersByNodeIdAsync(storyNodeId);
+        
+            return dialogues
+                .OrderBy(d => d.Order)
+                .Select(d => _genService.MapDialogue(d, d.Character));
         } catch (Exception ex) {
-            // rollback, & error handling.
             _logger.LogError(ex, "[Storyservice] Error retrieving dialogues from StoryNode with id {StoryNodeId}", storyNodeId);
             throw;
         }

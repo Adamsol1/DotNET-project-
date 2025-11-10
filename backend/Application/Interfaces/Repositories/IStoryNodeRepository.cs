@@ -40,4 +40,5 @@ public interface IStoryNodeRepository : IGenericRepository<StoryNode>
     
     // Added this method to get all characters in a story node
     Task<IEnumerable<Character>> GetAllCharactersOfStoryNode(int id);
+    Task<StoryNode?> GetByIdWithDetailsAsync(int id);
 }
