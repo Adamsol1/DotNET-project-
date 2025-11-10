@@ -132,6 +132,10 @@ public class StoryController : ControllerBase
             _logger.LogError(ex, " Error making choice for save id {saveId} and choice id {choiceId}", request.SaveId, request.ChoiceId);
             return BadRequest("Failed to make choice: " + ex.Message);
         }
+        
+        
+        
+        
     }
 
     // get available choices for the current story node, the player is on.
@@ -195,6 +199,27 @@ public class StoryController : ControllerBase
         {
             _logger.LogError(ex, "Error modifying health for choice {ChoiceId}", request.choiceId);
             return BadRequest("Failed to modify health");
+        }
+    }
+
+    // get the current state of a player character.
+    [HttpGet("player/{playerCharacterId}")]
+    public async Task<ActionResult<PlayerCharacterDto>> GetPlayerState(int playerCharacterId)
+    {
+        try
+        {
+            var playerState = await _storyControllerService.GetPlayerState(playerCharacterId);
+            return Ok(playerState);
+        }
+        catch (KeyNotFoundException)
+        {
+            _logger.LogWarning("Player character {PlayerCharacterId} not found", playerCharacterId);
+            return NotFound($"Player character {playerCharacterId} not found");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting player state for player {PlayerCharacterId}", playerCharacterId);
+            return StatusCode(500, "Failed to get player state");
         }
     }
 

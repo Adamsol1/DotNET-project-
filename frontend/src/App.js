@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import { GameProvider } from './context/GameContext';
 import { AudioProvider } from './context/AudioContext';
 import { Home } from './pages/Home';
 import { Game } from './pages/Game';
-//import { AccountManagement } from './pages/AccountManagement';
 import { tokens } from './design/tokens';
+import {AccountManagement} from "./pages/AccountManagement";
 
 //set the appContent routes
 function AppContent() {
@@ -22,10 +22,10 @@ function AppContent() {
     localStorage.setItem('currentPage', currentPage);
   }, [currentPage]);
 
-    // navigate to a different page
-    const navigate = (page) => {
-        setCurrentPage(page);
-    };
+  // navigate to a different page
+  const navigate = (page) => {
+    setCurrentPage(page);
+  };
 
   // render the current page based on the currentPage state.
   const renderPage = () => {
@@ -34,23 +34,22 @@ function AppContent() {
         return <Home onNavigate={navigate} />;
       case 'game':
         return <Game onNavigate={navigate} />;
-
-      //case 'account':
-        //return <Account onNavigate={navigate} />;
+      case 'account':
+        return <AccountManagement onNavigate={navigate} />;
       default:
         return <Home onNavigate={navigate} />;
     }
   };
 
-    return (
-        <div style={{
-            minHeight: '100vh',
-            background: tokens.color.bg,
-            color: tokens.color.text
-        }}>
-            {renderPage()}
-        </div>
-    );
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: tokens.color.bg,
+      color: tokens.color.text
+    }}>
+      {renderPage()}
+    </div>
+  );
 }
 
 // Setup of the app with the GameProvider, AudioProvider, and AppContent

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useGame } from '../../context/GameContext';
-import { useAudio } from '../../context/AudioContext';
 import { SceneLayout } from '../scene/SceneLayout';
 import { DialoguePanel } from '../DialoguePanel';
 import { HUD } from '../Hudv2';
@@ -8,22 +7,25 @@ import { Button } from '../../ui/Button';
 import { Card } from '../../ui/Card';
 import { Text } from '../../ui/Text';
 import { tokens } from '../../design/tokens';
+import {useAudio} from "../../context/AudioContext";
 
 export function PlayGame({ saveId, onBackToMenu }) {
     const {
         currentNode,
-        currentDialogue,
         availableChoices,
         playerState,
         loading,
         error,
+        loadGame,
         getCurrentNode,
         getNextDialogue,
         makeChoice,
         goBack,
         nextNode,
         getPlayerState,
-        clearError
+        clearError,
+        gameOver,
+        currentSave,
     } = useGame();
 
     const {
@@ -32,64 +34,132 @@ export function PlayGame({ saveId, onBackToMenu }) {
         playChoiceAudio
     } = useAudio();
 
+    // dialogue index for multi-line dialogues loaded in currentNode.Dialogues
     const [dialogueIndex, setDialogueIndex] = useState(0);
     const [showChoices, setShowChoices] = useState(false);
 
+    const visitedNodeIds = currentSave?.visitedNodeIds;
+    const isRevisit = Array.isArray(visitedNodeIds) &&
+        currentNode?.id &&
+        visitedNodeIds.includes(currentNode.id);
+
+    // Load node when saveId changes
     useEffect(() => {
         if (saveId) {
             loadGameData();
         }
     }, [saveId]);
-
-    // Handle audio when node changes
+    
+    //TODO: there might be a case were we use the backgroundsMusicUrl for ambient sounds for a node, so will see if there is
+    // a need to change the nesting of the if statements under
+    
+    // Play audio when node changes
     useEffect(() => {
         if (currentNode) {
-            // Play background music (persists across nodes if same URL)
-            if (currentNode.backgroundMusicUrl) {
-                playBackgroundMusic(currentNode.backgroundMusicUrl);
-            }
+            // Check if this is a revisit
+            const visitedIds = currentSave?.visitedNodeIds;
+            const isNodeRevisit = Array.isArray(visitedIds) && visitedIds.includes(currentNode.id);
 
-            // Play ambient sound for this node
-            if (currentNode.ambientSoundUrl) {
-                playAmbientSound(currentNode.ambientSoundUrl, true);
+            if (isNodeRevisit) {
+                // For revisits: skip directly to choices, no audio
+                setDialogueIndex(0);
+                setShowChoices(true);
+                playAmbientSound(null); // Stop any ambient sounds
+            } else {
+                // First time visit: play audio and show dialogues
+                if (currentNode.backgroundMusicUrl) {
+                    playBackgroundMusic(currentNode.backgroundMusicUrl);
+                }
+                if (currentNode.ambientSoundUrl) {
+                    playAmbientSound(currentNode.ambientSoundUrl, false);
+                } else {
+                    playAmbientSound(null);
+                }
+
+                // reset local dialogue state for new node
+                setDialogueIndex(0);
+                // if node has no dialogues, show choices immediately
+                const hasDialogues = (currentNode.dialogues && currentNode.dialogues.length > 0);
+                setShowChoices(!hasDialogues);
             }
         }
-    }, [currentNode?.id, currentNode?.backgroundMusicUrl, currentNode?.ambientSoundUrl]);
+    }, [currentNode?.id, currentSave?.visitedNodeIds]);
 
+    // load current node from backend
     const loadGameData = async () => {
         try {
             clearError();
             await getCurrentNode(saveId);
-        } catch (error) {
-            console.error('Failed to load game data:', error);
-        }
-    };
-
-    const handleChoice = async (choice) => {
-        try {
-            // Play choice audio if it exists
-            if (choice.audioUrl) {
-                playChoiceAudio(choice.audioUrl);
-            }
-
-            await makeChoice(saveId, choice.id);
-            console.log(choice);
             setShowChoices(false);
             setDialogueIndex(0);
-        } catch (error) {
-            console.error('choices is: ', choice);
-            console.error('Failed to make choice:', error);
+        } catch (err) {
+            console.error('Failed to load game data:', err);
         }
     };
 
+    // Resolve the current dialogue using currentNode.dialogues and dialogueIndex
+    const dialogues = currentNode?.dialogues || [];
+    const currentDialogue = dialogues.length > 0 ? dialogues[dialogueIndex] : null;
+
+    // Try to resolve character image:
+    const resolveCharacterImage = () => {
+        // 1) If dialogue contains character object (legacy)
+        if (currentDialogue && currentDialogue.character && currentDialogue.character.imageUrl) {
+            return currentDialogue.character.imageUrl;
+        }
+
+        // 2) If currentNode has characters list (several DTO variants exist)
+        const chars = currentNode?.charactersInScene || currentNode?.characters || currentNode?.charactersInScene;
+        if (chars && currentDialogue) {
+            const found = chars.find((c) => c.id === currentDialogue.characterId);
+            if (found && (found.imageUrl || found.imageURL)) {
+                return found.imageUrl || found.imageURL;
+            }
+        }
+
+        // 3) Fallback: try a common field on dialogue (maybe backend serializes characterImageUrl)
+        if (currentDialogue && (currentDialogue.characterImageUrl || currentDialogue.characterimageurl)) {
+            return currentDialogue.characterImageUrl || currentDialogue.characterimageurl;
+        }
+
+        // 4) Default avatar
+        return '/assets/characters/hero.png';
+    };
+
+    const characterImageUrl = resolveCharacterImage();
+
+    // Handle making a choice
+    const handleChoice = async (choice) => {
+        try {
+            // Play choice audio if present on the choice
+            if (choice.audioUrl) playChoiceAudio(choice.audioUrl);
+
+            // Call makeChoice
+            const res = await makeChoice(saveId, choice.id);
+
+            // After making a choice, refresh the current node and playerState
+            await loadGameData();
+
+            // Reset dialogue index
+            setDialogueIndex(0);
+            setShowChoices(false);
+
+        } catch (err) {
+            console.error('Failed to make choice:', err);
+        }
+    };
+
+    // Next dialogue (advance through currentNode.dialogues)
     const handleNextDialogue = async () => {
         try {
-            const dialogue = await getNextDialogue(saveId);
-            if (dialogue) {
+            // If there is a next dialogue, advance index
+            if (dialogues && dialogueIndex + 1 < dialogues.length) {
                 setDialogueIndex((prev) => prev + 1);
             } else {
+                // end of dialogues -> show choices
                 setShowChoices(true);
             }
+<<<<<<< HEAD
         } catch (error) {
             console.error('Failed to get next dialogue:', error);
         }
@@ -113,12 +183,18 @@ export function PlayGame({ saveId, onBackToMenu }) {
             setShowChoices(false);
         } catch (error) {
             console.error('Failed to go forward:', error);
+=======
+        } catch (err) {
+            console.error('Failed to advance dialogue:', err);
+>>>>>>> Dev
         }
     };
 
+    // Loading / error / empty safeguards
     if (loading && !currentNode) {
         return (
             <div
+<<<<<<< HEAD
 =======
   return (
     <div
@@ -216,6 +292,8 @@ export function PlayGame({ saveId, onBackToMenu }) {
             <div style={{ flex: 1, paddingRight: '12px' }}>
               <p
 >>>>>>> Dev:frontend/src/components/Game/PlayGame.jsx
+=======
+>>>>>>> Dev
                 style={{
                     minHeight: '100vh',
                     background: tokens.color.bg,
@@ -284,15 +362,27 @@ export function PlayGame({ saveId, onBackToMenu }) {
         );
     }
 
+    // compute whether the player is dead / game over
+    const hp = playerState?.health ?? playerState?.hp ?? 100;
+    const isGameOver = (typeof gameOver === 'boolean') ? gameOver : hp <= 0;
+
+    console.log('Debug:', {
+        isRevisit,
+        showChoices,
+        availableChoices: availableChoices?.length,
+        currentNodeId: currentNode?.id,
+        visitedNodeIds: currentSave?.visitedNodeIds
+    });
+    
     return (
         <div
             style={{
                 minHeight: '100vh',
                 background: tokens.color.bg,
-                paddingTop: '48px'
+                paddingTop: '1px'
             }}
         >
-            {/* HUD */}
+            {/* HUD now receives playerState and currentNode directly */}
             <HUD
                 playerState={playerState}
                 currentNode={currentNode}
@@ -308,7 +398,7 @@ export function PlayGame({ saveId, onBackToMenu }) {
                     border: '2px solid #00A2FF',
                     borderRadius: '12px',
                     overflow: 'hidden',
-                    margin: '16px',
+                    margin: '40px',
                     boxSizing: 'border-box'
                 }}
             >
@@ -317,173 +407,196 @@ export function PlayGame({ saveId, onBackToMenu }) {
                     style={{
                         width: '100%',
                         height: '100%',
-                        backgroundImage: `url(${
-                            currentNode.backgroundUrl || '/assets/bg/space-tunnel.png'
-                        })`,
+                        backgroundImage: `url(${currentNode.backgroundUrl || '/assets/bg/space-tunnel.png'})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center'
                     }}
                 />
 
                 {/* Dialogue Panel - Fixed at Bottom */}
-                <div
-                    style={{
-                        position: 'absolute',
-                        bottom: '16px',
-                        left: '16px',
-                        right: '16px',
-                        backgroundColor: '#0a0f1a',
-                        border: '2px solid #3ae6ff',
-                        padding: '12px 16px',
-                        display: 'flex',
-                        gap: '12px',
-                        imageRendering: 'pixelated',
-                        color: '#d8faff',
-                        boxShadow: '0 0 8px #003644, 0 0 2px #3ae6ff inset',
-                        alignItems: 'flex-start'
-                    }}
-                >
-                    {/* Avatar */}
+                {!isGameOver && (
                     <div
                         style={{
-                            flex: '0 0 96px',
-                            height: '96px',
+                            position: 'absolute',
+                            bottom: '16px',
+                            left: '16px',
+                            right: '16px',
+                            backgroundColor: '#0a0f1a',
                             border: '2px solid #3ae6ff',
-                            backgroundColor: '#000',
-                            overflow: 'hidden',
-                            imageRendering: 'pixelated'
-                        }}
-                    >
-                        <img
-                            src={
-                                currentDialogue?.character?.imageUrl ||
-                                '/assets/characters/hero.png'
-                            }
-                            alt="Character"
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'cover',
-                                imageRendering: 'pixelated'
-                            }}
-                        />
-                    </div>
-
-                    {/* Text + Choices + Button wrapper as row */}
-                    <div
-                        style={{
-                            flex: 1,
+                            padding: '12px 16px',
                             display: 'flex',
-                            flexDirection: 'row',
+                            gap: '12px',
+                            imageRendering: 'pixelated',
+                            color: '#d8faff',
+                            boxShadow: '0 0 8px #003644, 0 0 2px #3ae6ff inset',
                             alignItems: 'flex-start'
                         }}
                     >
-                        {/* Text + Choices column */}
-                        <div style={{ flex: 1, paddingRight: '12px' }}>
-                            <p
+                        {/* Avatar - only show if NOT a revisit */}
+                        {!isRevisit && (
+                            <div
                                 style={{
-                                    color: '#FFFFFF',
-                                    lineHeight: '1.4',
-                                    margin: 0,
-                                    marginBottom: showChoices ? '12px' : '0',
-                                    fontFamily: '"visitor1", monospace',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '0.05em'
+                                    flex: '0 0 96px',
+                                    height: '96px',
+                                    border: '2px solid #3ae6ff',
+                                    backgroundColor: '#000',
+                                    overflow: 'hidden',
+                                    imageRendering: 'pixelated'
                                 }}
                             >
-                                {currentDialogue?.text ||
-                                    currentNode.description ||
-                                    'Welcome to the adventure!'}
-                            </p>
+                                <img
+                                    src={characterImageUrl}
+                                    alt="Character"
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        imageRendering: 'pixelated'
+                                    }}
+                                />
+                            </div>
+                        )}
 
-                            {/* Choices */}
-                            {showChoices && availableChoices?.length > 0 && (
+                        {/* Text + Choices + Button wrapper as row */}
+                        <div
+                            style={{
+                                flex: 1,
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'flex-start'
+                            }}
+                        >
+                            <div style={{ flex: 1, paddingRight: '12px' }}>
+                                {/* Only show dialogue text if NOT a revisit */}
+                                {!isRevisit && (
+                                    <p
+                                        style={{
+                                            color: '#FFFFFF',
+                                            lineHeight: '1.4',
+                                            margin: 0,
+                                            marginBottom: showChoices ? '12px' : '0',
+                                            fontFamily: '"visitor1", monospace',
+                                            textTransform: 'uppercase',
+                                            letterSpacing: '0.05em'
+                                        }}
+                                    >
+                                        {currentDialogue?.text || currentNode.description || 'Welcome to the adventure!'}
+                                    </p>
+                                )}
+
+                                {/* Show choices when appropriate - EITHER showChoices is true OR it's a revisit */}
+                                {(showChoices || isRevisit) && (availableChoices?.length > 0) && (
+                                    <div
+                                        style={{
+                                            marginTop: isRevisit ? '0' : '12px',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '8px'
+                                        }}
+                                    >
+                                        {availableChoices.map((choice) => (
+                                            <button
+                                                key={choice.id}
+                                                onClick={() => handleChoice(choice)}
+                                                disabled={loading}
+                                                style={{
+                                                    padding: '8px 12px',
+                                                    background: '#0a0f1a',
+                                                    border: '2px solid #3ae6ff',
+                                                    borderRadius: '0px',
+                                                    color: '#d8faff',
+                                                    fontSize: '20px',
+                                                    lineHeight: '1.4',
+                                                    fontFamily: '"visitor1", monospace',
+                                                    cursor: loading ? 'not-allowed' : 'pointer',
+                                                    textAlign: 'left',
+                                                    boxShadow: '0 0 6px #003644, 0 0 2px #3ae6ff inset',
+                                                    imageRendering: 'pixelated'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    if (!loading) e.target.style.background = '#112032';
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.target.style.background = '#0a0f1a';
+                                                }}
+                                            >
+                                                {choice.text}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Next button column - only show if NOT revisit AND NOT showing choices */}
+                            {!showChoices && !isRevisit && (
                                 <div
                                     style={{
-                                        marginTop: '12px',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: '8px'
+                                        flex: '0 0 auto',
+                                        display: 'flex'
                                     }}
                                 >
-                                    {availableChoices.map((choice, index) => (
-                                        <button
-                                            key={choice.id}
-                                            onClick={() => handleChoice(choice)}
-                                            disabled={loading}
-                                            style={{
-                                                padding: '8px 12px',
-                                                background: '#0a0f1a',
-                                                border: '2px solid #3ae6ff',
-                                                borderRadius: '0px',
-                                                color: '#d8faff',
-                                                fontSize: '20px',
-                                                lineHeight: '1.4',
-                                                fontFamily: '"visitor1", monospace',
-                                                cursor: loading ? 'not-allowed' : 'pointer',
-                                                textAlign: 'left',
-                                                boxShadow:
-                                                    '0 0 6px #003644, 0 0 2px #3ae6ff inset',
-                                                imageRendering: 'pixelated'
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                if (!loading) {
-                                                    e.target.style.background = '#112032';
-                                                }
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.target.style.background = '#0a0f1a';
-                                            }}
-                                        >
-                                            {choice.text}
-                                        </button>
-                                    ))}
+                                    <button
+                                        onClick={handleNextDialogue}
+                                        disabled={loading}
+                                        style={{
+                                            padding: '8px 12px',
+                                            background: '#0a0f1a',
+                                            border: '2px solid #3ae6ff',
+                                            borderRadius: '0px',
+                                            color: '#d8faff',
+                                            fontSize: '20px',
+                                            lineHeight: '1.4',
+                                            fontWeight: 'bold',
+                                            fontFamily: '"visitor1", monospace',
+                                            cursor: loading ? 'not-allowed' : 'pointer',
+                                            boxShadow:
+                                                '0 0 6px #003644, 0 0 2px #3ae6ff inset',
+                                            imageRendering: 'pixelated',
+                                            whiteSpace: 'nowrap'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (!loading) e.target.style.background = '#112032';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.target.style.background = '#0a0f1a';
+                                        }}
+                                    >
+                                        {loading ? '...' : 'NEXT'}
+                                    </button>
                                 </div>
                             )}
                         </div>
-
-                        {/* Next button column */}
-                        {!showChoices && (
-                            <div
-                                style={{
-                                    flex: '0 0 auto',
-                                    display: 'flex'
-                                }}
-                            >
-                                <button
-                                    onClick={handleNextDialogue}
-                                    disabled={loading}
-                                    style={{
-                                        padding: '8px 12px',
-                                        background: '#0a0f1a',
-                                        border: '2px solid #3ae6ff',
-                                        borderRadius: '0px',
-                                        color: '#d8faff',
-                                        fontSize: '20px',
-                                        lineHeight: '1.4',
-                                        fontWeight: 'bold',
-                                        fontFamily: '"visitor1", monospace',
-                                        cursor: loading ? 'not-allowed' : 'pointer',
-                                        boxShadow:
-                                            '0 0 6px #003644, 0 0 2px #3ae6ff inset',
-                                        imageRendering: 'pixelated',
-                                        whiteSpace: 'nowrap'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        if (!loading) {
-                                            e.target.style.background = '#112032';
-                                        }
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.target.style.background = '#0a0f1a';
-                                    }}
-                                >
-                                    {loading ? '...' : 'NEXT'}
-                                </button>
-                            </div>
-                        )}
                     </div>
-                </div>
+                )}
+
+                {/* Game Over overlay */}
+                {isGameOver && (
+                    <div style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(0,0,0,0.95)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 9999,
+                        color: '#FF4D4D',
+                        fontFamily: '"visitor1", monospace',
+                        textAlign: 'center',
+                        padding: 24
+                    }}>
+                        <div style={{ fontSize: 36, letterSpacing: 2 }}>████ GAME OVER ████</div>
+                        <div style={{ marginTop: 16, color: '#fff', fontSize: 18 }}>
+                            Your journey ends here.
+                        </div>
+                        <div style={{ marginTop: 24 }}>
+                            <Button onClick={onBackToMenu}>Return to Menu</Button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

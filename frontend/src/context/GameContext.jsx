@@ -1,12 +1,12 @@
 // react imports
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 // api imports
-import { auth, game, story } from '../endpoints/api';
+import { auth, game, story, account } from '../endpoints/api';
 
 /**
  * This context file is used to manage the game state and actions that can be taken.
- * as well used to store game states, that the backend, can use to get data. 
- * 
+ * as well used to store game states, that the backend, can use to get data.
+ *
  */
 
 /* Adding browser state management, so that the user isnt defaulted back to
@@ -91,22 +91,18 @@ const savedState = loadStateFromStorage();
 // this is the start / initial state, of the game before the user even has
 // visited the application. 
 const startState = {
-    // user stae is null, and they arent logged inn.
     user: null,
     authenticated: false,
-
-    // the game states, they are emtpy.
     currentSave: null,
     currentNode: null,
-    // empty array,
     availableChoices: [],
     playerState: null,
     visitedNodes: [],
-
-    // UI state.
     loading: false,
     error: null,
     dialogueIndex: 0,
+    gameOver: false,
+    allSaves: [], // store all previous saves
 };
 
 /**
@@ -160,6 +156,20 @@ const ActionTypes = {
     SET_LOADING: 'SET_LOADING',
     SET_ERROR: 'SET_ERROR',
     CLEAR_ERROR: 'CLEAR_ERROR',
+    SET_GAME_OVER: 'SET_GAME_OVER',
+
+    // account actions
+    UPDATE_USERNAME_START: 'UPDATE_USERNAME_START',
+    UPDATE_USERNAME_SUCCESS: 'UPDATE_USERNAME_SUCCESS',
+    UPDATE_USERNAME_ERROR: 'UPDATE_USERNAME_ERROR',
+
+    UPDATE_PASSWORD_START: 'UPDATE_PASSWORD_START',
+    UPDATE_PASSWORD_SUCCESS: 'UPDATE_PASSWORD_SUCCESS',
+    UPDATE_PASSWORD_ERROR: 'UPDATE_PASSWORD_ERROR',
+
+    DELETE_ACCOUNT_START: 'DELETE_ACCOUNT_START',
+    DELETE_ACCOUNT_SUCCESS: 'DELETE_ACCOUNT_SUCCESS',
+    DELETE_ACCOUNT_ERROR: 'DELETE_ACCOUNT_ERROR',
 };
 
 /**
@@ -170,103 +180,138 @@ const ActionTypes = {
 function gameReducer(state, action) {
     //switch on the action type, to return a new state.
     switch (action.type) {
-        // We copy the state we are in, and move to the next state.
+        // Auth
         case ActionTypes.LOGIN_START:
             return { ...state, loading: true, error: null };
-        
-        // set the once loading is sucess, we set the user and authenticated state.
         case ActionTypes.LOGIN_SUCCESS:
-            return {
-                ...state, loading: false, authenticated: true, 
-                user: action.payload, error: null,
-            };
-        
-        // if the login fails, we set the error state.
+            return { ...state, loading: false, authenticated: true, user: action.payload, error: null };
         case ActionTypes.LOGIN_ERROR:
-            return { ...state, loading: false, error: action.payload, authenticated: false };
-        
-        // if the user logs out, we reset all the states to the start state.
+            return { ...state, loading: false, authenticated: false, error: action.payload };
+        case ActionTypes.REGISTER_START:
+            return { ...state, loading: true, error: null };
+        case ActionTypes.REGISTER_SUCCESS:
+            return { ...state, loading: false, authenticated: true, user: action.payload, error: null };
+        case ActionTypes.REGISTER_ERROR:
+            return { ...state, loading: false, error: action.payload };
         case ActionTypes.LOGOUT:
-            return { ...state, user: null, authenticated: false,
-                currentSave: null, currentNode: null, availableChoices: [],
-                playerState: null, visitedNodes: [],
-            };
-        
-        // if the game starts, we set the current save state.
+            return { ...startState };
+
+        // Game
         case ActionTypes.START_GAME:
             return { ...state, loading: true, error: null };
-        
+
         // if the game starts successfully, we set the current save state.
         case ActionTypes.GAME_SUCCESS:
-            return { ...state, loading: false, error: null,
+            return {
+                ...state,
+                loading: false,
+                error: null,
                 currentSave: action.payload,
+                // reset playerState to initial or from payload if available
+                playerState: action.payload.playerCharacter || action.payload.playerState || { health: 100, maxHealth: 100 },
             };
-        // if the game starts fails, we set the error state.
         case ActionTypes.GAME_ERROR:
             return { ...state, loading: false, error: action.payload };
-        
-        // if the node starts, we set the current node state.
+        case ActionTypes.GET_ALL_SAVES:
+            return { ...state, allSaves: action.payload || [] };
+        case ActionTypes.DELETE_SAVE_START:
+            return { ...state, loading: true, error: null };
+        case ActionTypes.DELETE_SAVE_SUCCESS:
+            return { ...state, loading: false, allSaves: state.allSaves.filter(s => s.id !== action.payload) };
+        case ActionTypes.DELETE_SAVE_ERROR:
+            return { ...state, loading: false, error: action.payload };
+        case ActionTypes.UPDATE_SAVE:
+            return {
+                ...state,
+                allSaves: state.allSaves.map(s => s.id === action.payload.id ? action.payload : s)
+            };
+
+        // Node - NOW INCLUDES PLAYER STATE
         case ActionTypes.NODE_START:
             return { ...state, loading: true, error: null };
-        
-        // if the node starts successfully, we set the current node state.
         case ActionTypes.NODE_SUCCESS:
-            return { ...state, loading: false, error: null,
-                currentNode: action.payload, availableChoices: action.payload.choices || [],
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                currentNode: action.payload.node || action.payload,
+                availableChoices: (action.payload.node || action.payload).choices || [],
+                // always update playerState if payload contains it
+                playerState: action.payload.playerCharacter ?? action.payload.playerState ?? state.playerState
             };
-        // if the node starts fails, we set the error state.
+
         case ActionTypes.NODE_ERROR:
             return { ...state, loading: false, error: action.payload };
-        
-        // if the choice starts, we set the current choice state.
+
+        // Choice
         case ActionTypes.CHOICE_START:
             return { ...state, loading: true, error: null };
-
-        // if the choice starts successfully, we set the current choice state.
         case ActionTypes.CHOICE_SUCCESS:
-            return { 
-                ...state, 
-                loading: false, 
+            return {
+                ...state,
+                loading: false,
                 error: null,
-                currentNode: action.payload,
-                availableChoices: action.payload.choices || []
+                currentNode: action.payload.CurrentStoryNode || state.currentNode,
+                availableChoices: action.payload.AvailableChoices || [],
+                playerState: action.payload.PlayerCharacter || state.playerState,
             };
-
-        // if the choice starts fails, we set the error state.
         case ActionTypes.CHOICE_ERROR:
             return { ...state, loading: false, error: action.payload };
-        
-        // if the dialogue starts, we set the current dialogue state.
+
+        // Dialogue
         case ActionTypes.DIALOGUE_START:
             return { ...state, loading: true, error: null };
-        
-        // if the dialogue starts successfully, we set the current dialogue state.
         case ActionTypes.DIALOGUE_SUCCESS:
-            return { ...state, loading: false, error: null,
-                currentDialogue: action.payload,
-                dialogueIndex: action.payload.index || 0
-            };
-        
-        // if the dialogue starts fails, we set the error state.
+            return { ...state, loading: false, error: null, dialogueIndex: action.payload.index || 0 };
         case ActionTypes.DIALOGUE_ERROR:
             return { ...state, loading: false, error: action.payload };
-        
-        // if the navigation starts, we set the current navigation state.
+
+        // Navigation
         case ActionTypes.NAVIGATE_START:
             return { ...state, loading: true, error: null };
-        
-        // if the application is loading, we set the loading state.
+        case ActionTypes.NAVIGATE_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                currentNode: action.payload.node || action.payload,
+                availableChoices: (action.payload.node || action.payload).choices || [],
+                // Update playerState if included
+                playerState: action.payload.playerCharacter || action.payload.playerState || state.playerState
+            };
+        case ActionTypes.NAVIGATE_ERROR:
+            return { ...state, loading: false, error: action.payload };
+
+        // UI
         case ActionTypes.SET_LOADING:
             return { ...state, loading: action.payload };
-        
-        // if the application has an error, we set the error state.
         case ActionTypes.SET_ERROR:
             return { ...state, error: action.payload };
-        
-        // if the error is cleared, we clear the error state.
         case ActionTypes.CLEAR_ERROR:
             return { ...state, error: null };
-        
+        case ActionTypes.SET_GAME_OVER:
+            return { ...state, gameOver: action.payload };
+
+        // AccountManagement
+        case ActionTypes.UPDATE_USERNAME_START:
+            return { ...state, loading: true, error: null };
+        case ActionTypes.UPDATE_USERNAME_SUCCESS:
+            return { ...state, loading: false, user: action.payload, error: null };
+        case ActionTypes.UPDATE_USERNAME_ERROR:
+            return { ...state, loading: false, error: action.payload };
+        case ActionTypes.UPDATE_PASSWORD_START:
+            return { ...state, loading: true, error: null };
+        case ActionTypes.UPDATE_PASSWORD_SUCCESS:
+            return { ...state, loading: false, error: null };
+        case ActionTypes.UPDATE_PASSWORD_ERROR:
+            return { ...state, loading: false, error: action.payload };
+        case ActionTypes.DELETE_ACCOUNT_START:
+            return { ...state, loading: true, error: null };
+        case ActionTypes.DELETE_ACCOUNT_SUCCESS:
+            return { ...startState, loading: false };
+        case ActionTypes.DELETE_ACCOUNT_ERROR:
+            return { ...state, loading: false, error: action.payload };
+
         // return a state as default.
         default:
             return state;
@@ -298,11 +343,7 @@ export function GameProvider({ children }) {
             // return the user.
             return user;
         } catch (error) {
-            // if the login fails, we dispatch the error action.
-            const errorMessage = error.response?.data || 'Login failed';
-
-            dispatch({ type: ActionTypes.LOGIN_ERROR, payload: error.message });
-            // return the error.
+            dispatch({ type: ActionTypes.LOGIN_ERROR, payload: error.message || 'Login failed' });
             throw error;
         }
     };
@@ -317,10 +358,8 @@ export function GameProvider({ children }) {
             dispatch({ type: ActionTypes.REGISTER_SUCCESS, payload: user });
             // return the user.
             return user;
-        }
-        catch (error) {
-            const errorMessage = error.response?.data || 'Registration failed';
-            dispatch({ type: ActionTypes.REGISTER_ERROR, payload: errorMessage });
+        } catch (error) {
+            dispatch({ type: ActionTypes.REGISTER_ERROR, payload: error.message || 'Registration failed' });
             throw error;
         }
     };
@@ -338,22 +377,66 @@ export function GameProvider({ children }) {
         return true;
     };
 
+    // update username
+    const updateUsername = async (usernameData) => {
+        try {
+            dispatch({ type: ActionTypes.UPDATE_USERNAME_START });
+            const updatedUsername = await account.updateUsername(usernameData);
+            dispatch({ type: ActionTypes.UPDATE_USERNAME_SUCCESS, payload: updatedUsername });
+            return updatedUsername;
+        } catch (error) {
+            const errorMessage = error.response?.data || 'Failed to update username';
+            dispatch({ type: ActionTypes.UPDATE_USERNAME_ERROR, payload: errorMessage });
+            throw error;
+        }
+    };
+
+    // update password
+    const updatePassword = async (passwordData) => {
+        try {
+            dispatch({ type: ActionTypes.UPDATE_PASSWORD_START });
+            await account.updatePassword(passwordData);
+            dispatch({ type: ActionTypes.UPDATE_PASSWORD_SUCCESS });
+            return true;
+        } catch (error) {
+            const errorMessage = error.response?.data || 'Failed to update password';
+            dispatch({ type: ActionTypes.UPDATE_PASSWORD_ERROR, payload: errorMessage });
+            throw error;
+        }
+    };
+
+    // delete account
+    const deleteAccount = async (userId) => {
+        try {
+            dispatch({ type: ActionTypes.DELETE_ACCOUNT_START });
+            await account.deleteAccount(userId);
+            dispatch({ type: ActionTypes.DELETE_ACCOUNT_SUCCESS });
+            clearGameStateFromStorage();
+            return true;
+        } catch (error) {
+            const errorMessage = error.response?.data || 'Failed to delete account';
+            dispatch({ type: ActionTypes.DELETE_ACCOUNT_ERROR, payload: errorMessage });
+            throw error;
+        }
+    };
+
+
     // start the game and return the result.
     const startGame = async (gameData) => {
         try {
             dispatch({ type: ActionTypes.START_GAME });
-            
+
             const save = await game.startGame(gameData);
-           
+
             dispatch({ type: ActionTypes.GAME_SUCCESS, payload: save });
-            
+
             // return the save.
             return save;
         } catch (error) {
             const errorMessage = error.response?.data || 'Failed to start game';
-            
+
             dispatch({ type: ActionTypes.GAME_ERROR, payload: errorMessage });
-            
+
             //return the error.
             throw error;
         }
@@ -364,12 +447,12 @@ export function GameProvider({ children }) {
         try {
             // send the load game start action to the reducer.
             dispatch({ type: ActionTypes.START_GAME });
-            
+
             // get the save from the API.
             const save = await game.loadGame(saveId);
 
             // send the load game success action to the reducer.
-            
+
             dispatch({ type: ActionTypes.GAME_SUCCESS, payload: save });
             // return the save.
             return save;
@@ -398,19 +481,26 @@ export function GameProvider({ children }) {
         }
     };
 
-    // delete a save and return the result.
+    const getSaveById = async (saveId) => {
+        try {
+            const save = state.allSaves.find(s => s.id === saveId);
+            if (!save) throw new Error('Save not found');
+            return save;
+        } catch (error) {
+            dispatch({ type: ActionTypes.SET_ERROR, payload: error.message || 'Failed to get save' });
+            return null;
+        }
+    };
+
     const deleteSave = async (saveId) => {
         try {
             dispatch({ type: ActionTypes.DELETE_SAVE_START });
-            await game.deleteSave(saveId);
+            await game.deleteSave(saveId); // API call
             dispatch({ type: ActionTypes.DELETE_SAVE_SUCCESS, payload: saveId });
             // return the result.
             return true;
         } catch (error) {
-            const errorMessage = error.response?.data || 'Failed to delete save';
-            dispatch({ type: ActionTypes.DELETE_SAVE_ERROR, payload: errorMessage });
-            // return the error.
-            throw error;
+            dispatch({ type: ActionTypes.DELETE_SAVE_ERROR, payload: error.message || 'Failed to delete save' });
         }
     };
 
@@ -426,23 +516,20 @@ export function GameProvider({ children }) {
             // return the save.
             return save;
         } catch (error) {
-            const errorMessage = error.response?.data || 'Failed to update save';
-            dispatch({ type: ActionTypes.GAME_ERROR, payload: errorMessage });
-            // return the error.
-            throw error;
+            dispatch({ type: ActionTypes.SET_ERROR, payload: error.message || 'Failed to update save' });
         }
     };
 
     // get player state and return the result.
     const getPlayerState = async (playerCharacterId) => {
         try {
-            dispatch({ type: ActionTypes.SET_LOADING, payload: true });
+            dispatch({ type: ActionTypes.PLAYER_STATE_START });
             const playerState = await story.getPlayerState(playerCharacterId);
-            dispatch({ type: ActionTypes.SET_LOADING, payload: false });
+            dispatch({ type: ActionTypes.PLAYER_STATE_SUCCESS, payload: playerState });
             return playerState;
         } catch (error) {
             const errorMessage = error.response?.data || 'Failed to get player state';
-            dispatch({ type: ActionTypes.SET_ERROR, payload: errorMessage });
+            dispatch({ type: ActionTypes.PLAYER_STATE_ERROR, payload: errorMessage });
             throw error;
         }
     };
@@ -453,12 +540,23 @@ export function GameProvider({ children }) {
             dispatch({ type: ActionTypes.NODE_START });
 
             // get the current node from the API.
-            const node = await story.getCurrentNode(saveId);
+            const response = await story.getCurrentNode(saveId);
+
+            // The response might be just the node, or it might include playerCharacter
+            // Handle both cases
+            const nodeData = response.node || response.currentStoryNode || response;
+            const playerData = response.playerCharacter || response.playerState;
 
             // send the get current node success action to the reducer.
-            dispatch({ type: ActionTypes.NODE_SUCCESS, payload: node });
+            dispatch({
+                type: ActionTypes.NODE_SUCCESS,
+                payload: {
+                    node: nodeData,
+                    playerCharacter: playerData
+                }
+            });
             // return the node.
-            return node;
+            return nodeData;
         }
         catch (error) {
             const errorMessage = error.response?.data || 'Failed to get current node';
@@ -468,23 +566,64 @@ export function GameProvider({ children }) {
         }
     };
 
+
     // make a choice and return the result.
     const makeChoice = async (saveId, choiceId) => {
         try {
             dispatch({ type: ActionTypes.CHOICE_START });
 
-            // get the choice from the API.
-            const choice = await story.makeChoice(saveId, choiceId);
+            // Track the current node as visited BEFORE making the choice
+            if (state.currentNode?.id && state.currentSave) {
+                // Ensure visitedNodeIds is always an array
+                let visitedIds = state.currentSave.visitedNodeIds;
 
-            // send the make choice success action to the reducer.
-            dispatch({ type: ActionTypes.CHOICE_SUCCESS, payload: choice });
+                if (!visitedIds) {
+                    visitedIds = [];
+                } else if (!Array.isArray(visitedIds)) {
+                    visitedIds = [];
+                } else {
+                    visitedIds = [...visitedIds];
+                }
 
-            // return the choice.
-            return choice;
+                // Add current node if not already visited
+                if (!visitedIds.includes(state.currentNode.id)) {
+                    visitedIds.push(state.currentNode.id);
+
+                    // Update currentSave in state immediately
+                    dispatch({
+                        type: ActionTypes.GAME_SUCCESS,
+                        payload: {
+                            ...state.currentSave,
+                            visitedNodeIds: visitedIds
+                        }
+                    });
+
+                    // Fire and forget backend update (don't wait for it)
+                    updateSave(saveId, { visitedNodeIds: visitedIds }).catch(err => {
+                        console.error('Failed to sync visited nodes to backend:', err);
+                    });
+                }
+            }
+
+            const gameState = await story.makeChoice(saveId, choiceId);
+
+            dispatch({
+                type: ActionTypes.CHOICE_SUCCESS,
+                payload: {
+                    CurrentStoryNode: gameState.currentStoryNode,
+                    AvailableChoices: gameState.availableChoices,
+                    PlayerCharacter: gameState.playerCharacter
+                        ? { ...gameState.playerCharacter, health: gameState.playerCharacter.health }
+                        : null,
+                }
+            });
+
+            if (gameState.IsGameOver) {
+                dispatch({ type: ActionTypes.SET_GAME_OVER, payload: true });
+            }
+            return gameState;
         } catch (error) {
-            const errorMessage = error.response?.data || 'Failed to make choice';
-            dispatch({ type: ActionTypes.CHOICE_ERROR, payload: errorMessage });
-            // return the error.
+            dispatch({ type: ActionTypes.CHOICE_ERROR, payload: error.message || 'Failed to make choice' });
             throw error;
         }
     };
@@ -495,12 +634,22 @@ export function GameProvider({ children }) {
             dispatch({ type: ActionTypes.NAVIGATE_START });
 
             // get the previous node from the API.
-            const node = await story.goBack(saveId);
+            const response = await story.goBack(saveId);
+
+            // Handle different response formats
+            const nodeData = response.node || response.currentStoryNode || response;
+            const playerData = response.playerCharacter || response.playerState;
 
             // send the go back success action to the reducer.
-            dispatch({ type: ActionTypes.NAVIGATE_SUCCESS, payload: node });
+            dispatch({
+                type: ActionTypes.NAVIGATE_SUCCESS,
+                payload: {
+                    node: nodeData,
+                    playerCharacter: playerData
+                }
+            });
             // return the node.
-            return node;
+            return nodeData;
 
         } catch (error) {
             const errorMessage = error.response?.data || 'Failed to go back';
@@ -516,12 +665,22 @@ export function GameProvider({ children }) {
             dispatch({ type: ActionTypes.NAVIGATE_START });
 
             // get the next node from the API.
-            const node = await story.nextNode(saveId);
+            const response = await story.nextNode(saveId);
+
+            // Handle different response formats
+            const nodeData = response.node || response.currentStoryNode || response;
+            const playerData = response.playerCharacter || response.playerState;
 
             // send the go forward success action to the reducer.
-            dispatch({ type: ActionTypes.NAVIGATE_SUCCESS, payload: node });
+            dispatch({
+                type: ActionTypes.NAVIGATE_SUCCESS,
+                payload: {
+                    node: nodeData,
+                    playerCharacter: playerData
+                }
+            });
             // return the node.
-            return node;
+            return nodeData;
         } catch (error) {
             const errorMessage = error.response?.data || 'Failed to go forward';
             dispatch({ type: ActionTypes.NAVIGATE_ERROR, payload: errorMessage });
@@ -589,6 +748,13 @@ export function GameProvider({ children }) {
         dispatch({ type: ActionTypes.CLEAR_ERROR });
     };
 
+    const setGameOver = (value) => {
+        dispatch({ type: ActionTypes.SET_GAME_OVER, payload: value });
+    };
+
+
+
+
     // values to return.
     const values = {
         // state.
@@ -601,6 +767,7 @@ export function GameProvider({ children }) {
         startGame,
         loadGame,
         getAllSaves,
+        getSaveById,
         deleteSave,
         updateSave,
 
@@ -610,6 +777,7 @@ export function GameProvider({ children }) {
         goBack,
         nextNode,
         getPlayerState,
+        setGameOver,
 
         // dialogue actions.
         getNextDialogue,
@@ -619,6 +787,11 @@ export function GameProvider({ children }) {
         setLoading,
         setError,
         clearError,
+
+        // account management
+        updateUsername,
+        updatePassword,
+        deleteAccount,
     };
 
     // finally packagge the context and return it.

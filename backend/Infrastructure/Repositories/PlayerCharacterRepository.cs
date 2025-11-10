@@ -28,13 +28,4 @@ public class PlayerCharacterRepository : GenericRepository<PlayerCharacter>, IPl
         return await health;
     }
 
-    public async Task<IEnumerable<PlayerCharacter>> GetAllByUserId(int userId)
-    {
-        return await GetAllByProperty(pc => pc.UserId, userId);
-    }
-
-    public async Task<PlayerCharacter?> GetByUserId(int userId)
-    {
-        return await GetByProperty(pc => pc.UserId, userId);
-    }
 }

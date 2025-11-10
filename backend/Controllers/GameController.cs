@@ -54,15 +54,22 @@ public class GameController : ControllerBase
 
     // Make a choice
     [HttpPost("choice")]
-        public async Task<ActionResult<GameSaveDto>> MakeChoice(MakeChoiceRequestDto request)
+    public async Task<ActionResult<GameStateDto>> MakeChoice(MakeChoiceRequestDto request)
     {
-        try {
-            // make the choice.
-            var gameSave = await _gameService.MakeChoice(request.SaveId, request.ChoiceId);
-            
-            return Ok(gameSave);
-        } catch (Exception ex) {
-            return BadRequest($"Failed to make choice");
+        try
+        {
+            var gameState = await _gameService.MakeChoiceAsync(request.SaveId, request.ChoiceId);
+            Console.WriteLine("Gamestate - gamestate: " + gameState);
+            return Ok(gameState);
+        }
+        catch (InvalidOperationException invEx)
+        {
+            // e.g. choice doesn't belong to node
+            return BadRequest(invEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest("Failed to make choice");
         }
     }
 
@@ -112,3 +119,5 @@ public class GameController : ControllerBase
     }
 
 }
+
+

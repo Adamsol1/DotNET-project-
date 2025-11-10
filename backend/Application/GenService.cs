@@ -105,7 +105,8 @@ public class GenService : IGenService
             Text = choice.Text,
             StoryNodeId = choice.StoryNodeId,
             NextStoryNodeId = choice.NextStoryNodeId,
-            AudioUrl = choice.AudioUrl
+            AudioUrl = choice.AudioUrl,
+            HealthEffect = choice.HealthEffect
         };
     }
 
@@ -145,7 +146,8 @@ public class GenService : IGenService
             SaveName = gameSave.SaveName,
             PlayerCharacterId = gameSave.PlayerCharacterId,
             CurrentStoryNodeId = gameSave.CurrentStoryNodeId,
-            LastUpdate = gameSave.LastUpdate
+            LastUpdate = gameSave.LastUpdate,
+            Health = gameSave.Health
         };
     }
 
@@ -179,11 +181,6 @@ public class GenService : IGenService
         // get the choice from the repository.
         var choice = await ValidateEntityExists<Choice>(choiceId);
         
-        Console.WriteLine("Genservice node used is: " + nodeId );
-        Console.WriteLine("GenService: Choise id: " + choiceId);
-        Console.WriteLine("GenService: Choise Stroy node: " + choice.StoryNodeId);
-
-
         return choice.StoryNodeId == nodeId;
 
     }
