@@ -52,27 +52,39 @@ public class AuthController : ControllerBase
         // Attempt to contact service layer about the account registration
         try
         {
-            //Await the answer given by the service layer. 
-            var userDto = await _userService.RegisterAccount(request);
-            //If the service layer was unable to create the account inform the user. 
-            if (userDto == null)
+            var user = new AuthUser
             {
-                // TODO : Inform user about the error
-                return BadRequest("Failed to create account. Username may already exist.");
+                UserName = request.Username,
+
+            };
+            
+            var result = await _userManager.CreateAsync(user, request.Password);
+            if (!result.Succeeded)
+            {
+                _logger.LogWarning("[AuthController] Unable to create account with {@Username}", request.Username);
+                return BadRequest(result.Errors);
                 
             }
-
-            //If account registration succesfull the user will be informed and redirected to the login page. 
-            // TODO : Inform user about account registration
-            return Ok(userDto);
-
-        //If unable to contact service layer error will be given
+            
+            _logger.LogInformation("[AuthController] Succesfully created account for {$Username}", request.Username);
+            var gameUser = _userService.RegisterAccount(request);
+            if (gameUser == null)
+            {
+                _logger.LogWarning("[AUTHDATABASE]The database will not be syncecd and will create error");
+                return BadRequest("The database will not be syncecd and will create error");
+            }
+            
+            return Ok("User created account successfully with ");
+            //Await the answer given by the service layer. 
+            
+        // Todo : håndter mer spesifikke error handlings.    
+        // Catch block for handling unexpected error
         } catch(Exception e)
         {
             // log the error
-            _logger.LogError(e, "[AuthController] Failed to create account. Username may already exist.");
+            _logger.LogError(e, "[AuthController] Unexpected error occured while trying to create  account for {$Username}", request.Username);
             // return the error
-            return BadRequest("Failed to create account. Username may already exist.");
+            return BadRequest("Unexpected error occured while creating account.");
         }
     }
 
@@ -95,26 +107,26 @@ public class AuthController : ControllerBase
             
             var userDto = await _userManager.FindByNameAsync(request.Username);
 
-            //Checks if the user service found a user with given username and password
-            if (userDto == null)
+            if (userDto != null && await _userManager.CheckPasswordAsync(userDto, request.Password))
             {
-                // return the error
-                _logger.LogWarning($"User {request.Username} user not authorized for username {request.Username}.");
-                return Unauthorized("Invalid username or password.");
-            }
+                _logger.LogInformation("[AuthController] Login attempt authorized for user : {@LoginUserDto}", request);
+                var token =  GenerateJwtToken(userDto);
 
-            // If the service returns a valid userDTO the webpage will navigate to the Home page. 
-            _logger.LogInformation("[AuthController] Authorized login for user {@LoginUserDto}", request);
-            var token = GenerateJwtToken(userDto);
-            return Ok(new{Token = token});
+                var user = await _userService.Login(request);
+                
+                return Ok(new { Token = token, userId = user.Id, username = user.Username });
+            }
+            _logger.LogWarning("[AuthController] Login attempt failed for user : {@LoginUserDto}", request);
+            return Unauthorized();
+            
         }
-            //If unable to use the service the user will be given an error message. 
+            //Todo : Håndet mer konkret error handling.
             catch (Exception e)
             {
                 // log the error
-                _logger.LogError(e, "[AuthController] Failed to login. Invalid username or password.");
+                _logger.LogError(e, "[AuthController] Unexpected error occured while trying to login.");
                 // return the error
-                return BadRequest("Failed to login. Invalid username or password.");
+                return BadRequest("Unexpected error occured while trying to login.");
             }
         }
     
@@ -128,10 +140,10 @@ public class AuthController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Logout()
     {
-        // return the success message since we dont use JWT tokens yet
+        
         await _signInManager.SignOutAsync();
         _logger.LogInformation("[AuthController] Logged out.");
-        return Ok(new { message = "Logged out successfully" });
+        return Ok("Logged out successfully");
 
     }
     
@@ -182,27 +194,7 @@ public class AuthController : ControllerBase
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    // COMMENTED OUT FOR REACT FRONTEND - These were MVC view methods
-    /*
-    /// <summary>
-    /// Get method for displaying the login page
-    /// </summary>
-    /// <returns>The view of the loginpage</returns>
-    [HttpGet("login")]
-    public IActionResult login()
-    {
-        return View(new LogInViewModel());
-    }
-
-    ///<summary
-    /// Get method for displaying the register page
-    /// </summary>
-    [HttpGet("register")]
-    public IActionResult Register()
-    {
-        return View();
-    }
-    */
+  
 
     
 }

@@ -22,7 +22,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 ///JSON web token
 builder.Services.AddDbContext<AuthDbContext>(options =>
-options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+options.UseSqlite(builder.Configuration.GetConnectionString("AuthConnection")));
 builder.Services.AddIdentity<AuthUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthDbContext>()
     .AddDefaultTokenProviders();
@@ -32,11 +32,32 @@ builder.Services.AddCors(options =>
     {
         options.AddPolicy("CorsPolicy", builder =>
             {
-                builder.WithOrigins("http://localhost:3000")
+                builder.WithOrigins("http://localhost:3000", "http://localhost:5169")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();
             });
+});
+
+// Hentet fra pensum for debug. kan fjerne etterhvert. 
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My Shop API", Version = "v1" }); // Basic info for the API
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme // Define the Bearer auth scheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement // Require Bearer token for accessing the API
+    {{ new OpenApiSecurityScheme // Reference the defined scheme
+        { Reference = new OpenApiReference
+        { Type = ReferenceType.SecurityScheme,
+            Id = "Bearer"}},
+        new string[] {}
+    }});
 });
 
 builder.Services.AddAuthorization();
@@ -213,14 +234,13 @@ app.Use(async (context, next) =>
 app.UseAuthentication();
 app.UseAuthorization();
 
-/**
+/*
     * In production, the frontend and backend should be hosted on the same domain
     * and cors should be configured accordingly.
     * cors for the frontend to access the api
     * frontend hosted on localhost:3000
     * backend hosted on localhost:5169
     */
-
 
 //NOTE : This is commented out for testing with core made in the authorization. If sucesscfull this will be removed. 
 /*
