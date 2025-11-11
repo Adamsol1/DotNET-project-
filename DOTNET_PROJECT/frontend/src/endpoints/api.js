@@ -25,6 +25,23 @@ const api = axios.create({
 // should we enforce usage of JWT token for the api requests?
 // for know il not include it.
 
+//TODO: Fiks kilde
+//Based on : https://medium.com/@krishnanand654/jwt-token-refresh-using-axios-interceptors-03ad9fa74d77
+api.interceptors.request.use(
+    config => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+        
+    },
+    function (error) {
+        return Promise.reject(error);
+    }
+)
+
+
 // interceptor for error handling.
 api.interceptors.response.use(
     (response) => response,
