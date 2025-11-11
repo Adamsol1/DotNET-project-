@@ -131,7 +131,7 @@ public class GameService : IGameService
             
             // if the visited nodes list is empty or the last node is not the current node, 
             // add the current node to the list.
-            if (visitedNodes.Count == 0 || visitedNodes.Last() != gameSave.CurrentStoryNodeId)
+            if (!visitedNodes.Contains(gameSave.CurrentStoryNodeId))
             {
                 visitedNodes.Add(gameSave.CurrentStoryNodeId);
             }
@@ -291,35 +291,49 @@ public class GameService : IGameService
         }
     }
 
-    public async Task<GameSave> UpdateGameSave(int gameSaveId, int currentStoryNodeId)
+    public async Task<GameSave> UpdateGameSave(int gameSaveId, UpdateGameSaveRequest request)
     {
         try {
-            // start a transaction
             await _uow.BeginAsync();
-            
-            // get the game save from the repository.
+    
             var gameSave = await _uow.GameRepository.GetById(gameSaveId);
-            if (gameSave == null) throw new Exception("gameservice l214: game save not found");
-            
-            // update the game save.
-            gameSave.CurrentStoryNodeId = currentStoryNodeId;
+            if (gameSave == null) 
+                throw new Exception("gameservice: game save not found");
+    
+            if (request.CurrentStoryNodeId.HasValue)
+            {
+                gameSave.CurrentStoryNodeId = request.CurrentStoryNodeId.Value;
+            }
+
+            // Merge instead of overwriting
+            if (request.VisitedNodeIds != null && request.VisitedNodeIds.Any())
+            {
+                var existing = string.IsNullOrEmpty(gameSave.VisitedNodeIds)
+                    ? new List<int>()
+                    : JsonSerializer.Deserialize<List<int>>(gameSave.VisitedNodeIds) ?? new List<int>();
+
+                foreach (var id in request.VisitedNodeIds)
+                {
+                    if (!existing.Contains(id))
+                        existing.Add(id);
+                }
+
+                gameSave.VisitedNodeIds = JsonSerializer.Serialize(existing);
+            }
+
             gameSave.LastUpdate = DateTime.UtcNow;
 
-            // update the game save in the repository.
             await _uow.GameRepository.Update(gameSave);
-
-            // save and commit
             await _uow.SaveAsync();
             await _uow.CommitAsync();
 
-            // return the game save object.
             return gameSave;
         }
         catch (Exception ex)
         {
             await _uow.RollBackAsync();
-            _logger.LogError(ex, "gameservice l218: failed to update game save");
-            throw new Exception("gameservice l218: failed to update game save: " + ex.Message);
+            _logger.LogError(ex, "gameservice: failed to update game save");
+            throw new Exception("gameservice: failed to update game save: " + ex.Message);
         }
     }
 

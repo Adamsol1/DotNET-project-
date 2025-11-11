@@ -14,6 +14,28 @@ public class DialogueRepository : GenericRepository<Dialogue>, IDialogueReposito
     {
         _db = db;
     }
+  
+    /// <summary>
+    /// Get a dialogue by ID with its Character eagerly loaded
+    /// </summary>
+    public async Task<Dialogue?> GetByIdWithCharacter(int id)
+    {
+        return await _db.Dialogues
+            .Include(d => d.Character)
+            .FirstOrDefaultAsync(d => d.Id == id);
+    }
+
+    /// <summary>
+    /// Get all dialogues for a story node with Characters eagerly loaded
+    /// </summary>
+    public async Task<IEnumerable<Dialogue>> GetAllByStoryNodeWithCharacter(int storyNodeId)
+    {
+        return await _db.Dialogues
+            .Include(d => d.Character)
+            .Where(d => d.StoryNodeId == storyNodeId)
+            .OrderBy(d => d.Order)
+            .ToListAsync();
+    }
 
     /// <summary>
     /// Get the id of the story node where dialogue is shown
