@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 // component imports . gameContext has api calls and game state management.
@@ -7,13 +7,17 @@ import { useGame } from '../context/GameContext';
 import Planet from '../components/Home/Planet';
 import Spaceship from '../components/Home/Spaceship';
 import Stars from '../components/Home/Stars';
-
+// alert modal for unsaved changes.
+import AlertModal from '../components/AlertModal';
 
 export function Home({ onNavigate }) {
   const { authenticated, user, logout, login, register } = useGame();
   const [activeTab, setActiveTab] = useState('login');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const [showLeaveAlert, setShowLeaveAlert] = useState(false);
+  const hasUnsavedChanges = username !== '' || password !== '';
 
   // log inn the user, call the login function. from api.auth.login
   const handleLogin = async () => {
@@ -43,11 +47,53 @@ export function Home({ onNavigate }) {
   const handleLogout = async () => {
     try {
       await logout();
+      setActiveTab('login');
+      setUsername('');
+      setPassword('');
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
 
+  // Warn user if they try to close/refresh the tab
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = ''; 
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges]);
+
+  // handle tab click with unsaved changes check
+  const handleTabClick = (tab) => {
+    if (tab === activeTab) return;
+
+    // if there are unsaved changes on register tab, show the alert modal
+    if (activeTab === 'register' && tab === 'login' && hasUnsavedChanges) {
+      setShowLeaveAlert(true);
+    } else {
+      setActiveTab(tab);
+      setUsername('');
+      setPassword('');
+    }
+  };
+
+  // handle confirm leave when there are unsaved changes
+  const confirmLeave = () => {
+    setShowLeaveAlert(false);
+    setActiveTab('login');
+    setUsername('');
+    setPassword('');
+  };
+
+  // handle cancel leave
+  const cancelLeave = () => {
+    setShowLeaveAlert(false);
+  };
 
   // since login becomes essentially the HomePage, 
   // we check if the user is logged in, if yes, then we show play game button.
@@ -133,7 +179,7 @@ export function Home({ onNavigate }) {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => setActiveTab('login')}
+                    onClick={() => handleTabClick('login')}
                     className={`flex-1 px-6 py-3 font-bold transition-colors ${
                       activeTab === 'login' 
                         ? 'bg-blue-600 text-white' 
@@ -145,7 +191,7 @@ export function Home({ onNavigate }) {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => setActiveTab('register')}
+                    onClick={() => handleTabClick('register')}
                     className={`flex-1 px-6 py-3 font-bold transition-colors ${
                       activeTab === 'register' 
                         ? 'bg-blue-600 text-white' 
@@ -217,7 +263,17 @@ export function Home({ onNavigate }) {
           </motion.div>
         </main>
       </div>
+      {/* Custom AlertModal for unsaved changes */}
+      {showLeaveAlert && (
+        <AlertModal
+          title="Unsaved Changes"
+          message="You have unsaved changes. Are you sure you want to leave?"
+          confirmLabel="LEAVE"
+          cancelLabel="STAY"
+          onCancel={cancelLeave}
+          onConfirm={confirmLeave}
+        />
+      )}
     </div>
   );
-
 }
