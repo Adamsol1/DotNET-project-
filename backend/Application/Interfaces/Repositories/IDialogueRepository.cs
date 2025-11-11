@@ -5,6 +5,9 @@ namespace backend.Application.Interfaces.Repositories;
 
 public interface IDialogueRepository : IGenericRepository<Dialogue>
 {
+    
+    Task<Dialogue?> GetByIdWithCharacter(int id);
+    Task<IEnumerable<Dialogue>> GetAllByStoryNodeWithCharacter(int storyNodeId);
     /// <summary>
     /// Get the id of the story node where dialogue is shown
     /// </summary>

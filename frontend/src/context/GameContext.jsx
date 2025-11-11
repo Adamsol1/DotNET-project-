@@ -208,7 +208,10 @@ function gameReducer(state, action) {
                 error: null,
                 currentSave: action.payload,
                 // reset playerState to initial or from payload if available
-                playerState: action.payload.playerCharacter || action.payload.playerState || { health: 100, maxHealth: 100 },
+                playerState:
+                    action.payload.playerCharacter ?? 
+                    action.payload.playerState ??
+                    state.playerState,
             };
         case ActionTypes.GAME_ERROR:
             return { ...state, loading: false, error: action.payload };
@@ -617,10 +620,7 @@ export function GameProvider({ children }) {
                         : null,
                 }
             });
-
-            if (gameState.IsGameOver) {
-                dispatch({ type: ActionTypes.SET_GAME_OVER, payload: true });
-            }
+            
             return gameState;
         } catch (error) {
             dispatch({ type: ActionTypes.CHOICE_ERROR, payload: error.message || 'Failed to make choice' });

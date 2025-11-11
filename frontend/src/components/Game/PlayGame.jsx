@@ -26,6 +26,7 @@ export function PlayGame({ saveId, onBackToMenu }) {
         clearError,
         gameOver,
         currentSave,
+        setGameOver,
     } = useGame();
 
     const {
@@ -38,10 +39,26 @@ export function PlayGame({ saveId, onBackToMenu }) {
     const [dialogueIndex, setDialogueIndex] = useState(0);
     const [showChoices, setShowChoices] = useState(false);
 
-    const visitedNodeIds = currentSave?.visitedNodeIds;
-    const isRevisit = Array.isArray(visitedNodeIds) &&
-        currentNode?.id &&
-        visitedNodeIds.includes(currentNode.id);
+    let isRevisit = false;
+    if (currentSave && currentNode?.id) {
+        let visitedNodeIds = currentSave.visitedNodeIds;
+
+        // handle string type coming from backend
+        if (typeof visitedNodeIds === 'string') {
+            try {
+                visitedNodeIds = JSON.parse(visitedNodeIds);
+            } catch {
+                visitedNodeIds = [];
+            }
+        }
+
+        if (Array.isArray(visitedNodeIds)) {
+            // normalize to numbers before comparing
+            isRevisit = visitedNodeIds.some(
+                (id) => Number(id) === Number(currentNode.id)
+            );
+        }
+    }
 
     // Load node when saveId changes
     useEffect(() => {
@@ -55,35 +72,57 @@ export function PlayGame({ saveId, onBackToMenu }) {
     
     // Play audio when node changes
     useEffect(() => {
-        if (currentNode) {
-            // Check if this is a revisit
-            const visitedIds = currentSave?.visitedNodeIds;
-            const isNodeRevisit = Array.isArray(visitedIds) && visitedIds.includes(currentNode.id);
+        if (!currentNode) return;
 
-            if (isNodeRevisit) {
-                // For revisits: skip directly to choices, no audio
-                setDialogueIndex(0);
-                setShowChoices(true);
-                playAmbientSound(null); // Stop any ambient sounds
-            } else {
-                // First time visit: play audio and show dialogues
-                if (currentNode.backgroundMusicUrl) {
-                    playBackgroundMusic(currentNode.backgroundMusicUrl);
-                }
-                if (currentNode.ambientSoundUrl) {
-                    playAmbientSound(currentNode.ambientSoundUrl, false);
-                } else {
-                    playAmbientSound(null);
-                }
-
-                // reset local dialogue state for new node
-                setDialogueIndex(0);
-                // if node has no dialogues, show choices immediately
-                const hasDialogues = (currentNode.dialogues && currentNode.dialogues.length > 0);
-                setShowChoices(!hasDialogues);
+        // Normalize visited node ids (string → array)
+        let visitedIds = currentSave?.visitedNodeIds;
+        if (typeof visitedIds === 'string') {
+            try {
+                visitedIds = JSON.parse(visitedIds);
+            } catch {
+                visitedIds = [];
             }
         }
+
+        // Check if this node is a revisit
+        const isNodeRevisit =
+            Array.isArray(visitedIds) &&
+            visitedIds.some((id) => Number(id) === Number(currentNode.id));
+
+        if (isNodeRevisit) {
+            // For revisits:
+            setDialogueIndex(0);
+            setShowChoices(true);
+            playAmbientSound(null);
+
+            return; // Exit before any new ambient or dialogues start
+        }
+        
+        if (currentNode.backgroundMusicUrl) {
+            playBackgroundMusic(currentNode.backgroundMusicUrl);
+        }
+        
+        if (currentNode.ambientSoundUrl) {
+            playAmbientSound(currentNode.ambientSoundUrl, false);
+        } else {
+            playAmbientSound(null);
+        }
+
+        // Dialogue setup
+        setDialogueIndex(0);
+        const hasDialogues =
+            currentNode.dialogues && currentNode.dialogues.length > 0;
+        setShowChoices(!hasDialogues);
     }, [currentNode?.id, currentSave?.visitedNodeIds]);
+
+    useEffect(() => {
+        const hp = playerState?.health ?? playerState?.hp ?? 100;
+        const shouldBeGameOver = hp <= 0;
+
+        if (shouldBeGameOver && !gameOver) {
+            setGameOver(true);
+        }
+    }, [playerState, gameOver, setGameOver]);
 
     // load current node from backend
     const loadGameData = async () => {
@@ -103,26 +142,21 @@ export function PlayGame({ saveId, onBackToMenu }) {
 
     // Try to resolve character image:
     const resolveCharacterImage = () => {
-        // 1) If dialogue contains character object (legacy)
-        if (currentDialogue && currentDialogue.character && currentDialogue.character.imageUrl) {
-            return currentDialogue.character.imageUrl;
+        // 1) Check if dialogue has character image directly
+        if (currentDialogue?.characterImageUrl) {
+            return currentDialogue.characterImageUrl;
         }
 
-        // 2) If currentNode has characters list (several DTO variants exist)
-        const chars = currentNode?.charactersInScene || currentNode?.characters || currentNode?.charactersInScene;
-        if (chars && currentDialogue) {
-            const found = chars.find((c) => c.id === currentDialogue.characterId);
-            if (found && (found.imageUrl || found.imageURL)) {
-                return found.imageUrl || found.imageURL;
-            }
+        // 2) Fallback to checking characters array
+        const chars = currentNode?.charactersInScene
+            || currentNode?.characters;
+
+        if (chars && currentDialogue?.characterId) {
+            const found = chars.find(c => c.id === currentDialogue.characterId);
+            if (found?.imageUrl) return found.imageUrl;
         }
 
-        // 3) Fallback: try a common field on dialogue (maybe backend serializes characterImageUrl)
-        if (currentDialogue && (currentDialogue.characterImageUrl || currentDialogue.characterimageurl)) {
-            return currentDialogue.characterImageUrl || currentDialogue.characterimageurl;
-        }
-
-        // 4) Default avatar
+        // 3) Default avatar
         return '/assets/characters/hero.png';
     };
 

@@ -25,7 +25,7 @@ public interface IGameService
     Task<GameSave> GetGameSave(int gameSaveId);
     Task<IEnumerable<GameSave>> GetUserGameSaves(int userId);
     Task<bool> DeleteGameSave(int gameSaveId);
-    Task<GameSave> UpdateGameSave(int gameSaveId, int currentStoryNodeId);
+    Task<GameSave> UpdateGameSave(int gameSaveId, UpdateGameSaveRequest request);
 
 
 

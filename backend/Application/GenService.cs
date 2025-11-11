@@ -113,14 +113,16 @@ public class GenService : IGenService
     // map dialogue to a DialogueDto.
     public DialogueDto MapDialogue(Dialogue dialogue)
     {
-        return new DialogueDto
-        {
-            Id = dialogue.Id,
-            Text = dialogue.Text,
-            CharacterId = dialogue.CharacterId,
-            StoryNodeId = dialogue.StoryNodeId,
-            Order = dialogue.Order
-        };
+		return new DialogueDto
+    	{
+        	Id = dialogue.Id,
+        	Text = dialogue.Text,
+        	CharacterId = dialogue.CharacterId,
+        	StoryNodeId = dialogue.StoryNodeId,
+        	Order = dialogue.Order,
+        	CharacterName = dialogue.Character?.Name,       
+        	CharacterImageUrl = dialogue.Character?.ImageUrl
+    	};
     }
 
     // map character to a CharacterDto.

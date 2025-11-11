@@ -118,8 +118,8 @@ public class GameProgressDto
 
 public class UpdateGameSaveRequest
 {
-    public int SaveId { get; set; }
-    public int CurrentStoryNodeId { get; set; }
+    public int? CurrentStoryNodeId { get; set; }
+	public List<int>? VisitedNodeIds { get; set; }
 }
 
 // make choice dto.

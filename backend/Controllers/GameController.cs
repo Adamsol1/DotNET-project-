@@ -87,7 +87,7 @@ public class GameController : ControllerBase
     }
 
     // Delete a game save
-    [HttpDelete("delete/{saveId}")]
+    [HttpDelete("saves/{saveId}")]
     public async Task<ActionResult<bool>> DeleteGameSave(int saveId)
     {
         try {
@@ -106,18 +106,19 @@ public class GameController : ControllerBase
     }
 
     // Update a game save
-    [HttpPut("update/{saveId}")]
-    public async Task<ActionResult<GameSaveDto>> UpdateGameSave(int saveId, UpdateGameSaveRequest request)
+     [HttpPut("saves/{saveId}")]
+    public async Task<ActionResult<GameSaveDto>> UpdateGameSave(
+        int saveId, 
+        [FromBody] UpdateGameSaveRequest request)
     {
         try {
             // update the game save.
-            var gameSave = await _gameService.UpdateGameSave(saveId, request.CurrentStoryNodeId);
+            var gameSave = await _gameService.UpdateGameSave(saveId, request);
             return Ok(gameSave);
         } catch (Exception ex) {
-            return BadRequest($"Failed to update game save");
+            return BadRequest($"Failed to update game save: {ex.Message}");
         }
     }
-
 }
 
 

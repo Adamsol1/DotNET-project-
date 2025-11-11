@@ -25,14 +25,13 @@ public class StoryService : IStoryService
     {
         try
         {
-            // get story node by id - no transaction here, called from within Execute
             var storyNode = await _genService.ValidateEntityExists<StoryNode>(id);
             
-            // get the dialogues & choices that belongs to the storyNode
-            var dialogues = await _uow.StoryNodeRepository.GetAllDialoguesOfStoryNode(id);
+            var dialogues = await _uow.DialogueRepository
+                .GetAllByStoryNodeWithCharacter(id);
+        
             var choices = await _uow.StoryNodeRepository.GetAllChoicesOfStoryNode(id);
 
-            // use GenService mapping
             return _genService.MapStoryNode(storyNode, dialogues, choices);
         }
         catch (Exception ex)
@@ -61,8 +60,10 @@ public class StoryService : IStoryService
             // fetch dialoges & choices for each story node and add it to a list.
             var result = new List<StoryNodeDto>();
             foreach (var storyNode in storyNodes) {
-                var dialogues = await _uow.StoryNodeRepository.GetAllDialoguesOfStoryNode(storyNode.Id);
-                var choices = await _uow.StoryNodeRepository.GetAllChoicesOfStoryNode(storyNode.Id);
+                var dialogues = await _uow.DialogueRepository
+                    .GetAllByStoryNodeWithCharacter(storyNode.Id);
+                var choices = await _uow.StoryNodeRepository
+                    .GetAllChoicesOfStoryNode(storyNode.Id);
                 // error handling later
                 result.Add(_genService.MapStoryNode(storyNode, dialogues, choices));
             }
@@ -177,7 +178,6 @@ public class StoryService : IStoryService
         try {
             await _uow.BeginAsync();
 
-            // create the dialogue
             var dialogue = new Dialogue {
                 Text = request.Text,
                 CharacterId = request.CharacterId,
@@ -185,17 +185,17 @@ public class StoryService : IStoryService
                 Order = request.Order,
             };
 
-            // create in the repository
             await _uow.DialogueRepository.Create(dialogue);
-            // save and commit
             await _uow.SaveAsync();
             await _uow.CommitAsync();
 
-            // return the dialogue
-            return _genService.MapDialogue(dialogue);
+            // Reload with Character included
+            var dialogueWithCharacter = await _uow.DialogueRepository
+                .GetByIdWithCharacter(dialogue.Id);
+        
+            return _genService.MapDialogue(dialogueWithCharacter!);
         }
         catch (Exception ex) {
-            // rollback, & error handling.
             await _uow.RollBackAsync();
             _logger.LogError(ex, "[Storyservice] Error creating Dialogue");
             throw;
@@ -207,28 +207,26 @@ public class StoryService : IStoryService
         try {
             await _uow.BeginAsync();
 
-            // get the dialogue from the repository
             var dialogue = await _uow.DialogueRepository.GetById(request.Id);
             if (dialogue == null) {
                 _logger.LogWarning("[Storyservice] Dialogue with id {DialogueId} not found", request.Id);
                 throw new Exception("Dialogue not found");
             }
 
-            // update the dialogue
             dialogue.Id = request.Id;
             dialogue.Text = request.Text;
             dialogue.CharacterId = request.CharacterId;
             dialogue.StoryNodeId = request.StoryNodeId;
             dialogue.Order = request.Order;
 
-            // update in the repository
             await _uow.DialogueRepository.Update(dialogue);
-            // save and commit
             await _uow.SaveAsync();
             await _uow.CommitAsync();
+            
+            var dialogueWithCharacter = await _uow.DialogueRepository
+                .GetByIdWithCharacter(dialogue.Id);
 
-            // return the dialogue
-            return _genService.MapDialogue(dialogue);
+            return _genService.MapDialogue(dialogueWithCharacter!);
         }
         catch (Exception ex) {
             await _uow.RollBackAsync();
@@ -238,17 +236,17 @@ public class StoryService : IStoryService
     }
 
     // get the dialogues in a story node
-     public async Task<IEnumerable<DialogueDto>> GetDialoguesInStoryNode(int storyNodeId)
+    public async Task<IEnumerable<DialogueDto>> GetDialoguesInStoryNode(int storyNodeId)
     {
         try {
-            // begin transaction
             await _uow.BeginAsync();
 
-            // get the dialogues from the repository
-            var dialogues = await _uow.StoryNodeRepository.GetAllDialoguesOfStoryNode(storyNodeId);
+            // Use the new method with Character included
+            var dialogues = await _uow.DialogueRepository
+                .GetAllByStoryNodeWithCharacter(storyNodeId);
+        
             return dialogues.Select(_genService.MapDialogue);
         } catch (Exception ex) {
-            // rollback, & error handling.
             _logger.LogError(ex, "[Storyservice] Error retrieving dialogues from StoryNode with id {StoryNodeId}", storyNodeId);
             throw;
         }
