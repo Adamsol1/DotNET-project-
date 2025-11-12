@@ -46,6 +46,18 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response,
     (error) => {
+        //Auth error handling. // TODO DEBUGGED WITH CHAT 
+        /*
+        if(error.response.status === 401) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('user_id');
+            }
+         */
+            
+         
+            
+        
         // log the error message or the error data to the console.
         if (error.response?.data) {
             console.error('API Error:', JSON.stringify(error.response.data, null, 2));

@@ -8,9 +8,14 @@ import Planet from '../components/Home/Planet';
 import Spaceship from '../components/Home/Spaceship';
 import Stars from '../components/Home/Stars';
 
+import {useAuth} from "../context/Authentication";
+import * as authservice from "../endpoints/AuthenticationService";
+
 
 export function Home({ onNavigate }) {
-  const { authenticated, user, logout, login, register } = useGame();
+  const { user, logout, login, register } = useAuth();
+  //CHAT
+  const  authenticated= !!user;
   const [activeTab, setActiveTab] = useState('login');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -32,7 +37,7 @@ export function Home({ onNavigate }) {
     try {
       // passes inn the username and password captured from the form 
       // to the register function.
-      await register({ username, password });
+      await authservice.register({ username, password });
     } catch (error) {
       console.error('Register failed:', error);
     }

@@ -1,9 +1,11 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import React, { useState } from 'react';
 import './App.css';
 import { GameProvider } from './context/GameContext';
 import { Home } from './pages/Home';
 import { Game } from './pages/Game';
 import { tokens } from './design/tokens';
+import {AuthProvider} from "./context/Authentication";
 
 //set the appContent routes
 function AppContent() {
@@ -41,8 +43,10 @@ function AppContent() {
 // setup the app with the GameProvider and AppContent
 export default function App() {
   return (
+  <AuthProvider>
     <GameProvider>
       <AppContent />
     </GameProvider>
+  </AuthProvider>
   );
 }

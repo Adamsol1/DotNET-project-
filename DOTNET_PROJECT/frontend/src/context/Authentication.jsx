@@ -2,7 +2,7 @@ import React, {useState, useEffect, createContext, useContext, ReactNode} from '
 import { jwtDecode } from "jwt-decode";
 /** @typedef {import('..types/Auth').LoginUserDto} LoginUserDto */
 /** @typedef {import('..types/Auth').RegistrerUserDto} RegistrerUserDto */
-import * as authservice from "./authservice";
+import * as authservice from "../endpoints/AuthenticationService";
 import {pem as jwt} from "node-forge";
 
 
@@ -41,7 +41,7 @@ export function AuthProvider({ children }) {
         localStorage.setItem('user', user.username);
         localStorage.setItem('user_id', user.id);
 
-        const decodedUser = jwtDecode(token);
+        const decodedUser = jwtDecode(user.token);
         setUser(decodedUser);
         setToken(user.token);
 
@@ -49,18 +49,19 @@ export function AuthProvider({ children }) {
 
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('user_id');
         setUser(null);
         setToken(null);
     }
 
 
     return (
-    <AuthContext.Provider value={{user, token, login, logout, Loading}}>
-        {!Loading && children}
+    <AuthContext.Provider value={{user, token, login, logout, loading}}>
+        {!loading && children}
     </AuthContext.Provider>
     )
 
-
+}
     export function useAuth() {
         const context = useContext(AuthContext);
         if (!context) {
@@ -69,4 +70,4 @@ export function AuthProvider({ children }) {
         }
             return context;
     }
-}
+

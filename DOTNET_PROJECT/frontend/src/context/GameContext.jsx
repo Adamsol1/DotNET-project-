@@ -1,7 +1,7 @@
 // react imports
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 // api imports
-import { auth, game, story } from '../endpoints/api';
+import { game, story } from '../endpoints/api';
 
 /**
  * This context file is used to manage the game state and actions that can be taken.
@@ -14,8 +14,6 @@ import { auth, game, story } from '../endpoints/api';
 const startState = {
     // user stae is null, and they arent logged inn.
     user: null,
-    authenticated: false,
-
     // the game states, they are emtpy.
     currentSave: null,
     currentNode: null,
@@ -205,6 +203,7 @@ export function GameProvider({ children }) {
     const [state, dispatch] = useReducer(gameReducer, startState);
 
     // handles the login process.
+    /*
     const login = async (credentials) => {
         // try to send the credentials to the backend.
         try {
@@ -227,6 +226,9 @@ export function GameProvider({ children }) {
             throw error;
         }
     };
+    */
+     
+    /*
 
     // register user and return the result.
     const register = async (userData) => {
@@ -245,6 +247,9 @@ export function GameProvider({ children }) {
             throw error;
         }
     };
+    
+    */
+     /*
 
     // logout user and return the result.
     const logout = async () => {
@@ -259,6 +264,8 @@ export function GameProvider({ children }) {
         return true;
     };
 
+*/
+      
     // start the game and return the result.
     const startGame = async (gameData) => {
         try {
@@ -515,9 +522,9 @@ export function GameProvider({ children }) {
         // state.
         ...state,
         // auth actions.
-        login,
-        register,
-        logout,
+        //login,
+        // register,
+       // logout,
         // game actions.
         startGame,
         loadGame,
