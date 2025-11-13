@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.OpenApi.Models;
 using DOTNET_PROJECT.Domain.Models;
+using System.IO;
 using DOTNET_PROJECT.Application;
 using DOTNET_PROJECT.Infrastructure.Data;
 using DOTNET_PROJECT.Infrastructure.Repositories;
@@ -203,6 +204,28 @@ app.UseHttpsRedirection();
     */
 app.UseStaticFiles();
 app.UseRouting();
+// Debug middleware: log Origin, Method, Path and small request body for auth endpoints
+app.Use(async (context, next) =>
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    var origin = context.Request.Headers["Origin"].FirstOrDefault() ?? "<no-origin>";
+    logger.LogInformation("Incoming request: {Method} {Path} Origin:{Origin} Content-Type:{ContentType}",
+        context.Request.Method, context.Request.Path, origin, context.Request.ContentType);
+
+    // If this is an auth POST, read and log the small JSON body (enable buffering)
+    if (context.Request.Path.StartsWithSegments("/api/auth") && context.Request.Method == HttpMethods.Post)
+    {
+        context.Request.EnableBuffering();
+        using var reader = new StreamReader(context.Request.Body, leaveOpen: true);
+        var body = await reader.ReadToEndAsync();
+        context.Request.Body.Position = 0;
+        logger.LogDebug("Auth request body: {Body}", body);
+    }
+
+    await next();
+
+    logger.LogInformation("Response for {Path} -> {StatusCode}", context.Request.Path, context.Response.StatusCode);
+});
 app.UseCors("CorsPolicy");
 
 // NOTE THIS IS FOR DEBUG PURPOSE. It will be removed when authentication feature works. 

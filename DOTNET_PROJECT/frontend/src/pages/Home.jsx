@@ -37,7 +37,7 @@ export function Home({ onNavigate }) {
     try {
       // passes inn the username and password captured from the form 
       // to the register function.
-      await authservice.register({ username, password });
+      await authservice.register( username, password );
     } catch (error) {
       console.error('Register failed:', error);
     }

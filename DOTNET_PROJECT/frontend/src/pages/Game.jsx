@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useGame } from '../context/GameContext';
+import { useAuth } from '../context/Authentication';
 import { StartGame } from '../components/Game/NewGame';
 import { PlayGame } from '../components/Game/PlayGame';
 import { motion } from 'framer-motion';
 
 export function Game({ onNavigate }) {
-  const { authenticated, user, getAllSaves } = useGame();
+  const { getAllSaves } = useGame();
+  const { user } = useAuth();
+  const authenticated = !!user;
   const [currentSave, setCurrentSave] = useState(null);
   const [saves, setSaves] = useState([]);
   const [showGameStart, setShowGameStart] = useState(false);

@@ -57,6 +57,15 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<PlayerCharacter>()
             .HasBaseType<Character>();
         
+        modelBuilder.Entity<User>()
+            .Property(u => u.AuthUserId)
+            .HasMaxLength(450)
+            .IsRequired();
+
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.AuthUserId)
+            .IsUnique();
+        
         
         // This will have to be fixed later on when we get the save entity :)
         //

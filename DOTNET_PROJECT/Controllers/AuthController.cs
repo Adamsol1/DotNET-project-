@@ -49,6 +49,14 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register([FromBody] RegisterUserDto request)
     {
+        // Log and validate incoming request
+        _logger.LogInformation("[AuthController] Register called for username: {Username}", request?.Username);
+        if (!ModelState.IsValid)
+        {
+            _logger.LogWarning("[AuthController] Invalid ModelState for register: {@ModelState}", ModelState);
+            return BadRequest(ModelState);
+        }
+
         // Attempt to contact service layer about the account registration
         try
         {
@@ -61,20 +69,28 @@ public class AuthController : ControllerBase
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
             {
-                _logger.LogWarning("[AuthController] Unable to create account with {@Username}", request.Username);
+                _logger.LogWarning("[AuthController] Unable to create account with {@Username}. Errors: {@Errors}", request.Username, result.Errors);
                 return BadRequest(result.Errors);
-                
+
             }
-            
-            _logger.LogInformation("[AuthController] Succesfully created account for {$Username}", request.Username);
-            var gameUser = _userService.RegisterAccount(request);
-            if (gameUser == null)
+
+            _logger.LogInformation("[AuthController] Succesfully created account for {Username}", request.Username);
+            var authUserId = user.Id;
+            UserDto gameUserDto;
+            try
             {
-                _logger.LogWarning("[AUTHDATABASE]The database will not be syncecd and will create error");
-                return BadRequest("The database will not be syncecd and will create error");
+                gameUserDto = await _userService.RegisterAccount(request, authUserId);
+            }
+            catch (Exception e)
+            {
+                //TODO Correct error handling
+                await _userManager.DeleteAsync(user);
+                _logger.LogError(e, "[AuthController] Unable to create account for {Username}. The auth user is rolled back", request.Username);
+                return StatusCode(500,"Registration failed.");
             }
             
-            return Ok("User created account successfully with ");
+            
+            return Ok(new {message = "Account created successfully", gameUserId = gameUserDto.Id});
             //Await the answer given by the service layer. 
             
         // Todo : håndter mer spesifikke error handlings.    
@@ -100,7 +116,12 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<LoginUserDto>> Login([FromBody] LoginUserDto request)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+        _logger.LogInformation("[AuthController] Login called for username: {Username}", request?.Username);
+        if (!ModelState.IsValid)
+        {
+            _logger.LogWarning("[AuthController] Invalid ModelState for login: {@ModelState}", ModelState);
+            return BadRequest(ModelState);
+        }
         // Try to use user service for login
         try
         {
@@ -110,10 +131,11 @@ public class AuthController : ControllerBase
             if (userDto != null && await _userManager.CheckPasswordAsync(userDto, request.Password))
             {
                 _logger.LogInformation("[AuthController] Login attempt authorized for user : {@LoginUserDto}", request);
-                var token =  GenerateJwtToken(userDto);
+                var token = GenerateJwtToken(userDto);
+                _logger.LogDebug("[AuthController] Generated token length: {Len} for user {User}", token?.Length, userDto.UserName);
 
                 var user = await _userService.Login(request);
-                
+
                 return Ok(new { Token = token, userId = user.Id, username = user.Username });
             }
             _logger.LogWarning("[AuthController] Login attempt failed for user : {@LoginUserDto}", request);
