@@ -127,6 +127,9 @@ public class GameService : IGameService
     {
         try {
             await _uow.BeginAsync();
+            
+            var user = await _uow.UserRepository.GetById(userId);
+            if (user == null) throw new Exception("gameservice: user not found, Check that you are not passing the auth ID!");
 
             // we have a fixed story player character, named Ryan
             // i asume that player exists in the database, but as a precaution

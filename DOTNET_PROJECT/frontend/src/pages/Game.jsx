@@ -23,6 +23,9 @@ export function Game({ onNavigate }) {
   // get saves that belongs to the logged in user and set the saves state.
   const loadSaves = async () => {
     try {
+      console.log('[Game] loadSaves called, user object:', user);
+      console.log('[Game] user.id (userId):', user?.id);
+      console.log('[Game] localStorage user_id:', localStorage.getItem('user_id'));
       const userSaves = await getAllSaves(user.id);
       setSaves(userSaves);
     } catch (error) {
@@ -44,6 +47,7 @@ export function Game({ onNavigate }) {
   const handleBackToMenu = () => {
     setCurrentSave(null);
     setShowGameStart(false);
+    loadSaves(); // Reload saves list to show updated saves from gameplay
   };
 
   // handle the load save event and set the current save state to the selected save.

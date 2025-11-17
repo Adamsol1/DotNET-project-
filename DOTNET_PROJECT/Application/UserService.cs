@@ -62,6 +62,7 @@ public class UserService : IUserService
                 return null;
             }
 
+            _logger.LogInformation("[Userservice] GameUser found for login - Id: {UserId}, Username: {Username}, AuthUserId: {AuthUserId}", user.Id, user.Username, user.AuthUserId);
             return ReturnUserDto(user);  
         }
         catch (Exception e)

@@ -135,8 +135,9 @@ public class AuthController : ControllerBase
                 _logger.LogDebug("[AuthController] Generated token length: {Len} for user {User}", token?.Length, userDto.UserName);
 
                 var user = await _userService.Login(request);
+                _logger.LogInformation("[AuthController] GameUser found - Id: {UserId}, Username: {Username}", user?.Id, user?.Username);
 
-                return Ok(new { Token = token, userId = user.Id, username = user.Username });
+                return Ok(new { token = token, userId = user.Id, username = user.Username });
             }
             _logger.LogWarning("[AuthController] Login attempt failed for user : {@LoginUserDto}", request);
             return Unauthorized();

@@ -201,6 +201,21 @@ const GameContext = createContext();
 export function GameProvider({ children }) {
     // use the reducer to manage the state.
     const [state, dispatch] = useReducer(gameReducer, startState);
+    //TODO : CHATS ATTEMPT TO FIX ALL THIS DEBUG HELL
+    useEffect(() => {
+        const idStr = localStorage.getItem('user_id');
+        const username = localStorage.getItem('user');
+
+        if (idStr) {
+            dispatch({
+                type: ActionTypes.LOGIN_SUCCESS,
+                payload: {
+                    id: Number(idStr),
+                    username: username || ''
+                }
+            });
+        }
+    }, []);
 
     // handles the login process.
     /*
@@ -312,6 +327,7 @@ export function GameProvider({ children }) {
     // get all saves and return the result.
     const getAllSaves = async (userId) => {
         try {
+            console.log('[GameContext] getAllSaves called with userId:', userId);
             dispatch({ type: ActionTypes.GET_ALL_SAVES });
             const saves = await game.getAllSaves(userId);
             dispatch({ type: ActionTypes.GAME_SUCCESS, payload: saves });
@@ -320,6 +336,7 @@ export function GameProvider({ children }) {
         }
         catch (error) {
             const errorMessage = error.response?.data || 'Failed to get all saves';
+            console.log('[GameContext] getAllSaves error:', errorMessage);
             dispatch({ type: ActionTypes.GAME_ERROR, payload: errorMessage });
             // return the error.
             throw error;

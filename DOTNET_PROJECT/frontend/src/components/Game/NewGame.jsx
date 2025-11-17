@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useGame } from '../../context/GameContext';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../context/Authentication';
 
 /**
  * 
@@ -14,7 +15,9 @@ export function StartGame({ onGameStart, onBack }) {
   });
   const [errors, setErrors] = useState({});
   
-  const { startGame, loading, error, clearError, user } = useGame();
+  const { startGame, loading, error, clearError} = useGame();
+  const {user} = useAuth();
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,6 +35,7 @@ export function StartGame({ onGameStart, onBack }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("gamecontext user in startgame:", user)
     setErrors({});
     clearError();
 
@@ -47,7 +51,7 @@ export function StartGame({ onGameStart, onBack }) {
 
     try {
       const gameSave = await startGame({
-        UserId: user.id,
+        UserId: Number(localStorage.getItem('user_id')),
         SaveName: formData.saveName
       });
       if (onGameStart) {
